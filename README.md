@@ -1,4 +1,4 @@
-# C# Excel Query
+# C# Extras
 
 C# library for extra general purpose functionality not found in the standard libraries.
 
