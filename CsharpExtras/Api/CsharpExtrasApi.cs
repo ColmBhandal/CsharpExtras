@@ -5,7 +5,7 @@ using System.Text;
 
 namespace CsharpExtras.Api
 {
-    public class QueryApi
+    public class CsharpExtrasApi
     {
         public void SetLogger(ILogger logger)
         {

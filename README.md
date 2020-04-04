@@ -14,7 +14,7 @@ To avoid dependencies on any particular logging library, the logger instance use
 To inject a logger:
 
 ```csharp
-ICsharpExtrasApi api = new CsharpExtrasApiImpl();
+CsharpExtrasApi api = new CsharpExtrasApiImpl();
 ILogger logger = // ...
 api.SetLogger(logger);
 ```
