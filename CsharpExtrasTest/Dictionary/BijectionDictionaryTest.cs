@@ -12,7 +12,7 @@ namespace Dictionary
     class BijectionDictionaryTest
     {
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenUniqueKeyValuePairsWhenAddedToTwoWayDictionaryThenCanBeAccessed()
         {
             int maxCount = 10;
@@ -25,7 +25,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenUniqueKeyValuePairsWhenAddedToTwoWayDictionaryThenReverseDictionaryCanBeAccessed()
         {
             int maxCount = 10;
@@ -40,7 +40,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenNonUniqueKeyValuePairsWhenAddedToTwoWayDictionaryThenExceptionsThrownForDuplicates()
         {
             IBijectionDictionary<int, string> dict = new BijectionDictionaryImpl<int, string>();
@@ -63,7 +63,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenRemoveItemsFromOriginalVersionThenItemsAlsoRemovedFromReversedVersion()
         {
             int maxCount = 10;
@@ -83,7 +83,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenRemoveItemsFromReversedVersionThenItemsAlsoRemovedFromOriginalVersion()
         {
             int maxCount = 10;
@@ -103,7 +103,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenGettingReverseOfReverseThenReverseOfReverseIsTheSameObjectAsOriginal()
         {
             int maxCount = 10;
@@ -117,7 +117,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenAllItemsClearedThenReverseVersionIsAlsoEmpty()
         {
             int maxCount = 10;
@@ -133,7 +133,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenExistingDictionaryWhenWrappedInTwoWayDictionaryThenReverseVersionIsPopulated()
         {
             int maxCount = 10;
@@ -153,7 +153,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenExistingDictionaryWithDuplicateValuesWhenWrappedInTwoWayDictionaryThenExceptionIsThrown()
         {
             int maxCount = 2;

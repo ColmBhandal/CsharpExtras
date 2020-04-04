@@ -14,7 +14,6 @@ namespace Tree.Visitor
     public class VoidVisitorTest
     {
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedByProductVisitorThenProductOfPayloadsReturned()
         {
@@ -23,7 +22,6 @@ namespace Tree.Visitor
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedBySummationVisitorThenSumOfPayloadsReturned()
         {
@@ -41,7 +39,6 @@ namespace Tree.Visitor
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedByNodeCounterThenCorrectNumberOfNodesIsReturned()
         {
@@ -50,7 +47,6 @@ namespace Tree.Visitor
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedByLeafNodeCounterThenCountOfLeafNodesOnlyReturned()
         {

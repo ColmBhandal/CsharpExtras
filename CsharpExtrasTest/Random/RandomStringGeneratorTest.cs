@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Random
 {
     [TestFixture]
-    [Category("Unit"), Category("Quick")]
+    [Category("Unit")]
     class RandomStringGeneratorTest
     {
         [Test]

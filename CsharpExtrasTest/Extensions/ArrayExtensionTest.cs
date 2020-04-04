@@ -9,7 +9,7 @@ namespace CustomExtensions
     [TestFixture]
     public class ArrayExtensionTest
     {
-        [Test, Category("Quick"), Category("Unit")]
+        [Test, Category("Unit")]
         public void GivenTwoArraysWithLongerValArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
         {
             int[] keys = new int[] { 1, 2, 1 };
@@ -20,7 +20,7 @@ namespace CustomExtensions
             Assert.AreEqual(1, zipped[2].Count);
         }
 
-        [Test, Category("Quick"), Category("Unit")]
+        [Test, Category("Unit")]
         public void GivenTwoArraysWithLongerKeyArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
         {
             int[] keys = new int[] { 1, 2, 1, 3, 4, 5, 1, 2 };
@@ -32,7 +32,7 @@ namespace CustomExtensions
             Assert.False(zipped.ContainsKey(3));
         }
 
-        [Test, Category("Quick"), Category("Unit")]
+        [Test, Category("Unit")]
         public void GivenArrayOfUniqueValuesAndOtherArrayOfDifferentLengthWhenZippedToDictionaryThenAllExpectedMappingsAreInDictionary()
         {
             int[] keys = new int[] { 1, 2 };
@@ -43,7 +43,7 @@ namespace CustomExtensions
             Assert.AreEqual("Two", zipped[2]);
         }
         
-        [Test, Category("Quick"), Category("Unit")]
+        [Test, Category("Unit")]
         public void GivenArraysOfStringsOfDifferingLengthsWhenZipArrayWithConcatThenArrayOfConcatsOfShortestLengthReturned()
         {
             string[] first = new string[] { "Hel", "wo", "adfs", "35230j" };
@@ -52,7 +52,7 @@ namespace CustomExtensions
             Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
         }
 
-        [Test, Category("Quick"), Category("Unit")]
+        [Test, Category("Unit")]
         public void GivenArraysRepresentingRowsOfLettersWhenZipMultiWithConcatThenSingleArrayOfColumnsIsReturned()
         {
             string[] row1 = new string[] { "H", "w" };
@@ -65,7 +65,7 @@ namespace CustomExtensions
             Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
         }
         
-        [Test, Category("Quick"), Category("Unit")]
+        [Test, Category("Unit")]
         public void TestGivenArrayWithMultipleElementsWhenMapAppliedWithKnownFunctionThenArrayWithMappedelementsReturned()
         {
             string[] arr = new string[] { "a", "aa", "aas", "sdfs", " )0Pr" };
@@ -75,7 +75,6 @@ namespace CustomExtensions
 
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void Given2dArrayWhenMappedThenResultantArrayIsAsExpected()
         {
@@ -90,7 +89,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void TestGiven2DArrayInputWhenTransposedThenArrayDimensionsAreFlipped()
         {
@@ -122,7 +120,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void TestGiven2DArrayInputWhenTransposedThenArrayDataIsTransposed()
         {
@@ -158,7 +155,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         [TestCaseSource("ArrayProviderForSubArrayTesting")]
         public void TestGivenStringArrayWhenGetSubArrayThenCorrectSizeReturned(string[] arr)
@@ -193,7 +189,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         [TestCaseSource("ArrayProviderForSubArrayTesting")]
         public void TestGivenStringArrayWhenGetSubArrayThenCorrectDataReturned(string[] arr)
@@ -221,7 +216,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         [TestCaseSource("ArrayProviderForSubArrayTesting")]
         public void TestGivenStringArrayWhenGetSubArrayWithInvalidValuesThenFullArrayReturned(string[] arr)
@@ -259,7 +253,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         [TestCaseSource("StringArrayProviderForRemoveBlanksTesting")]
         public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved(string[] arr)
@@ -277,7 +270,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void TestGivenArrayWithDuplicatesWhenFindDuplicatesThenCorrectRowsIdentified()
         {

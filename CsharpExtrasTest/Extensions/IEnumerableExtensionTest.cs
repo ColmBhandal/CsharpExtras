@@ -18,7 +18,7 @@ namespace CustomExtensions
             private const string One = "One";
             private const string Two = "Two";
 
-            [Test, Category("Unit"), Category("Quick")]
+            [Test, Category("Unit")]
             [TestCaseSource("ValidIndexingData")]
             public void GivenEnumerableWhenIndexedThenResultantDictionaryIsAsExpected(int startIndex, int step, int[] expectedKeysInOrder)
             {

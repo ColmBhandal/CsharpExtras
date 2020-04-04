@@ -12,7 +12,6 @@ namespace Map
     class MultiValueMapTest
     {
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void GivenEmptyMapWhenTwoItemsAddedToSameKeyThenBothItemsAreInSetForThatKey()
         {

@@ -6,7 +6,7 @@ namespace CustomExtensions
     [TestFixture]
     public class StringExtensionTest
     {
-        [Test, Category("Unit"), Category("Quick")]
+        [Test, Category("Unit")]
         [TestCaseSource("ValidRegexCaptureGroupTuples")]
         public void GivenStringAndRegexWhenGetFirstGroupInFirstMatchThenExpectedContentIsReturned
             (string input, string regex, string expected)
@@ -25,7 +25,7 @@ namespace CustomExtensions
             };
         }
 
-        [Test, Category("Unit"), Category("Quick")]
+        [Test, Category("Unit")]
         [TestCaseSource("ValidInsertSpacesPairs")]
         public void GivenStringWhenInsertSpacesThenResultHasSpacesInsertedAsExpected
             (string input, string expected)
@@ -46,7 +46,7 @@ namespace CustomExtensions
         }
 
 
-        [Test, Category("Unit"), Category("Quick")]
+        [Test, Category("Unit")]
         public void TestGivenStringWithVariedNewlineCharsWhenGetLinesThenSetContainsSegmentsBetweenTheLines()
         {
             string segment1 = "asdfads";
@@ -60,7 +60,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         [TestCase("abcbd", "b", 3)]
         [TestCase("aa -- bb -- cc -- ", "--", 4)]
         [TestCase("xxyyzz", "-", 1)]
@@ -75,7 +74,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void ContainsAnyTrueWithNoMatchesInMany()
         {
             Assert.IsFalse("AxBfd-afd_ sf".ContainsAny("adgfkjadhsfas", "afgadlsfgaksfjads", "Bfdxxxxs"));
@@ -83,7 +81,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void ContainsAnyTrueWithOneMatchInMany()
         {
             Assert.IsTrue("AxBfd-afd_ sf".ContainsAny("adgfkjadhsfas", "afgadlsfgaksfjads", "Bfd"));
@@ -91,7 +88,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void RemoveRegexMatchesRemovesMoreThanOneMatch()
         {
             Assert.AreEqual("AxBfd-afd_ sf".RemoveRegexMatches("[ _-]"), "AxBfdafdsf");
@@ -99,7 +95,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void GivenStringWithSpacesWhenRemoveWhitespaceThenStringWithoutWhitespaceReturned()
         {
             Assert.AreEqual(" A  b C    d   E   f  G".RemoveWhitespace(), "AbCdEfG");
@@ -107,7 +102,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void GivenStringWithSlashRSlashNWhenRemoveNewlinesThenBothNewlineCharactersRemoved()
         {
             Assert.AreEqual("FirstLine\r\nSecondLine".RemoveNewlines(), "FirstLineSecondLine");
@@ -115,7 +109,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void GivenStringWithSlashNWhenRemoveNewlinesThenSlashNIsRemoved()
         {
             Assert.AreEqual("FirstLine\nSecondLine".RemoveNewlines(), "FirstLineSecondLine");
@@ -123,7 +116,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void GivenStringWithSlashRWhenRemoveNewlinesThenSlashRIsRemoved()
         {
             Assert.AreEqual("FirstLine\rSecondLine".RemoveNewlines(), "FirstLineSecondLine");
@@ -131,7 +123,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void SplitEmptyStrIsSingletonEmptyStr()
         {
             Assert.AreEqual("".Split("dfasfadsf").Length, 1);
@@ -142,7 +133,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void EqualsIgnoreDigitsTrueWhenBothSidesHaveDifferentDigits()
         {
             Assert.IsTrue("s000df11asd1hf23las".EqualsIgnoreDigits("sdf33asdhf057la12389s"));

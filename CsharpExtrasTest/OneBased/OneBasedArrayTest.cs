@@ -8,7 +8,6 @@ namespace OneBased
 {
     [TestFixture]
     [Category("Unit")]
-    [Category("Quick")]
     public class OneBasedArrayTest
     {
         private const string One = "One";

@@ -13,7 +13,6 @@ namespace GeneralPurpose
     public class LazyFunctionMapTest
     {
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void TestThatDictionaryMatchesPureFunction()
         {

@@ -9,7 +9,6 @@ namespace IO
     {
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         [TestCaseSource("StringProviderForFileNameCheck")]
         public void TestGivenStringWhenCheckIfValidFileNameThenCorrectResultReturned(
             string fileName, bool expectedResult)

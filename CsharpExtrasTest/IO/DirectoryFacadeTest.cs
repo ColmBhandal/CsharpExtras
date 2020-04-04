@@ -15,7 +15,7 @@ namespace IO
     {
         IDirectoryFacade DirectoryFacade = new DirectoryFacadeImpl();
 
-        [Test, Category("Unit"), Category("Quick")]
+        [Test, Category("Unit")]
         public void TestGivenRootAndRelativeSubDirWhenCombineThenGetDifferenceThenResultEqualsRelativeSubDir()
         {
             string root = Directory.GetCurrentDirectory();

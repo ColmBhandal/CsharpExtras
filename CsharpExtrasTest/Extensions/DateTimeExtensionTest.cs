@@ -13,7 +13,6 @@ namespace CustomExtensions
     class DateTimeExtensionTest
     {
         [Test]
-        [Category("Quick")]
         [Category("Unit")]
         public void TestGivenKnownDateWhenGetShortDateStampThenExpectedStringReturned()
         {

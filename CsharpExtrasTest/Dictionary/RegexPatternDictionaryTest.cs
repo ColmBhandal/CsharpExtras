@@ -12,7 +12,7 @@ namespace Dictionary
     public class RegexPatternDictionaryTest
     {
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWhenCheckingForMatchesThenCorrectResultReturned()
         {
             IRegexPatternDictionary<string> regexDict = BuildTestRegexPatternDict();
@@ -25,7 +25,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWhenFindingAllMatchesThenCorrectResultReturned()
         {
             IRegexPatternDictionary<string> regexDict = BuildTestRegexPatternDict();
@@ -46,7 +46,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWithEscapedPatternWhenCheckingForMatchesThenCorrectResultReturned()
         {
             IRegexPatternDictionary<string> regexDict = new RegexPatternDictionaryImpl<string>();
@@ -65,7 +65,7 @@ namespace Dictionary
         }
         
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWithEscapedPatternWhenGetValueByPatternThenCorrectValueReturned()
         {
             IRegexPatternDictionary<string> regexDict = new RegexPatternDictionaryImpl<string>();
@@ -79,7 +79,7 @@ namespace Dictionary
         }
 
         [Test]
-        [Category("Unit"), Category("Quick")]
+        [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWithFullMatchPatternWhenCheckingForMatchesThenCorrectResultReturned()
         {
             IRegexPatternDictionary<string> regexDict = new RegexPatternDictionaryImpl<string>();

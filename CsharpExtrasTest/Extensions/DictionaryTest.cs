@@ -18,7 +18,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void GivenStringIntDictionaryAndStringBoolDictionaryWhenZippedWithNegationOperatorThenResultantDictionaryIsAsExpected()
         {
             IDictionary<string, int> mockDict = MockStrIntDictionary();
@@ -33,7 +32,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void GivenStringIntDictionaryWhenValuesMappedToStringThenValuesMatchExpectedMapValues()
         {
             IDictionary<string, int> mockDict = MockStrIntDictionary();
@@ -46,7 +44,6 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [Category("Quick")]
         public void GivenStringIntDictionaryWhenValuesMappedToStringThenKeysRemainUnchanged()
         {
             IDictionary<string, int> mockDict = MockStrIntDictionary();
