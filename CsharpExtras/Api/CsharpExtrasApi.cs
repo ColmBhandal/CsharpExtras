@@ -1,23 +1,41 @@
-﻿using CsharpExtras.Log;
-using IO;
-using IO;
-using OneBased;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Dictionary;
+using CsharpExtras.Enumerable.NonEmpty;
+using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras.IO;
+using CsharpExtras.Map;
+using CsharpExtras.Log;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using CsharpExtras.RandomDataGen.Impl;
+using CsharpExtras.Tree.Base;
+using CsharpExtras.Tree.Integer;
+using CsharpExtras.Validation;
 
 namespace CsharpExtras.Api
 {
     public class CsharpExtrasApi : ICsharpExtrasApi
     {
-        public IFileDecorator NewFileDecorator() => new FileDecoratorImpl(NewFileFacade());
-
-        private IFileFacade NewFileFacade() => new FileFacadeImpl();
 
         public void SetLogger(ILogger logger)
         {
             StaticLogManager.Logger = logger;
         }
+
+        public IComparer<T> NewDescendingComparer<T>() => new DescendingComparer<T>();
+
+        public IBijectionDictionary<TKey, TVal> NewBijectionDictionary<TKey, TVal>()
+            => new BijectionDictionaryImpl<TKey, TVal>();
+        public IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>()
+            => new RegexPatternDictionaryImpl<TVal>();
+        public IMultiValueMap<TKey, TVal> NewMultiValueMap<TKey, TVal>()
+            => new MultiValueMapImpl<TKey, TVal>();
+
+        public INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val)
+            => new NonEmptyCollectionImpl<TVal>(val);
+
+        public INonEmptyEnumerable<TVal> NewNonEmptyEnumerable<TVal>(TVal val)
+            => new NonEmptyEnumerableImpl<TVal>(val);
 
         public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(TVal[,] zeroBasedBackingArray)
         {
@@ -28,5 +46,20 @@ namespace CsharpExtras.Api
         {
             return new OneBasedArrayImpl<TVal>(zeroBasedBackingArray);
         }
+
+        public IFileDecorator NewFileDecorator() => new FileDecoratorImpl(NewFileFacade());
+
+        public IFileFacade NewFileFacade() => new FileFacadeImpl();
+        public ILazyFunctionMap<TKey, TVal> NewLazyFunctionMap<TKey, TVal>(Func<TKey, TVal> backingFunction)
+            => new LazyFunctionMapImpl<TKey, TVal>(backingFunction);
+        public IRandomStringGenerator NewRandomStringGenerator() => new RandomStringGeneratorImpl();
+        public ILeafBase<TVal> NewLeaf<TVal>(TVal payload) => new LeafBase<TVal>(payload);
+        public IIntegerTree NewIntegerTree(int payload) => new IntegerTreeImpl(payload);
+        public IIntegerLeaf NewIntegerLeaf(int payload) => new IntegerLeafImpl(payload);
+        public IValidationErrorCollection NewValidationErrorCollection() =>
+            new ValidationErrorCollectionImpl();
+        public IValidationError NewValidationError(bool isBlocker, string message)
+            => new ValidationErrorImpl(isBlocker, message);
+
     }
 }

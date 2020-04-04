@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NonEmptyEnumerable.Impl
+namespace CsharpExtras.Enumerable.NonEmpty
 {
     public class NonEmptyEnumerableImpl<T> : INonEmptyEnumerable<T>
     {

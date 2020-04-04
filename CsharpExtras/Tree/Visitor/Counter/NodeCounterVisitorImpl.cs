@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tree.Visitor.Counter
+namespace CsharpExtras.Tree.Visitor.Counter
 {
     public class NodeCounterVisitorImpl<TPayload> : NodeCounterVisitorBase<TPayload>, INodeCounterVisitor<TPayload>
     {

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static CsharpExtras.Log.StaticLogManager;
 
-namespace IO
+namespace CsharpExtras.IO
 {
     class DirectoryFacadeImpl : IDirectoryFacade
     {

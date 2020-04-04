@@ -1,4 +1,4 @@
-﻿namespace Map
+﻿namespace CsharpExtras.Map
 {
 
     /// <summary>

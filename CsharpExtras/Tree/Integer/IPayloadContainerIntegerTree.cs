@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tree.Integer
+namespace CsharpExtras.Tree.Integer
 {
     interface IChildSetIntegerTree : IChildSetTree<int, IChildSetIntegerTree>
     {

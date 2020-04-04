@@ -1,4 +1,4 @@
-﻿namespace Map
+﻿namespace CsharpExtras.Map
 {
     public interface IFunctionMap<T, U>
     {

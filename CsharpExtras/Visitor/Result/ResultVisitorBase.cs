@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Visitor.Result
+namespace CsharpExtras.Visitor.Result
 {
     public class ResultVisitorBase<TVisitable, TResult> : IResultVisitorBase<TVisitable, TResult> where TVisitable : IVisitableBase<TVisitable>
     {

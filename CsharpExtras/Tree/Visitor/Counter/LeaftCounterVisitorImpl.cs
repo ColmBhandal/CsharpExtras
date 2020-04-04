@@ -1,13 +1,7 @@
-﻿using Tree.Base;
-using Tree.Integer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CsharpExtras.Tree.Base;
 using static CsharpExtras.Log.StaticLogManager;
 
-namespace Tree.Visitor.Counter
+namespace CsharpExtras.Tree.Visitor.Counter
 {
     /// <summary>
     /// Count only the leaf nodes of the tree in question, not the intermediate nodes

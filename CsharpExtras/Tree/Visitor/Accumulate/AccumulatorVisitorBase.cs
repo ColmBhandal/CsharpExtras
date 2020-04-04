@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tree.Visitor.Void.Integer
+namespace CsharpExtras.Tree.Visitor.Void.Integer
 {
     public abstract class AccumulatorVisitorBase<TPayload, TResult> : TreeVisitorBase<TPayload>, IAccumulatorVisitor<TResult>        
     {

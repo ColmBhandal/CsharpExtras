@@ -1,10 +1,6 @@
-﻿using RandomDataGen.Impl;
+﻿using CsharpExtras.RandomDataGen.Impl;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Random
 {

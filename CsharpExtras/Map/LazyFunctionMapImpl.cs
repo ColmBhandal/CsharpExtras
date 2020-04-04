@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Map
+namespace CsharpExtras.Map
 {
     /// <summary>
     /// The lazy function map caches the results of calls to the backing function. Every time the function is called on an argument u and returns v,

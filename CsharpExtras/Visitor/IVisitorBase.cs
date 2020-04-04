@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Visitor
+namespace CsharpExtras.Visitor
 {
     public interface IVisitorBase<TVisitable> where TVisitable : IVisitableBase<TVisitable>
     {

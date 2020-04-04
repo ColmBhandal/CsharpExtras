@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CustomExtensions
+namespace CsharpExtras.CustomExtensions
 {
     public static class IEnumerableExtension
     {

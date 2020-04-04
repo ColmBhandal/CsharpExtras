@@ -1,4 +1,5 @@
-﻿using Map;
+﻿using CsharpExtras.Dictionary;
+using Map;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

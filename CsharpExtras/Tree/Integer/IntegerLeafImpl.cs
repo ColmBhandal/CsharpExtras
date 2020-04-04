@@ -1,11 +1,6 @@
-﻿using Tree.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CsharpExtras.Tree.Base;
 
-namespace Tree.Integer
+namespace CsharpExtras.Tree.Integer
 {
     class IntegerLeafImpl : LeafBase<int>, IIntegerLeaf, IIntegerTree
     {

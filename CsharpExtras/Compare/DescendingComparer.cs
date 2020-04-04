@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Compare
+namespace CsharpExtras.Compare
 {
     public class DescendingComparer<T> : IComparer<T>
     {

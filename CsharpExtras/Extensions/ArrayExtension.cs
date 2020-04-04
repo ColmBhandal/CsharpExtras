@@ -1,11 +1,9 @@
-﻿using Map;
+﻿using CsharpExtras.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CustomExtensions
+namespace CsharpExtras.CustomExtensions
 {
     public static class ArrayExtension
     {

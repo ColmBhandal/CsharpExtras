@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tree
+namespace CsharpExtras.Tree
 {
     abstract class ChildSetTreeBase<TPayload, TRec, TLeaf> : PayloadContainerTreeBase<TPayload>, IChildSetTree<TPayload, TRec>
         where TLeaf : ITreeBase<TPayload> where TRec : IChildSetTree<TPayload, TRec>

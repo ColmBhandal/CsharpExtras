@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Map
+namespace CsharpExtras.Dictionary
 {
     public interface IMultiValueMap<K, U> : IDictionary<K, ISet<U>>
     {

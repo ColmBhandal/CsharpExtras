@@ -1,4 +1,4 @@
-﻿namespace Tree.Visitor.Integer
+﻿namespace CsharpExtras.Tree.Visitor.Integer
 {
     interface IIntegerAccumulationVisitor : ITreeVisitor<int>
     {

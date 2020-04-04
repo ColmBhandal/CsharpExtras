@@ -1,13 +1,10 @@
-﻿using CustomExtensions;
-using Map;
+﻿using CsharpExtras.CustomExtensions;
+using CsharpExtras.Dictionary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OneBased
+namespace CsharpExtras.Enumerable.OneBased
 {
     public interface IOneBasedArray<TVal> : IEnumerable<TVal>
     {
@@ -43,9 +40,9 @@ namespace OneBased
     {
         private TVal[] _backingArray;
 
-        public OneBasedArrayImpl(TVal[] backingArray)
+        public OneBasedArrayImpl(TVal[] zeroBasedBackingArray)
         {
-            _backingArray = backingArray;
+            _backingArray = zeroBasedBackingArray;
         }
 
         public TVal this[int oneBasedIndex]

@@ -1,11 +1,6 @@
-﻿using Tree.Visitor.Void.Integer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CsharpExtras.Tree.Visitor.Void.Integer;
 
-namespace Tree.Visitor.Integer
+namespace CsharpExtras.Tree.Visitor.Integer
 {
     public abstract class IntegerAccumulatorVisitorBase : AccumulatorVisitorBase<int, int>
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static CsharpExtras.Log.StaticLogManager;
 
-namespace Visitor.Result
+namespace CsharpExtras.Visitor.Result
 {
     public abstract class ResultStorageVisitorBase<TVisitable, TResult> : IVisitorBase<TVisitable>,
         IResultStorageVisitorBase<TVisitable, TResult> where TVisitable : IVisitableBase<TVisitable>

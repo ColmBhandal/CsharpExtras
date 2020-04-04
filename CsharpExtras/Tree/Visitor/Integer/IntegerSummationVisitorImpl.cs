@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tree.Visitor.Integer
+namespace CsharpExtras.Tree.Visitor.Integer
 {
     public class IntegerSummationVisitorImpl : IntegerAccumulatorVisitorBase, IIntegerAccumulationVisitor
     {

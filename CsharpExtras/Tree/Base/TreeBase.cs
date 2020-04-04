@@ -1,12 +1,9 @@
-﻿using Tree.Visitor;
-using Visitor;
+﻿using CsharpExtras.Visitor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Tree
+namespace CsharpExtras.Tree
 {
     public abstract class TreeBase<TPayload> : VisitableBase<ITreeBase<TPayload>>, ITreeBase<TPayload>
     {

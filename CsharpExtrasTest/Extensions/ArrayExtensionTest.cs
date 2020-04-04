@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using RandomDataGen.Impl;
+﻿using CsharpExtras.CustomExtensions;
+using CsharpExtras.Dictionary;
+using CsharpExtras.RandomDataGen.Impl;
 using NUnit.Framework;
-using Map;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CustomExtensions
 {

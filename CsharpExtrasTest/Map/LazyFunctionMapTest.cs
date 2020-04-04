@@ -1,4 +1,5 @@
-﻿using GeneralPurpose;
+﻿using CsharpExtras.Map;
+using GeneralPurpose;
 using Map;
 using NUnit.Framework;
 using System;

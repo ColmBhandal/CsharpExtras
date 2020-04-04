@@ -1,11 +1,7 @@
-﻿using CustomExtensions;
+﻿using CsharpExtras.CustomExtensions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OneBased
+namespace CsharpExtras.Enumerable.OneBased
 {
     public interface IOneBasedArray2D<TVal>
     {

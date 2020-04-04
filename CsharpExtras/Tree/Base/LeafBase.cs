@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tree.Base
+namespace CsharpExtras.Tree.Base
 {    
     class LeafBase<TPayload> : PayloadContainerTreeBase<TPayload>, ILeafBase<TPayload>
     {

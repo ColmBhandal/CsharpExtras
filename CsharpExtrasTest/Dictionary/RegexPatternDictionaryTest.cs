@@ -1,4 +1,5 @@
-﻿using Dictionary;
+﻿using CsharpExtras.Dictionary;
+using Dictionary;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

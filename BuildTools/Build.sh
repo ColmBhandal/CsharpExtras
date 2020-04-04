@@ -2,6 +2,6 @@
 
 ./UpdateVersion.sh
 
-cd ../
+cd ../CsharpExtras
 dotnet build --configuration Release
-dotnet pack CsharpExtras/CsharpExtras.csproj --configuration Release
+dotnet pack CsharpExtras.csproj --configuration Release

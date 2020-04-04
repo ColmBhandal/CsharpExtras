@@ -1,6 +1,6 @@
-﻿using Tree.Integer;
-using Tree.Visitor.Counter;
-using Tree.Visitor.Integer;
+﻿using CsharpExtras.Tree.Integer;
+using CsharpExtras.Tree.Visitor.Counter;
+using CsharpExtras.Tree.Visitor.Integer;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

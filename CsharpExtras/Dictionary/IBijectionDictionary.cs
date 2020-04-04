@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dictionary
+namespace CsharpExtras.Dictionary
 {
     public interface IBijectionDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {

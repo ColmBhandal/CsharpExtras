@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tree.Visitor
+namespace CsharpExtras.Tree.Visitor
 {
     public abstract class TreeVisitorBase<TPayload> : ITreeVisitor<TPayload>
     {

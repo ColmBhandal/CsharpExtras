@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.IO;
 using NUnit.Framework;
 using System.Collections.Generic;
 

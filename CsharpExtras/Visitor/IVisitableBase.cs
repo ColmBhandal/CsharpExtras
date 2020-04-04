@@ -1,4 +1,4 @@
-﻿namespace Visitor
+﻿namespace CsharpExtras.Visitor
 {
     public interface IVisitableBase<TVisitable> where TVisitable : IVisitableBase<TVisitable>
     {

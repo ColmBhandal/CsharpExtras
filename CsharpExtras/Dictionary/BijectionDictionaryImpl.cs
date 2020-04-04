@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Dictionary
+namespace CsharpExtras.Dictionary
 {
     public class BijectionDictionaryImpl<TKey, TValue> : IBijectionDictionary<TKey, TValue>
     {

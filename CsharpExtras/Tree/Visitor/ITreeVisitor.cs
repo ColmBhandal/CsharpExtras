@@ -1,6 +1,6 @@
-﻿using Visitor;
+﻿using CsharpExtras.Visitor;
 
-namespace Tree.Visitor
+namespace CsharpExtras.Tree.Visitor
 {
     public interface ITreeVisitor<TPayload> : IVisitorBase<ITreeBase<TPayload>>
     {

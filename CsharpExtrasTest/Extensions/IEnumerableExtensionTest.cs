@@ -1,17 +1,10 @@
-﻿using CustomExtensions;
+﻿using CsharpExtras.CustomExtensions;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CustomExtensions
 {
-
-    namespace CustomExtensions
-    {
-        [TestFixture]
+    [TestFixture]
         public class IEnumerableTest
         {
             private const string Zero = "Zero";
@@ -48,6 +41,4 @@ namespace CustomExtensions
                 };
             }
         }
-    }
-
 }
