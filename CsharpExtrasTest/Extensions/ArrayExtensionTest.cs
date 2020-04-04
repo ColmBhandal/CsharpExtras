@@ -1,0 +1,339 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using RandomDataGen.Impl;
+using NUnit.Framework;
+using Map;
+
+namespace CustomExtensions
+{
+    [TestFixture]
+    public class ArrayExtensionTest
+    {
+        [Test, Category("Quick"), Category("Unit")]
+        public void GivenTwoArraysWithLongerValArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
+        {
+            int[] keys = new int[] { 1, 2, 1 };
+            string[] vals = new string[] { "One", "Two", "Three", "dasfash", "One" };
+            IMultiValueMap<int, string> zipped = keys.ZipToMultiValueMap(vals);
+            Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
+            Assert.AreEqual(2, zipped[1].Count);
+            Assert.AreEqual(1, zipped[2].Count);
+        }
+
+        [Test, Category("Quick"), Category("Unit")]
+        public void GivenTwoArraysWithLongerKeyArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
+        {
+            int[] keys = new int[] { 1, 2, 1, 3, 4, 5, 1, 2 };
+            string[] vals = new string[] { "One", "Two", "Three" };
+            IMultiValueMap<int, string> zipped = keys.ZipToMultiValueMap(vals);
+            Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
+            Assert.AreEqual(2, zipped[1].Count);
+            Assert.AreEqual(1, zipped[2].Count);
+            Assert.False(zipped.ContainsKey(3));
+        }
+
+        [Test, Category("Quick"), Category("Unit")]
+        public void GivenArrayOfUniqueValuesAndOtherArrayOfDifferentLengthWhenZippedToDictionaryThenAllExpectedMappingsAreInDictionary()
+        {
+            int[] keys = new int[] { 1, 2 };
+            string[] vals = new string[] { "One", "Two", "Three", "dasfash"};
+            IDictionary<int, string> zipped = keys.ZipToDictionary(vals);
+            Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
+            Assert.AreEqual("One", zipped[1]);
+            Assert.AreEqual("Two", zipped[2]);
+        }
+        
+        [Test, Category("Quick"), Category("Unit")]
+        public void GivenArraysOfStringsOfDifferingLengthsWhenZipArrayWithConcatThenArrayOfConcatsOfShortestLengthReturned()
+        {
+            string[] first = new string[] { "Hel", "wo", "adfs", "35230j" };
+            string[] second = new string[] { "lo", "rld!"};
+            string[] zipped = first.ZipArray((s1, s2) => s1 + s2, second);
+            Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
+        }
+
+        [Test, Category("Quick"), Category("Unit")]
+        public void GivenArraysRepresentingRowsOfLettersWhenZipMultiWithConcatThenSingleArrayOfColumnsIsReturned()
+        {
+            string[] row1 = new string[] { "H", "w" };
+            string[] row2 = new string[] { "e", "o" };
+            string[] row3 = new string[] { "l", "r" };
+            string[] row4 = new string[] { "l", "l" };
+            string[] row5 = new string[] { "o", "d" };
+            string[] row6 = new string[] { "", "!" };
+            string[] zipped = row1.ZipMulti((s1, s2) => s1 + s2, row2, row3, row4, row5, row6);
+            Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
+        }
+        
+        [Test, Category("Quick"), Category("Unit")]
+        public void TestGivenArrayWithMultipleElementsWhenMapAppliedWithKnownFunctionThenArrayWithMappedelementsReturned()
+        {
+            string[] arr = new string[] { "a", "aa", "aas", "sdfs", " )0Pr" };
+            int[] mapped = arr.Map(s => s.Length);
+            Assert.AreEqual(new int[] {1, 2, 3, 4, 5}, mapped);
+        }
+
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        public void Given2dArrayWhenMappedThenResultantArrayIsAsExpected()
+        {
+            string[,] grid = new string[,] { { "H", "el", "lo " }, { "Wor", "ld", "!" } };
+            int[,] charCount = grid.Map(s => s.Length);
+            Assert.AreEqual(1, charCount[0, 0]);
+            Assert.AreEqual(2, charCount[0, 1]);
+            Assert.AreEqual(3, charCount[0, 2]);
+            Assert.AreEqual(3, charCount[1, 0]);
+            Assert.AreEqual(2, charCount[1, 1]);
+            Assert.AreEqual(1, charCount[1, 2]);
+        }
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        public void TestGiven2DArrayInputWhenTransposedThenArrayDimensionsAreFlipped()
+        {
+            IList<string[,]> testData = GenerateArrayTranspositionTestData();
+
+            foreach (string[,] testCase in testData)
+            {
+                AssertTransposedArrayFlipsDimensions(testCase);
+            }
+        }
+        private IList<string[,]> GenerateArrayTranspositionTestData()
+        {
+            IList<string[,]> testData = new List<string[,]>
+            {
+                new string[,] { { "1", "2" }, { "3", "4" } },
+                new string[,] { { "1" }, { "2" }, { "3" } },
+                new string[,] { { "1", "2", "3" } },
+                new string[,] { { "1", "2", "3" }, { "4", "5", "6" } }
+            };
+            return testData;
+        }
+
+        private void AssertTransposedArrayFlipsDimensions(string[,] input)
+        {
+            string[,] transposed = input.Transpose();
+
+            Assert.AreEqual(transposed.GetLength(0), input.GetLength(1));
+            Assert.AreEqual(transposed.GetLength(1), input.GetLength(0));
+        }
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        public void TestGiven2DArrayInputWhenTransposedThenArrayDataIsTransposed()
+        {
+            IList<string[,]> testData = GenerateArrayTranspositionTestData();
+
+            foreach (var testCase in testData)
+            {
+                AssertTransposedArrayFlipsData(testCase);
+            }
+        }
+
+        private void AssertTransposedArrayFlipsData(string[,] input)
+        {
+            string[,] transposed = input.Transpose();
+
+            for (int i = 0; i < transposed.GetLength(0); i++)
+            {
+                for (int j = 0; j < transposed.GetLength(1); j++)
+                {
+                    Assert.AreEqual(transposed[i, j], input[j, i]);
+                }
+            }
+        }
+
+        private static IEnumerable<string[]> ArrayProviderForSubArrayTesting()
+        {
+            return new List<string[]> {
+                new string[] { "a1", "a2", "a3", "a4", "a5" },
+                new string[] {  },
+                new string[] { "a1" },
+                new string[] { "a1", "a2" },
+            };
+        }
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        [TestCaseSource("ArrayProviderForSubArrayTesting")]
+        public void TestGivenStringArrayWhenGetSubArrayThenCorrectSizeReturned(string[] arr)
+        {
+            Assert.NotNull(arr, "GIVEN: String array should not be null");
+
+            string[] sub = arr.SubArray(0);
+            Assert.AreEqual(arr.Length, sub.Length,
+                "Expecting sub array to have the same length as source array");
+
+            if (arr.Length > 0)
+            {
+                sub = arr.SubArray(1);
+                Assert.AreEqual(arr.Length - 1, sub.Length,
+                    "Expecting sub array to be shorter than the source array by 1");
+
+                sub = arr.SubArray(0, arr.Length - 1);
+                Assert.AreEqual(arr.Length - 1, sub.Length,
+                    "Expecting sub array to be shorter than the source array by 1");
+            }
+
+            if (arr.Length > 1)
+            {
+                sub = arr.SubArray(2);
+                Assert.AreEqual(arr.Length - 2, sub.Length,
+                    "Expecting sub array to be shorter than the source array by 2");
+
+                sub = arr.SubArray(1, arr.Length - 1);
+                Assert.AreEqual(arr.Length - 2, sub.Length,
+                    "Expecting sub array to be shorter than the source array by 2");
+            }
+        }
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        [TestCaseSource("ArrayProviderForSubArrayTesting")]
+        public void TestGivenStringArrayWhenGetSubArrayThenCorrectDataReturned(string[] arr)
+        {
+            Assert.NotNull(arr, "GIVEN: String array should not be null");
+
+            string[] sub = arr.SubArray(0);
+            Assert.AreEqual(arr, sub,
+                "Expecting sub array to equal source array");
+
+            if (arr.Length > 1)
+            {
+                sub = arr.SubArray(1);
+                Assert.AreEqual(arr[1], sub[0],
+                    "Expecting sub array to start at the right value");
+            }
+            if (arr.Length > 2)
+            {
+                sub = arr.SubArray(1, arr.Length - 1);
+                Assert.AreEqual(arr[1], sub[0],
+                    "Expecting sub array to start at the right value");
+                Assert.AreEqual(arr[arr.Length - 2], sub[sub.Length - 1],
+                    "Expecting sub array to end at the right value");
+            }
+        }
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        [TestCaseSource("ArrayProviderForSubArrayTesting")]
+        public void TestGivenStringArrayWhenGetSubArrayWithInvalidValuesThenFullArrayReturned(string[] arr)
+        {
+            Assert.NotNull(arr, "GIVEN: String array should not be null");
+
+            string[] sub = arr.SubArray(-1);
+            Assert.AreEqual(arr.Length, sub.Length,
+                "Expecting sub array to have the same length as source array");
+
+            sub = arr.SubArray(0, arr.Length + 1);
+            Assert.AreEqual(arr.Length, sub.Length,
+                "Expecting sub array to have the same length as source array");
+
+            sub = arr.SubArray(-1, arr.Length + 1);
+            Assert.AreEqual(arr.Length, sub.Length,
+                "Expecting sub array to have the same length as source array");
+        }
+
+        //non-mvp: Add test for getting subarray from out of bounds on only one side. 
+        // For example: -1 to the middle of the source array
+
+        //non-mvp: Consider changing test to take a tupple of input array and number of expected blanks
+        // This will probably be a better test since the test uses the same code as the implementation
+
+        private static IEnumerable<string[]> StringArrayProviderForRemoveBlanksTesting()
+        {
+            return new List<string[]> {
+                new string[] { "a1", "", "a3", "a4", "  " },
+                new string[] {  },
+                new string[] { "a1" },
+                new string[] { "" },
+                new string[] { "  ", "a2" },
+            };
+        }
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        [TestCaseSource("StringArrayProviderForRemoveBlanksTesting")]
+        public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved(string[] arr)
+        {
+            Assert.NotNull(arr, "GIVEN: String array should not be null");
+
+            int rawCount = arr.Length;
+            int nonBlankCount = arr.Count(s => !string.IsNullOrWhiteSpace(s));
+
+            string[] cleaned = arr.RemoveBlankEntries();
+
+            Assert.AreEqual(nonBlankCount, cleaned.Length, "Expected all blank entries to be removed");
+            Assert.AreEqual(0, cleaned.Count(s => string.IsNullOrWhiteSpace(s)),
+                "No blank values should exist in the cleaned array");
+        }
+
+        [Test]
+        [Category("Quick")]
+        [Category("Unit")]
+        public void TestGivenArrayWithDuplicatesWhenFindDuplicatesThenCorrectRowsIdentified()
+        {
+            string[] array = new string[] {
+                "0",
+                "a",
+                "b",
+                "a",
+                "c",
+                "a",
+                "d"
+            };
+
+            var duplicates = array.FindDuplicateIndices();
+
+            Assert.NotNull(duplicates);
+            Assert.AreEqual(1, duplicates.Count);
+            Assert.AreEqual(3, duplicates["a"].Count);
+            Assert.AreEqual(new int[] { 1, 3, 5 }, duplicates["a"].ToArray());
+        }
+
+        [Test]
+        [Category("Manual")]
+        [Category("Performance")]
+        // Initial test run found duplicates in 20.000 items in an average of 1ms (this is a manual test for now)
+        // TODO: Automate test to automatically check against an expected average time
+        public void TestGivenArrayWithLargeNumberOfElementsWhenCheckForDuplicatesThenCheckIsFast()
+        {
+            int arraySize = 20_000;
+            int stringLength = 5;
+            int repetitions = 100;
+
+            string[] arr = PopulateRandomStringArray(arraySize, stringLength);
+
+            for (int i = 0; i < repetitions; i++)
+            {
+                IDictionary<string, IList<int>> duplicates = FindDuplicates(arr);
+                Assert.NotNull(duplicates, "Find duplicates should not return null");
+            }
+        }
+
+        private string[] PopulateRandomStringArray(int length, int stringLength)
+        {
+            IRandomStringGenerator stringGen = new RandomStringGeneratorImpl();
+            string[] arr = new string[length];
+
+            for (int i = 0; i < length; i++)
+            {
+                arr[i] = stringGen.RandomAlphaNumericMixedCaseString(stringLength);
+            }
+            return arr;
+        }
+
+        private IDictionary<string, IList<int>> FindDuplicates(string[] array)
+        {
+            return array.FindDuplicateIndices();
+        }
+    }
+}

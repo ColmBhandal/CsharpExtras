@@ -6,9 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using static CsharpExtras.Log.StaticLogManager;
 
-namespace IO.Impl
+namespace IO
 {
-    class DirectoryFacadeImplIDirectoryFacade
+    class DirectoryFacadeImpl : IDirectoryFacade
     {
         public DirectoryInfo CreateDirectory(string path)
         {

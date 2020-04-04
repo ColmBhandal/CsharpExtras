@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace IO.Impl
+namespace IO
 {
     class FileFacadeImpl : IFileFacade
     {
