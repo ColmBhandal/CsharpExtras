@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
+    <Version>1.0.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
