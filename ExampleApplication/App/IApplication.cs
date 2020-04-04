@@ -1,9 +1,9 @@
-﻿namespace ExampleApplication.App
+﻿using System.Collections.Generic;
+
+namespace ExampleApplication.App
 {
     internal interface IApplication
     {
-        void RunPreApplication();
-
-        void RunApplication();
+        IDictionary<string, string> RunApplicationAndGetResults();
     }
 }

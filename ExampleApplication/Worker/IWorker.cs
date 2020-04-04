@@ -1,7 +1,9 @@
-﻿namespace ExampleApplication.Worker
+﻿using System.Collections.Generic;
+
+namespace ExampleApplication.Worker
 {
     internal interface IWorker
     {
-        void DoWork();
+        IDictionary<string, string> RunSampleAlgorithmsAndGetResults();
     }
 }

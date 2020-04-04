@@ -22,7 +22,7 @@ namespace OneBased
         IOneBasedArray<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray<TOther> other);
         IOneBasedArray<TResult> Map<TResult>(Func<TVal, TResult> mapper);
 
-        IDictionary<TVal, IList<int>> Inverse();
+        IDictionary<TVal, IList<int>> InverseMap();
 
         /// <summary>
         /// Uses the values of this array as the keys of a new dictionary, and the values of the other array as the values of that dictionary.
@@ -170,7 +170,7 @@ namespace OneBased
             return zeroBasedDuplicates.MapValues(list => list.Map(i => i + 1));
         }
 
-        public IDictionary<TVal, IList<int>> Inverse()
+        public IDictionary<TVal, IList<int>> InverseMap()
         {
             IDictionary<TVal, IList<int>> reversedZeroBased = ZeroBasedEquivalent.Inverse();
             return reversedZeroBased.MapValues(list => list.Map(i => i + 1));

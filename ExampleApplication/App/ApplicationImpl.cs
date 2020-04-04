@@ -1,4 +1,5 @@
 ﻿using ExampleApplication.Worker;
+using System.Collections.Generic;
 
 namespace ExampleApplication.App
 {
@@ -6,17 +7,9 @@ namespace ExampleApplication.App
     {
         private IWorker Worker => new WorkerImpl();
 
-        public void RunPreApplication()
+        public IDictionary<string, string> RunApplicationAndGetResults()
         {
-            Worker.DoWork();
-        }
-
-        public void RunApplication()
-        {
-            for (int i = 0; i < 10; i++)
-            {
-                Worker.DoWork();
-            }
+            return Worker.RunSampleAlgorithmsAndGetResults();
         }
     }
 }

@@ -98,7 +98,7 @@ namespace OneBased
         public void TestGivenOneBasedArrayWithDuplicatesWhenInvertingThenCorrectIndexesReturned()
         {
             IOneBasedArray<string> arrOneBased = GenTestStringArrayWithDuplicates();
-            IDictionary<string, IList<int>> invertedDict = arrOneBased.Inverse();
+            IDictionary<string, IList<int>> invertedDict = arrOneBased.InverseMap();
 
             Assert.AreEqual(3, invertedDict[One].Count, "Expected 3 matches for value: " + One);
             Assert.AreEqual(2, invertedDict[Two].Count, "Expected 2 matches for value: " + Two);
