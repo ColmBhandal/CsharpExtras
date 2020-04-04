@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CsharpExtras.Validation.Impl
+namespace CsharpExtras.Validation
 {
     class EmptyValidatorImpl<T> : ValidatorBase<T>
     {
