@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using CsharpExtras.Tree.Integer;
 using CsharpExtras.Tree.Base;
-using CsharpExtras.RandomDataGen.Impl;
+using CsharpExtras.RandomDataGen;
 using CsharpExtras.Validation;
 
 namespace CsharpExtras.Api

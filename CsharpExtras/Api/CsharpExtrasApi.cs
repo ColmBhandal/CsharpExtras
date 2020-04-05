@@ -3,14 +3,14 @@ using CsharpExtras.Dictionary;
 using CsharpExtras.Enumerable.NonEmpty;
 using CsharpExtras.Enumerable.OneBased;
 using CsharpExtras.IO;
-using CsharpExtras.Map;
 using CsharpExtras.Log;
-using System;
-using System.Collections.Generic;
-using CsharpExtras.RandomDataGen.Impl;
+using CsharpExtras.Map;
+using CsharpExtras.RandomDataGen;
 using CsharpExtras.Tree.Base;
 using CsharpExtras.Tree.Integer;
 using CsharpExtras.Validation;
+using System;
+using System.Collections.Generic;
 
 namespace CsharpExtras.Api
 {

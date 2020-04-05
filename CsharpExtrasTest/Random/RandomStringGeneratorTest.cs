@@ -1,4 +1,4 @@
-﻿using CsharpExtras.RandomDataGen.Impl;
+﻿using CsharpExtras.RandomDataGen;
 using NUnit.Framework;
 using System.Collections.Generic;
 

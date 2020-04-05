@@ -1,4 +1,4 @@
-﻿namespace CsharpExtras.RandomDataGen.Impl
+﻿namespace CsharpExtras.RandomDataGen
 {
     public interface IRandomStringGenerator
     {

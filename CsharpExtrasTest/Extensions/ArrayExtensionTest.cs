@@ -1,6 +1,6 @@
 ﻿using CsharpExtras.CustomExtensions;
 using CsharpExtras.Dictionary;
-using CsharpExtras.RandomDataGen.Impl;
+using CsharpExtras.RandomDataGen;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;

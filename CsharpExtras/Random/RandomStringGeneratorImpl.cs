@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CsharpExtras.RandomDataGen.Impl
+namespace CsharpExtras.RandomDataGen
 {
     class RandomStringGeneratorImpl : IRandomStringGenerator
     {
