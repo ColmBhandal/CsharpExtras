@@ -63,5 +63,7 @@ namespace CsharpExtras.Api
         public IValidationError NewValidationError(bool isBlocker, string message)
             => new ValidationErrorImpl(isBlocker, message);
 
+        public IValidator<T> NewEmptyValidator<T>() => new EmptyValidatorImpl<T>();
+
     }
 }
