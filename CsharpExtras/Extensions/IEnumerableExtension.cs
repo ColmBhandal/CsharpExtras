@@ -37,8 +37,8 @@ namespace CsharpExtras.CustomExtensions
         }
 
         public static int FirstIndexOf<T>(this IEnumerable<T> values, T value)
-        {
-            return values.FirstIndexOf(v => v.Equals(value));
+        {            
+            return values.FirstIndexOf(v => v != null && v.Equals(value));
         }
 
         /// <summary>

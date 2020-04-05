@@ -1,9 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<LangVersion>8.0</LangVersion>
+	<WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
+	<TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <Version>1.0.0.7</Version>
+    <Version>1.0.0.8</Version>
   </PropertyGroup>
 
   <ItemGroup>

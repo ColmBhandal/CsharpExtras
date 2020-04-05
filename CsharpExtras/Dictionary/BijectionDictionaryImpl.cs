@@ -45,7 +45,7 @@ namespace CsharpExtras.Dictionary
         {
             if (_delegate.ContainsKey(key) || _reverseDelegate.ContainsKey(value))
             {
-                throw new ArgumentException(string.Format("An item with the same key ({0}) has already been added.", key.ToString()));
+                throw new ArgumentException(string.Format("An item with the same key ({0}) has already been added.", key?.ToString() ?? ""));
             }
 
             _delegate.Add(key, value);
