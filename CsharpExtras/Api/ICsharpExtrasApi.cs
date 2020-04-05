@@ -30,6 +30,7 @@ namespace CsharpExtras.Api
         INonEmptyEnumerable<TVal> NewNonEmptyEnumerable<TVal>(TVal val);
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(TVal[] zeroBasedBackingArray);
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(TVal[,] zeroBasedBackingArray);
+        IPathFacade NewPathFacade();
         IRandomStringGenerator NewRandomStringGenerator();
         IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>();
         IValidationError NewValidationError(bool isBlocker, string message);
