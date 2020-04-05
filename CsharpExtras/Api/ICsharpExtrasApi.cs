@@ -18,6 +18,7 @@ namespace CsharpExtras.Api
     {
         IBijectionDictionary<TKey, TVal> NewBijectionDictionary<TKey, TVal>();
         IComparer<T> NewDescendingComparer<T>();
+        IDirectoryFacade NewDirectoryFacade();
         IFileDecorator NewFileDecorator();
         IFileFacade NewFileFacade();
         IIntegerLeaf NewIntegerLeaf(int payload);

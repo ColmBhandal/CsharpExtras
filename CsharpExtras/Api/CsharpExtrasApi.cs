@@ -50,6 +50,8 @@ namespace CsharpExtras.Api
         public IFileDecorator NewFileDecorator() => new FileDecoratorImpl(NewFileFacade());
 
         public IFileFacade NewFileFacade() => new FileFacadeImpl();
+        public IDirectoryFacade NewDirectoryFacade() => new DirectoryFacadeImpl();
+        public IPathFacade NewPathFacade() => new PathFacadeImpl();
         public ILazyFunctionMap<TKey, TVal> NewLazyFunctionMap<TKey, TVal>(Func<TKey, TVal> backingFunction)
             => new LazyFunctionMapImpl<TKey, TVal>(backingFunction);
         public IRandomStringGenerator NewRandomStringGenerator() => new RandomStringGeneratorImpl();
