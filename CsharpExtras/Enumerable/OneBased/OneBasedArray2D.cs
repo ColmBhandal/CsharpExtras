@@ -10,6 +10,11 @@ namespace CsharpExtras.Enumerable.OneBased
 
         int GetLength(int dimZeroBased);
         IOneBasedArray2D<TResult> Map<TResult>(Func<TVal, TResult> mapper);
+
+        /// <summary>
+        /// Zip two 2D arrays into a single 2D array using a custom zipper function.
+        /// If the two input arrays are of different sizes, the size of the output array is the intersection of the two input arrays.
+        /// </summary>
         IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other);
     }
 

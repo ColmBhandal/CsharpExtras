@@ -182,6 +182,10 @@ namespace CsharpExtras.CustomExtensions
             return resultArrayZeroBased;
         }
 
+        /// <summary>
+        /// Zip two 2D arrays into a single 2D array using a custom zipper function.
+        /// If the two input arrays are of different sizes, the size of the output array is the intersection of the two input arrays.
+        /// </summary>
         public static TResult[,] ZipArray<TVal, TOther, TResult>(this TVal[,] array, Func<TVal, TOther, TResult> zipper, TOther[,] other)
         {
             int zipLength0 = Math.Min(array.GetLength(0), other.GetLength(0));
