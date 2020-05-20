@@ -54,6 +54,16 @@ namespace CustomExtensions
         }
 
         [Test, Category("Unit")]
+        public void Given2DArraysOfStringsWhenZipArrayWithConcatThen2DArrayReturned()
+        {
+            string[,] first = new string[,] { { "Hel", "wo" }, { "1", "2" } };
+            string[,] second = new string[,] { { "lo", "rld" }, { "3", "4" } };
+            string[,] zipped = first.ZipArray((s1, s2) => s1 + s2, second);
+
+            Assert.AreEqual(zipped, new string[,] { { "Hello", "world" }, { "13", "24" } });
+        }
+
+        [Test, Category("Unit")]
         public void GivenArraysRepresentingRowsOfLettersWhenZipMultiWithConcatThenSingleArrayOfColumnsIsReturned()
         {
             string[] row1 = new string[] { "H", "w" };

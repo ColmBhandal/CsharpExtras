@@ -10,6 +10,7 @@ namespace CsharpExtras.Enumerable.OneBased
 
         int GetLength(int dimZeroBased);
         IOneBasedArray2D<TResult> Map<TResult>(Func<TVal, TResult> mapper);
+        IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other);
     }
 
     class OneBasedArray2DImpl<TVal> : IOneBasedArray2D<TVal>
@@ -59,6 +60,12 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             TResult[,] mapped = ZeroBasedEquivalent.Map(mapper);
             return new OneBasedArray2DImpl<TResult>(mapped);
+        }
+
+        public IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other)
+        {
+            TResult[,] zipped = ZeroBasedEquivalent.ZipArray(zipper, other.ZeroBasedEquivalent);
+            return new OneBasedArray2DImpl<TResult>(zipped);
         }
     }
 }
