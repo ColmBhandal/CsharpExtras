@@ -11,6 +11,15 @@ namespace CsharpExtras.Dictionary
     {
         void Add(K key, U value);
         bool AnyValues();
+        /// <summary>
+        /// Generates a new multivalue map whose sets are the image of applying the transformer to this map's sets.
+        /// </summary>
+        /// <typeparam name="V">The return type of the transformer function.</typeparam>
+        /// <param name="transformer">A function which transforms each value to some other value.</param>
+        /// <returns>A new map, with the same keyset as this, whose values are sets resulting from applying the transformer
+        /// to all elements of the corresponding set in this map and then aggregating the mapped elements to a set.
+        /// Note: the sets in the resuling map may be smaller than those in the original map, if the transformer function maps many-to-one.</returns>
+        IMultiValueMap<K, V> TransformValues<V>(Func<U, V> transformer);
     }
 
     class MultiValueMapImpl<K, U> : IMultiValueMap<K, U>, IDictionary<K, ISet<U>>
@@ -34,6 +43,20 @@ namespace CsharpExtras.Dictionary
                 _setValuedMap.Add(key, new HashSet<U>());
             }
             _setValuedMap[key].Add(value);
+        }
+        public IMultiValueMap<K, V> TransformValues<V>(Func<U, V> transformer)
+        {
+            IMultiValueMap<K, V> transformedMap = new MultiValueMapImpl<K, V>();
+            foreach(K key in Keys)
+            {
+                ISet<U> thisSet = this[key];
+                IEnumerable<V> transformedValues = thisSet.Select(transformer);
+                foreach(V transformedValue in transformedValues)
+                {
+                    transformedMap.Add(key, transformedValue);
+                }
+            }
+            return transformedMap;
         }
 
         public void Add(K key, ISet<U> value)
