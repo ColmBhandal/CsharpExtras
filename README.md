@@ -2,6 +2,8 @@
 
 C# library for extra general purpose functionality not found in the standard libraries.
 
+![.NET Core](https://github.com/ColmBhandal/CsharpExtras/workflows/.NET%20Core/badge.svg)
+
 ## How to Use
 
 *See the included example project to see it in action*
