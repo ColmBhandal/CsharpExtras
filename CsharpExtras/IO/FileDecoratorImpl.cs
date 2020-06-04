@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsharpExtras.IO.FileNameCheck;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -7,6 +8,8 @@ namespace CsharpExtras.IO
     class FileDecoratorImpl : IFileDecorator
     {
         public IFileFacade FileFacade { get; }
+
+        public IFileNameChecker FileNameChecker { get; set; } = new SystemFileNameChecker();
 
         public FileDecoratorImpl(IFileFacade fileFacade)
         {
@@ -41,7 +44,7 @@ namespace CsharpExtras.IO
             {
                 return false;
             }
-            return !(fileName.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0);
+            return !FileNameChecker.DoesFileNameContainInvalidCharacters(fileName);
         }
     }
 }
