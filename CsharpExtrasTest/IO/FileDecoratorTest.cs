@@ -1,7 +1,11 @@
 ﻿using CsharpExtras.Api;
 using CsharpExtras.IO;
+using CsharpExtrasTest.IO.FileNameCheck;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace IO
 {
@@ -16,6 +20,7 @@ namespace IO
         {
             ICsharpExtrasApi api = new CsharpExtrasApi();
             IFileDecorator fileDecorator = api.NewFileDecorator();
+            fileDecorator.FileNameChecker = new MockWindowsSpecificFileNameChecker();
 
             Assert.AreEqual(expectedResult, fileDecorator.IsValidFileName(fileName), 
                 "Expected the file name check to match expected result");
