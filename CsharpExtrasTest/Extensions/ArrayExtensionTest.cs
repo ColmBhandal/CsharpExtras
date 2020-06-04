@@ -332,6 +332,15 @@ namespace CustomExtensions
             }
         }
 
+        [Test]
+        [Category("Unit")]
+        public void Given_MultidimensionalArray_When_CheckingForAnyMatch_Then_CorrectValueReturned()
+        {
+            string[,] data = new string[,] { { "a", "b" }, { "1", "2" } };
+            Assert.True(data.Any(value => value == "a"), "There should be a value 'a' in the input data");
+            Assert.False(data.Any(value => value == "A"), "There should not be a value 'A' in the input data");
+        }
+
         private string[] PopulateRandomStringArray(int length, int stringLength)
         {
             IRandomStringGenerator stringGen = new RandomStringGeneratorImpl();

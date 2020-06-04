@@ -261,5 +261,20 @@ namespace CsharpExtras.CustomExtensions
             }
             return resultArray;
         }
+
+        public static bool Any<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
+        {
+            for (int row = 0; row < array.GetLength(0); row++)
+            {
+                for (int column = 0; column < array.GetLength(1); column++)
+                {
+                    if (checkerFunction(array[row, column]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
