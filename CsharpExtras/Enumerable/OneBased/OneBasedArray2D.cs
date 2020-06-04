@@ -16,6 +16,8 @@ namespace CsharpExtras.Enumerable.OneBased
         /// If the two input arrays are of different sizes, the size of the output array is the intersection of the two input arrays.
         /// </summary>
         IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other);
+
+        bool Any(Func<TVal, bool> checkerFunction);
     }
 
     class OneBasedArray2DImpl<TVal> : IOneBasedArray2D<TVal>
@@ -71,6 +73,11 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             TResult[,] zipped = ZeroBasedEquivalent.ZipArray(zipper, other.ZeroBasedEquivalent);
             return new OneBasedArray2DImpl<TResult>(zipped);
+        }
+
+        public bool Any(Func<TVal, bool> checkerFunction)
+        {
+            return ZeroBasedEquivalent.Any(checkerFunction);
         }
     }
 }
