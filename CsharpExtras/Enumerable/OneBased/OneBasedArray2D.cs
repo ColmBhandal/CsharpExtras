@@ -88,14 +88,14 @@ namespace CsharpExtras.Enumerable.OneBased
             return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.SliceColumn(column - 1));
         }
 
-        public IOneBasedArray<TVal> CollapseToSingleColumn(Func<TVal, TVal, TVal> collapseFunction)
+        public IOneBasedArray<TVal> FoldToSingleColumn(Func<TVal, TVal, TVal> foldFunction)
         {
-            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.CollapseToSingleColumn(collapseFunction));
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.FoldToSingleColumn(foldFunction));
         }
 
-        public IOneBasedArray<TVal> CollapseToSingleRow(Func<TVal, TVal, TVal> collapseFunction)
+        public IOneBasedArray<TVal> FoldToSingleRow(Func<TVal, TVal, TVal> foldFunction)
         {
-            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.CollapseToSingleRow(collapseFunction));
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.FoldToSingleRow(foldFunction));
         }
     }
 }

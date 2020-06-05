@@ -35,17 +35,17 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray<TVal> SliceColumn(int column);
 
         /// <summary>
-        /// Use the provided function to collapse the 2D array into a single column.
-        /// For each row, the function will collapse the row data into a single value and put that value in the new array.
-        /// Returns an array with the collapsed values of all rows.
+        /// Use the provided function to fold the 2D array into a single column.
+        /// For each row, the function will fold the row data into a single value and put that value in the new array.
+        /// Returns an array with the folded values of all rows.
         /// </summary>
-        IOneBasedArray<TVal> CollapseToSingleColumn(Func<TVal, TVal, TVal> collapseFunction);
+        IOneBasedArray<TVal> FoldToSingleColumn(Func<TVal, TVal, TVal> foldFunction);
 
         /// <summary>
-        /// Use the provided function to collapse the 2D array into a single row.
-        /// For each column, the function will collapse the column data into a single value and put that value in the new array.
-        /// Returns an array with the collapsed values of all columns.
+        /// Use the provided function to fold the 2D array into a single row.
+        /// For each column, the function will fold the column data into a single value and put that value in the new array.
+        /// Returns an array with the folded values of all columns.
         /// </summary>
-        IOneBasedArray<TVal> CollapseToSingleRow(Func<TVal, TVal, TVal> collapseFunction);
+        IOneBasedArray<TVal> FoldToSingleRow(Func<TVal, TVal, TVal> foldFunction);
     }
 }

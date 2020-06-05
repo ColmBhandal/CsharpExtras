@@ -148,9 +148,9 @@ namespace CsharpExtras.Enumerable.OneBased
             return new OneBasedArray2DImpl<TVal>(ZeroBasedEquivalent.To2DArray(orientation));
         }
 
-        public TVal CollapseToSingleValue(Func<TVal, TVal, TVal> collapseFunction)
+        public TVal FoldToSingleValue(Func<TVal, TVal, TVal> foldFunction)
         {
-            return ZeroBasedEquivalent.CollapseToSingleValue(collapseFunction);
+            return ZeroBasedEquivalent.FoldToSingleValue(foldFunction);
         }
     }
 }

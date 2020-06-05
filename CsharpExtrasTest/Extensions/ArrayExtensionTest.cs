@@ -365,32 +365,32 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        [TestCaseSource("ProviderForCollapsingArrayToSingleValue")]
-        public void Given_Array_When_CollapsingToSingleValue_Then_CorrectValueReturned(
-            string[] data, Func<string, string, string> collapseFunction, string expectedResult)
+        [TestCaseSource("ProviderForFoldingArrayToSingleValue")]
+        public void Given_Array_When_FoldingToSingleValue_Then_CorrectValueReturned(
+            string[] data, Func<string, string, string> foldFunction, string expectedResult)
         {
-            string result = data.CollapseToSingleValue(collapseFunction);
-            Assert.AreEqual(expectedResult, result, "Collapsed value should equal expected value");
+            string result = data.FoldToSingleValue(foldFunction);
+            Assert.AreEqual(expectedResult, result, "Folded value should equal expected value");
         }
 
         [Test]
         [Category("Unit")]
-        [TestCaseSource("ProviderForCollapsingArrayToSingleRow")]
-        public void Given_MultiDimensionalArray_When_CollapsingToSingleRow_Then_CorrectValueReturned(
-            string[,] data, Func<string, string, string> collapseFunction, string[] expectedResult)
+        [TestCaseSource("ProviderForFoldingArrayToSingleRow")]
+        public void Given_MultiDimensionalArray_When_FoldingToSingleRow_Then_CorrectValueReturned(
+            string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
         {
-            string[] result = data.CollapseToSingleRow(collapseFunction);
-            Assert.AreEqual(expectedResult, result, "Collapsed row should equal expected value");
+            string[] result = data.FoldToSingleRow(foldFunction);
+            Assert.AreEqual(expectedResult, result, "Folded row should equal expected value");
         }
 
         [Test]
         [Category("Unit")]
-        [TestCaseSource("ProviderForCollapsingArrayToSingleColumn")]
-        public void Given_MultiDimensionalArray_When_CollapsingToSingleColumn_Then_CorrectValueReturned(
-            string[,] data, Func<string, string, string> collapseFunction, string[] expectedResult)
+        [TestCaseSource("ProviderForFoldingArrayToSingleColumn")]
+        public void Given_MultiDimensionalArray_When_FoldingToSingleColumn_Then_CorrectValueReturned(
+            string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
         {
-            string[] result = data.CollapseToSingleColumn(collapseFunction);
-            Assert.AreEqual(expectedResult, result, "Collapsed column should equal expected value");
+            string[] result = data.FoldToSingleColumn(foldFunction);
+            Assert.AreEqual(expectedResult, result, "Folded column should equal expected value");
         }
 
         private static IEnumerable<object[]> ProviderForCheckAnyMatch()
@@ -422,7 +422,7 @@ namespace CustomExtensions
             };
         }
 
-        private static IEnumerable<object[]> ProviderForCollapsingArrayToSingleValue()
+        private static IEnumerable<object[]> ProviderForFoldingArrayToSingleValue()
         {
             return new List<object[]> {
                 new object[] { new string[] { "a", "b" }, (Func<string, string, string>)((a, b) => a + b), "ab" },
@@ -431,7 +431,7 @@ namespace CustomExtensions
             };
         }
 
-        private static IEnumerable<object[]> ProviderForCollapsingArrayToSingleRow()
+        private static IEnumerable<object[]> ProviderForFoldingArrayToSingleRow()
         {
             return new List<object[]> {
                 new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a1", "b2" }, },
@@ -440,7 +440,7 @@ namespace CustomExtensions
             };
         }
 
-        private static IEnumerable<object[]> ProviderForCollapsingArrayToSingleColumn()
+        private static IEnumerable<object[]> ProviderForFoldingArrayToSingleColumn()
         {
             return new List<object[]> {
                 new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "ab", "12" }, },

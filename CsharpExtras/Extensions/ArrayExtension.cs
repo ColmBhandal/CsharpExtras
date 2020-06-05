@@ -303,48 +303,48 @@ namespace CsharpExtras.CustomExtensions
             return count;
         }
 
-        public static TVal CollapseToSingleValue<TVal>(this TVal[] array, Func<TVal, TVal, TVal> collapseFunction)
+        public static TVal FoldToSingleValue<TVal>(this TVal[] array, Func<TVal, TVal, TVal> foldFunction)
         {
             if (array.Length == 0)
             {
-                throw new ArgumentOutOfRangeException("Cannot collapse an empty array");
+                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
             }
             TVal result = array[0];
             for (int index = 1; index < array.Length; index++)
             {
-                result = collapseFunction(result, array[index]);
+                result = foldFunction(result, array[index]);
             }
             return result;
         }
 
-        public static TVal[] CollapseToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> collapseFunction)
+        public static TVal[] FoldToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
         {
             if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
             {
-                throw new ArgumentOutOfRangeException("Cannot collapse an empty array");
+                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
             }
 
             TVal[] output = new TVal[array.GetLength(0)];
             for (int row = 0; row < array.GetLength(0); row++)
             {
                 TVal[] rowData = array.SliceRow(row);
-                output[row] = rowData.CollapseToSingleValue(collapseFunction);
+                output[row] = rowData.FoldToSingleValue(foldFunction);
             }
             return output;
         }
 
-        public static TVal[] CollapseToSingleRow<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> collapseFunction)
+        public static TVal[] FoldToSingleRow<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
         {
             if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
             {
-                throw new ArgumentOutOfRangeException("Cannot collapse an empty array");
+                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
             }
 
             TVal[] output = new TVal[array.GetLength(1)];
             for (int column = 0; column < array.GetLength(1); column++)
             {
                 TVal[] columnData = array.SliceColumn(column);
-                output[column] = columnData.CollapseToSingleValue(collapseFunction);
+                output[column] = columnData.FoldToSingleValue(foldFunction);
             }
             return output;
         }
