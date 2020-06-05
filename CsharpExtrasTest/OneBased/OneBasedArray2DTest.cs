@@ -54,6 +54,28 @@ namespace OneBased
             Assert.Throws<IndexOutOfRangeException>(() => { _ = arrOneBased[2, 5]; });
         }
 
+        [Test]
+        public void Given_2DArray_When_SlicedIntoRows_Then_AllRowsHaveCorrectLength()
+        {
+            IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
+            for (int row = 1; row <= array.GetLength(0); row++)
+            {
+                IOneBasedArray<string> rowSlice = array.SliceRow(row);
+                Assert.AreEqual(2, rowSlice.Length, "Sliced row should have correct length");
+            }
+        }
+
+        [Test]
+        public void Given_2DArray_When_SlicedIntoColumns_Then_AllColumnsHaveCorrectLength()
+        {
+            IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
+            for (int col = 1; col <= array.GetLength(1); col++)
+            {
+                IOneBasedArray<string> colSlice = array.SliceColumn(col);
+                Assert.AreEqual(3, colSlice.Length, "Sliced column should have correct length");
+            }
+        }
+
         private IOneBasedArray2D<string> GenTestData()
         {
             string[,] testData = new string[,] {
