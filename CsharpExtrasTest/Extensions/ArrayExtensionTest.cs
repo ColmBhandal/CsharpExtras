@@ -2,6 +2,7 @@
 using CsharpExtras.Dictionary;
 using CsharpExtras.RandomDataGen;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -334,11 +335,41 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
-        public void Given_MultidimensionalArray_When_CheckingForAnyMatch_Then_CorrectValueReturned()
+        [TestCaseSource("ProviderForCheckAnyMatch")]
+        public void Given_MultidimensionalArray_When_CheckingThatAnyMatch_Then_CorrectValueReturned(
+            string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
         {
-            string[,] data = new string[,] { { "a", "b" }, { "1", "2" } };
-            Assert.True(data.Any(value => value == "a"), "There should be a value 'a' in the input data");
-            Assert.False(data.Any(value => value == "A"), "There should not be a value 'A' in the input data");
+            bool result = data.Any(checkerFunction);
+            Assert.AreEqual(expectedResult, result, "Check for any should return the correct result");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCheckAllMatch")]
+        public void Given_MultidimensionalArray_When_CheckingThatAllMatch_Then_CorrectValueReturned(
+            string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
+        {
+            bool result = data.All(checkerFunction);
+            Assert.AreEqual(expectedResult, result, "Check that all match should return the correct result");
+        }
+
+        private static IEnumerable<object[]> ProviderForCheckAnyMatch()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "a"), true },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "A"), false },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str .Length > 1), false }
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForCheckAllMatch()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "a"), false },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "A"), false },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str .Length == 1), true },
+                new object[] { new string[,] { { "a", "b" }, { "12", "2" } }, (Func<string, bool>)(str => str .Length == 1), false }
+            };
         }
 
         private string[] PopulateRandomStringArray(int length, int stringLength)
@@ -352,6 +383,7 @@ namespace CustomExtensions
             }
             return arr;
         }
+
 
         private IDictionary<string, IList<int>> FindDuplicates(string[] array)
         {

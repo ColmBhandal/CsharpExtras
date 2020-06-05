@@ -276,5 +276,11 @@ namespace CsharpExtras.CustomExtensions
             }
             return false;
         }
+
+        public static bool All<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
+        {
+            Func<TVal, bool> inverseChecker = (value) => !checkerFunction(value);
+            return !array.Any(inverseChecker);
+        }
     }
 }

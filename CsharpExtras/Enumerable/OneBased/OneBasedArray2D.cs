@@ -18,6 +18,8 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other);
 
         bool Any(Func<TVal, bool> checkerFunction);
+
+        bool All(Func<TVal, bool> checkerFunction);
     }
 
     class OneBasedArray2DImpl<TVal> : IOneBasedArray2D<TVal>
@@ -78,6 +80,11 @@ namespace CsharpExtras.Enumerable.OneBased
         public bool Any(Func<TVal, bool> checkerFunction)
         {
             return ZeroBasedEquivalent.Any(checkerFunction);
+        }
+
+        public bool All(Func<TVal, bool> checkerFunction)
+        {
+            return ZeroBasedEquivalent.All(checkerFunction);
         }
     }
 }
