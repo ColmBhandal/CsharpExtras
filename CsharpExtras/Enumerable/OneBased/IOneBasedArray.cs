@@ -37,6 +37,11 @@ namespace CsharpExtras.Enumerable.OneBased
         (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set);
         (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex);
 
+        /// <summary>
+        /// Use the provided function to collapse an array of values into a single value.
+        /// The function is called with the first two elements of the array, then with the output of the previous call and the next cell.
+        /// The entire array is processed in this way and the final value is returned.
+        /// </summary>
         TVal CollapseToSingleValue(Func<TVal, TVal, TVal> collapseFunction);
     }
 }

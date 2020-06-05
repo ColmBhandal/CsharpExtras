@@ -327,12 +327,8 @@ namespace CsharpExtras.CustomExtensions
             TVal[] output = new TVal[array.GetLength(0)];
             for (int row = 0; row < array.GetLength(0); row++)
             {
-                TVal collapsedValue = array[row, 0];
-                for (int col = 1; col < array.GetLength(1); col++)
-                {
-                    collapsedValue = collapseFunction(collapsedValue, array[row, col]);
-                }
-                output[row] = collapsedValue;
+                TVal[] rowData = array.SliceRow(row);
+                output[row] = rowData.CollapseToSingleValue(collapseFunction);
             }
             return output;
         }
@@ -345,14 +341,10 @@ namespace CsharpExtras.CustomExtensions
             }
 
             TVal[] output = new TVal[array.GetLength(1)];
-            for (int col = 0; col < array.GetLength(1); col++)
+            for (int column = 0; column < array.GetLength(1); column++)
             {
-                TVal collapsedValue = array[0, col];
-                for (int row = 1; row < array.GetLength(0); row++)
-                {
-                    collapsedValue = collapseFunction(collapsedValue, array[row, col]);
-                }
-                output[col] = collapsedValue;
+                TVal[] columnData = array.SliceColumn(column);
+                output[column] = columnData.CollapseToSingleValue(collapseFunction);
             }
             return output;
         }

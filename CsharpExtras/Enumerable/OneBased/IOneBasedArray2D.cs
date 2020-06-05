@@ -24,12 +24,28 @@ namespace CsharpExtras.Enumerable.OneBased
 
         int Count(Func<TVal, bool> checkerFunction);
 
+        /// <summary>
+        /// Slice the 2D array into a single row.
+        /// </summary>
         IOneBasedArray<TVal> SliceRow(int row);
 
+        /// <summary>
+        /// Slice the 2D array into a single column.
+        /// </summary>
         IOneBasedArray<TVal> SliceColumn(int column);
 
+        /// <summary>
+        /// Use the provided function to collapse the 2D array into a single column.
+        /// For each row, the function will collapse the row data into a single value and put that value in the new array.
+        /// Returns an array with the collapsed values of all rows.
+        /// </summary>
         IOneBasedArray<TVal> CollapseToSingleColumn(Func<TVal, TVal, TVal> collapseFunction);
 
+        /// <summary>
+        /// Use the provided function to collapse the 2D array into a single row.
+        /// For each column, the function will collapse the column data into a single value and put that value in the new array.
+        /// Returns an array with the collapsed values of all columns.
+        /// </summary>
         IOneBasedArray<TVal> CollapseToSingleRow(Func<TVal, TVal, TVal> collapseFunction);
     }
 }
