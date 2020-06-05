@@ -77,5 +77,15 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             return ZeroBasedEquivalent.Count(checkerFunction);
         }
+
+        public IOneBasedArray<TVal> SliceRow(int row)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.SliceRow(row));
+        }
+
+        public IOneBasedArray<TVal> SliceColumn(int column)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.SliceColumn(column));
+        }
     }
 }

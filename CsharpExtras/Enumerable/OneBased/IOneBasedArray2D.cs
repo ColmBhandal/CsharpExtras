@@ -23,5 +23,9 @@ namespace CsharpExtras.Enumerable.OneBased
         int Count();
 
         int Count(Func<TVal, bool> checkerFunction);
+
+        IOneBasedArray<TVal> SliceRow(int row);
+
+        IOneBasedArray<TVal> SliceColumn(int column);
     }
 }
