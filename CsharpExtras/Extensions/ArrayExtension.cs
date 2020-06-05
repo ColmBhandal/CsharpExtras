@@ -282,5 +282,26 @@ namespace CsharpExtras.CustomExtensions
             Func<TVal, bool> inverseChecker = (value) => !checkerFunction(value);
             return !array.Any(inverseChecker);
         }
+
+        public static int Count<TVal>(this TVal[,] array)
+        {
+            return array.GetLength(0) * array.GetLength(1);
+        }
+
+        public static int Count<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
+        {
+            int count = 0;
+            for (int row = 0; row < array.GetLength(0); row++)
+            {
+                for (int column = 0; column < array.GetLength(1); column++)
+                {
+                    if (checkerFunction(array[row, column]))
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
     }
 }

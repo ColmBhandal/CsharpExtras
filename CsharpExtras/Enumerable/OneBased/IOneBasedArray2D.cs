@@ -19,5 +19,9 @@ namespace CsharpExtras.Enumerable.OneBased
         bool Any(Func<TVal, bool> checkerFunction);
 
         bool All(Func<TVal, bool> checkerFunction);
+
+        int Count();
+
+        int Count(Func<TVal, bool> checkerFunction);
     }
 }

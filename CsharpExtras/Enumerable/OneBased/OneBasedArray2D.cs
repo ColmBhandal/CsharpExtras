@@ -67,5 +67,15 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             return ZeroBasedEquivalent.All(checkerFunction);
         }
+
+        public int Count()
+        {
+            return ZeroBasedEquivalent.Count();
+        }
+
+        public int Count(Func<TVal, bool> checkerFunction)
+        {
+            return ZeroBasedEquivalent.Count(checkerFunction);
+        }
     }
 }

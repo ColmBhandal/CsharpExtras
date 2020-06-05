@@ -353,6 +353,16 @@ namespace CustomExtensions
             Assert.AreEqual(expectedResult, result, "Check that all match should return the correct result");
         }
 
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCountMatches")]
+        public void Given_MultidimensionalArray_When_CountingMatches_Then_CorrectValueReturned(
+            string[,] data, Func<string, bool> checkerFunction, int expectedResult)
+        {
+            int result = data.Count(checkerFunction);
+            Assert.AreEqual(expectedResult, result, "Counting matches should return the correct result");
+        }
+
         private static IEnumerable<object[]> ProviderForCheckAnyMatch()
         {
             return new List<object[]> {
@@ -369,6 +379,16 @@ namespace CustomExtensions
                 new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "A"), false },
                 new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str .Length == 1), true },
                 new object[] { new string[,] { { "a", "b" }, { "12", "2" } }, (Func<string, bool>)(str => str .Length == 1), false }
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForCountMatches()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "a"), 1 },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "C"), 0 },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str .Length == 1), 4 },
+                new object[] { new string[,] { { "a", "b" }, { "12", "2" } }, (Func<string, bool>)(str => str .Length == 1), 3 }
             };
         }
 
