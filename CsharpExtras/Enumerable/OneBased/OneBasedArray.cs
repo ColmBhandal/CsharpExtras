@@ -142,5 +142,10 @@ namespace CsharpExtras.Enumerable.OneBased
             IDictionary<TVal, IList<int>> reversedZeroBased = ZeroBasedEquivalent.Inverse();
             return reversedZeroBased.MapValues(list => list.Map(i => i + 1));
         }
+
+        public IOneBasedArray2D<TVal> To2DArray(ArrayExtension.ArrayOrientation orientation)
+        {
+            return new OneBasedArray2DImpl<TVal>(ZeroBasedEquivalent.To2DArray(orientation));
+        }
     }
 }

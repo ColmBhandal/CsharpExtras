@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.Dictionary;
 using System;
 using System.Collections.Generic;
+using static CsharpExtras.CustomExtensions.ArrayExtension;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
@@ -13,6 +14,9 @@ namespace CsharpExtras.Enumerable.OneBased
         int OneBasedFirstIndexOf(Func<TVal, bool> matchFunction);
         void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor);
         void Resize(int newSize);
+
+        IOneBasedArray2D<TVal> To2DArray(ArrayOrientation orientation);
+
         IDictionary<TVal, IList<int>> FindDuplicateIndices();
         IOneBasedArray<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray<TOther> other);
         IOneBasedArray<TResult> Map<TResult>(Func<TVal, TResult> mapper);

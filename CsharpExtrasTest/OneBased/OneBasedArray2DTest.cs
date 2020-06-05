@@ -2,6 +2,7 @@
 using CsharpExtras.Enumerable.OneBased;
 using NUnit.Framework;
 using System;
+using static CsharpExtras.CustomExtensions.ArrayExtension;
 
 namespace OneBased
 {
@@ -74,6 +75,26 @@ namespace OneBased
                 IOneBasedArray<string> colSlice = array.SliceColumn(col);
                 Assert.AreEqual(3, colSlice.Length, "Sliced column should have correct length");
             }
+        }
+
+        [Test]
+        public void Given_1dArray_When_ConvertedTo2dArrayAcrossColumns_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
+        {
+            IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
+            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.COLUMN);
+
+            Assert.AreEqual(1, twoDimArray.GetLength(0), "New 2D array should have 1 row");
+            Assert.AreEqual(4, twoDimArray.GetLength(1), "New 2D array should have 4 columns");
+        }
+
+        [Test]
+        public void Given_1dArray_When_ConvertedTo2dArrayAcrossRows_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
+        {
+            IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
+            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.ROW);
+
+            Assert.AreEqual(4, twoDimArray.GetLength(0), "New 2D array should have 4 rows");
+            Assert.AreEqual(1, twoDimArray.GetLength(1), "New 2D array should have 1 column");
         }
 
         private IOneBasedArray2D<string> GenTestData()
