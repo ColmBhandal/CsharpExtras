@@ -2,6 +2,7 @@
 using CsharpExtras.Dictionary;
 using CsharpExtras.RandomDataGen;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -330,6 +331,122 @@ namespace CustomExtensions
                 IDictionary<string, IList<int>> duplicates = FindDuplicates(arr);
                 Assert.NotNull(duplicates, "Find duplicates should not return null");
             }
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCheckAnyMatch")]
+        public void Given_MultidimensionalArray_When_CheckingThatAnyMatch_Then_CorrectValueReturned(
+            string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
+        {
+            bool result = data.Any(checkerFunction);
+            Assert.AreEqual(expectedResult, result, "Check for any should return the correct result");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCheckAllMatch")]
+        public void Given_MultidimensionalArray_When_CheckingThatAllMatch_Then_CorrectValueReturned(
+            string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
+        {
+            bool result = data.All(checkerFunction);
+            Assert.AreEqual(expectedResult, result, "Check that all match should return the correct result");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCountMatches")]
+        public void Given_MultidimensionalArray_When_CountingMatches_Then_CorrectValueReturned(
+            string[,] data, Func<string, bool> checkerFunction, int expectedResult)
+        {
+            int result = data.Count(checkerFunction);
+            Assert.AreEqual(expectedResult, result, "Counting matches should return the correct result");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForFoldingArrayToSingleValue")]
+        public void Given_Array_When_FoldingToSingleValue_Then_CorrectValueReturned(
+            string[] data, Func<string, string, string> foldFunction, string expectedResult)
+        {
+            string result = data.FoldToSingleValue(foldFunction);
+            Assert.AreEqual(expectedResult, result, "Folded value should equal expected value");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForFoldingArrayToSingleRow")]
+        public void Given_MultiDimensionalArray_When_FoldingToSingleRow_Then_CorrectValueReturned(
+            string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
+        {
+            string[] result = data.FoldToSingleRow(foldFunction);
+            Assert.AreEqual(expectedResult, result, "Folded row should equal expected value");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForFoldingArrayToSingleColumn")]
+        public void Given_MultiDimensionalArray_When_FoldingToSingleColumn_Then_CorrectValueReturned(
+            string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
+        {
+            string[] result = data.FoldToSingleColumn(foldFunction);
+            Assert.AreEqual(expectedResult, result, "Folded column should equal expected value");
+        }
+
+        private static IEnumerable<object[]> ProviderForCheckAnyMatch()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "a"), true },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "A"), false },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str .Length > 1), false }
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForCheckAllMatch()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "a"), false },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "A"), false },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str .Length == 1), true },
+                new object[] { new string[,] { { "a", "b" }, { "12", "2" } }, (Func<string, bool>)(str => str .Length == 1), false }
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForCountMatches()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "a"), 1 },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str == "C"), 0 },
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, bool>)(str => str .Length == 1), 4 },
+                new object[] { new string[,] { { "a", "b" }, { "12", "2" } }, (Func<string, bool>)(str => str .Length == 1), 3 }
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForFoldingArrayToSingleValue()
+        {
+            return new List<object[]> {
+                new object[] { new string[] { "a", "b" }, (Func<string, string, string>)((a, b) => a + b), "ab" },
+                new object[] { new string[] { "a", "b", "c" }, (Func<string, string, string>)((a, b) => a + b), "abc" },
+                new object[] { new string[] { "a" }, (Func<string, string, string>)((a, b) => a + b), "a" },
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForFoldingArrayToSingleRow()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a1", "b2" }, },
+                new object[] { new string[,] { { "a", "b", "c" }, { "1", "2", "3" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a1", "b2", "c3" }, },
+                new object[] { new string[,] { { "a" }, { "1"} }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a1" }, },
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForFoldingArrayToSingleColumn()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "ab", "12" }, },
+                new object[] { new string[,] { { "a", "b", "c" }, { "1", "2", "3" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "abc", "123" }, },
+                new object[] { new string[,] { { "a" }, { "1"} }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a", "1" }, },
+            };
         }
 
         private string[] PopulateRandomStringArray(int length, int stringLength)

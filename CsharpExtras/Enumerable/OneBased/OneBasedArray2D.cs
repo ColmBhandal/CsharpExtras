@@ -3,21 +3,6 @@ using System;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
-    public interface IOneBasedArray2D<TVal>
-    {
-        TVal this[int oneBasedIndex0, int oneBasedIndex1] { get; set; }
-        TVal[,] ZeroBasedEquivalent { get; }
-
-        int GetLength(int dimZeroBased);
-        IOneBasedArray2D<TResult> Map<TResult>(Func<TVal, TResult> mapper);
-
-        /// <summary>
-        /// Zip two 2D arrays into a single 2D array using a custom zipper function.
-        /// If the two input arrays are of different sizes, the size of the output array is the intersection of the two input arrays.
-        /// </summary>
-        IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other);
-    }
-
     class OneBasedArray2DImpl<TVal> : IOneBasedArray2D<TVal>
     {
         public TVal[,] ZeroBasedEquivalent { get; }
@@ -71,6 +56,46 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             TResult[,] zipped = ZeroBasedEquivalent.ZipArray(zipper, other.ZeroBasedEquivalent);
             return new OneBasedArray2DImpl<TResult>(zipped);
+        }
+
+        public bool Any(Func<TVal, bool> checkerFunction)
+        {
+            return ZeroBasedEquivalent.Any(checkerFunction);
+        }
+
+        public bool All(Func<TVal, bool> checkerFunction)
+        {
+            return ZeroBasedEquivalent.All(checkerFunction);
+        }
+
+        public int Count()
+        {
+            return ZeroBasedEquivalent.Count();
+        }
+
+        public int Count(Func<TVal, bool> checkerFunction)
+        {
+            return ZeroBasedEquivalent.Count(checkerFunction);
+        }
+
+        public IOneBasedArray<TVal> SliceRow(int row)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.SliceRow(row - 1));
+        }
+
+        public IOneBasedArray<TVal> SliceColumn(int column)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.SliceColumn(column - 1));
+        }
+
+        public IOneBasedArray<TVal> FoldToSingleColumn(Func<TVal, TVal, TVal> foldFunction)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.FoldToSingleColumn(foldFunction));
+        }
+
+        public IOneBasedArray<TVal> FoldToSingleRow(Func<TVal, TVal, TVal> foldFunction)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.FoldToSingleRow(foldFunction));
         }
     }
 }

@@ -202,7 +202,6 @@ namespace CsharpExtras.CustomExtensions
             return resultArrayZeroBased;
         }
 
-
         public static TResult[] ZipArray<TVal, TOther1, TOther2, TResult>(this TVal[] array, Func<TVal, TOther1, TOther2, TResult> zipper, TOther1[] other1, TOther2[] other2)
         {
             int zipLength = Math.Min(Math.Min(array.Length, other1.Length), other2.Length);
@@ -260,6 +259,94 @@ namespace CsharpExtras.CustomExtensions
                 resultArray[i] = mapper(array[i]);
             }
             return resultArray;
+        }
+
+        public static bool Any<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
+        {
+            for (int row = 0; row < array.GetLength(0); row++)
+            {
+                for (int column = 0; column < array.GetLength(1); column++)
+                {
+                    if (checkerFunction(array[row, column]))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static bool All<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
+        {
+            Func<TVal, bool> inverseChecker = (value) => !checkerFunction(value);
+            return !array.Any(inverseChecker);
+        }
+
+        public static int Count<TVal>(this TVal[,] array)
+        {
+            return array.GetLength(0) * array.GetLength(1);
+        }
+
+        public static int Count<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
+        {
+            int count = 0;
+            for (int row = 0; row < array.GetLength(0); row++)
+            {
+                for (int column = 0; column < array.GetLength(1); column++)
+                {
+                    if (checkerFunction(array[row, column]))
+                    {
+                        count++;
+                    }
+                }
+            }
+            return count;
+        }
+
+        public static TVal FoldToSingleValue<TVal>(this TVal[] array, Func<TVal, TVal, TVal> foldFunction)
+        {
+            if (array.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
+            }
+            TVal result = array[0];
+            for (int index = 1; index < array.Length; index++)
+            {
+                result = foldFunction(result, array[index]);
+            }
+            return result;
+        }
+
+        public static TVal[] FoldToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
+        {
+            if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
+            }
+
+            TVal[] output = new TVal[array.GetLength(0)];
+            for (int row = 0; row < array.GetLength(0); row++)
+            {
+                TVal[] rowData = array.SliceRow(row);
+                output[row] = rowData.FoldToSingleValue(foldFunction);
+            }
+            return output;
+        }
+
+        public static TVal[] FoldToSingleRow<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
+        {
+            if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
+            }
+
+            TVal[] output = new TVal[array.GetLength(1)];
+            for (int column = 0; column < array.GetLength(1); column++)
+            {
+                TVal[] columnData = array.SliceColumn(column);
+                output[column] = columnData.FoldToSingleValue(foldFunction);
+            }
+            return output;
         }
     }
 }

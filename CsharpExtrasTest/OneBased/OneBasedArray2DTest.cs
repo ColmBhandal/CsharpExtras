@@ -2,6 +2,7 @@
 using CsharpExtras.Enumerable.OneBased;
 using NUnit.Framework;
 using System;
+using static CsharpExtras.CustomExtensions.ArrayExtension;
 
 namespace OneBased
 {
@@ -52,6 +53,48 @@ namespace OneBased
         {
             IOneBasedArray2D<string> arrOneBased = GenTestData();
             Assert.Throws<IndexOutOfRangeException>(() => { _ = arrOneBased[2, 5]; });
+        }
+
+        [Test]
+        public void Given_2DArray_When_SlicedIntoRows_Then_AllRowsHaveCorrectLength()
+        {
+            IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
+            for (int row = 1; row <= array.GetLength(0); row++)
+            {
+                IOneBasedArray<string> rowSlice = array.SliceRow(row);
+                Assert.AreEqual(2, rowSlice.Length, "Sliced row should have correct length");
+            }
+        }
+
+        [Test]
+        public void Given_2DArray_When_SlicedIntoColumns_Then_AllColumnsHaveCorrectLength()
+        {
+            IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
+            for (int col = 1; col <= array.GetLength(1); col++)
+            {
+                IOneBasedArray<string> colSlice = array.SliceColumn(col);
+                Assert.AreEqual(3, colSlice.Length, "Sliced column should have correct length");
+            }
+        }
+
+        [Test]
+        public void Given_1dArray_When_ConvertedTo2dArrayAcrossColumns_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
+        {
+            IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
+            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.COLUMN);
+
+            Assert.AreEqual(1, twoDimArray.GetLength(0), "New 2D array should have 1 row");
+            Assert.AreEqual(4, twoDimArray.GetLength(1), "New 2D array should have 4 columns");
+        }
+
+        [Test]
+        public void Given_1dArray_When_ConvertedTo2dArrayAcrossRows_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
+        {
+            IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
+            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.ROW);
+
+            Assert.AreEqual(4, twoDimArray.GetLength(0), "New 2D array should have 4 rows");
+            Assert.AreEqual(1, twoDimArray.GetLength(1), "New 2D array should have 1 column");
         }
 
         private IOneBasedArray2D<string> GenTestData()
