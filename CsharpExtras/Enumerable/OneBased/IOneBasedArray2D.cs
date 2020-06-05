@@ -27,5 +27,9 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray<TVal> SliceRow(int row);
 
         IOneBasedArray<TVal> SliceColumn(int column);
+
+        IOneBasedArray<TVal> CollapseToSingleColumn(Func<TVal, TVal, TVal> collapseFunction);
+
+        IOneBasedArray<TVal> CollapseToSingleRow(Func<TVal, TVal, TVal> collapseFunction);
     }
 }

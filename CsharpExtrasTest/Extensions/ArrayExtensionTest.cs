@@ -363,6 +363,36 @@ namespace CustomExtensions
             Assert.AreEqual(expectedResult, result, "Counting matches should return the correct result");
         }
 
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCollapsingArrayToSingleValue")]
+        public void Given_Array_When_CollapsingToSingleValue_Then_CorrectValueReturned(
+            string[] data, Func<string, string, string> collapseFunction, string expectedResult)
+        {
+            string result = data.CollapseToSingleValue(collapseFunction);
+            Assert.AreEqual(expectedResult, result, "Collapsed value should equal expected value");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCollapsingArrayToSingleRow")]
+        public void Given_MultiDimensionalArray_When_CollapsingToSingleRow_Then_CorrectValueReturned(
+            string[,] data, Func<string, string, string> collapseFunction, string[] expectedResult)
+        {
+            string[] result = data.CollapseToSingleRow(collapseFunction);
+            Assert.AreEqual(expectedResult, result, "Collapsed row should equal expected value");
+        }
+
+        [Test]
+        [Category("Unit")]
+        [TestCaseSource("ProviderForCollapsingArrayToSingleColumn")]
+        public void Given_MultiDimensionalArray_When_CollapsingToSingleColumn_Then_CorrectValueReturned(
+            string[,] data, Func<string, string, string> collapseFunction, string[] expectedResult)
+        {
+            string[] result = data.CollapseToSingleColumn(collapseFunction);
+            Assert.AreEqual(expectedResult, result, "Collapsed column should equal expected value");
+        }
+
         private static IEnumerable<object[]> ProviderForCheckAnyMatch()
         {
             return new List<object[]> {
@@ -392,6 +422,33 @@ namespace CustomExtensions
             };
         }
 
+        private static IEnumerable<object[]> ProviderForCollapsingArrayToSingleValue()
+        {
+            return new List<object[]> {
+                new object[] { new string[] { "a", "b" }, (Func<string, string, string>)((a, b) => a + b), "ab" },
+                new object[] { new string[] { "a", "b", "c" }, (Func<string, string, string>)((a, b) => a + b), "abc" },
+                new object[] { new string[] { "a" }, (Func<string, string, string>)((a, b) => a + b), "a" },
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForCollapsingArrayToSingleRow()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a1", "b2" }, },
+                new object[] { new string[,] { { "a", "b", "c" }, { "1", "2", "3" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a1", "b2", "c3" }, },
+                new object[] { new string[,] { { "a" }, { "1"} }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a1" }, },
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForCollapsingArrayToSingleColumn()
+        {
+            return new List<object[]> {
+                new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "ab", "12" }, },
+                new object[] { new string[,] { { "a", "b", "c" }, { "1", "2", "3" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "abc", "123" }, },
+                new object[] { new string[,] { { "a" }, { "1"} }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a", "1" }, },
+            };
+        }
+
         private string[] PopulateRandomStringArray(int length, int stringLength)
         {
             IRandomStringGenerator stringGen = new RandomStringGeneratorImpl();
@@ -403,7 +460,6 @@ namespace CustomExtensions
             }
             return arr;
         }
-
 
         private IDictionary<string, IList<int>> FindDuplicates(string[] array)
         {

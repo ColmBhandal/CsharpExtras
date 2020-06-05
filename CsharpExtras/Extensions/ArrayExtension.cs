@@ -202,7 +202,6 @@ namespace CsharpExtras.CustomExtensions
             return resultArrayZeroBased;
         }
 
-
         public static TResult[] ZipArray<TVal, TOther1, TOther2, TResult>(this TVal[] array, Func<TVal, TOther1, TOther2, TResult> zipper, TOther1[] other1, TOther2[] other2)
         {
             int zipLength = Math.Min(Math.Min(array.Length, other1.Length), other2.Length);
@@ -302,6 +301,60 @@ namespace CsharpExtras.CustomExtensions
                 }
             }
             return count;
+        }
+
+        public static TVal CollapseToSingleValue<TVal>(this TVal[] array, Func<TVal, TVal, TVal> collapseFunction)
+        {
+            if (array.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot collapse an empty array");
+            }
+            TVal result = array[0];
+            for (int index = 1; index < array.Length; index++)
+            {
+                result = collapseFunction(result, array[index]);
+            }
+            return result;
+        }
+
+        public static TVal[] CollapseToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> collapseFunction)
+        {
+            if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot collapse an empty array");
+            }
+
+            TVal[] output = new TVal[array.GetLength(0)];
+            for (int row = 0; row < array.GetLength(0); row++)
+            {
+                TVal collapsedValue = array[row, 0];
+                for (int col = 1; col < array.GetLength(1); col++)
+                {
+                    collapsedValue = collapseFunction(collapsedValue, array[row, col]);
+                }
+                output[row] = collapsedValue;
+            }
+            return output;
+        }
+
+        public static TVal[] CollapseToSingleRow<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> collapseFunction)
+        {
+            if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
+            {
+                throw new ArgumentOutOfRangeException("Cannot collapse an empty array");
+            }
+
+            TVal[] output = new TVal[array.GetLength(1)];
+            for (int col = 0; col < array.GetLength(1); col++)
+            {
+                TVal collapsedValue = array[0, col];
+                for (int row = 1; row < array.GetLength(0); row++)
+                {
+                    collapsedValue = collapseFunction(collapsedValue, array[row, col]);
+                }
+                output[col] = collapsedValue;
+            }
+            return output;
         }
     }
 }

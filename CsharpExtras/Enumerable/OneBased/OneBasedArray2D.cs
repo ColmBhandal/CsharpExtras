@@ -87,5 +87,15 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.SliceColumn(column - 1));
         }
+
+        public IOneBasedArray<TVal> CollapseToSingleColumn(Func<TVal, TVal, TVal> collapseFunction)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.CollapseToSingleColumn(collapseFunction));
+        }
+
+        public IOneBasedArray<TVal> CollapseToSingleRow(Func<TVal, TVal, TVal> collapseFunction)
+        {
+            return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.CollapseToSingleRow(collapseFunction));
+        }
     }
 }

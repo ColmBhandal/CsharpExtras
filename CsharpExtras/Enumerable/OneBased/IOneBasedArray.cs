@@ -36,5 +36,7 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray<TVal> ZipMulti<TOther>(Func<TVal, TOther, TVal> zipper, IOneBasedArray<TOther> other, params IOneBasedArray<TOther>[] extras);
         (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set);
         (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex);
+
+        TVal CollapseToSingleValue(Func<TVal, TVal, TVal> collapseFunction);
     }
 }
