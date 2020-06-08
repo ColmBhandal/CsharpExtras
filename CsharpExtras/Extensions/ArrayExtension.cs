@@ -2,14 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static CsharpExtras.Extensions.ArrayOrientationClass;
 
-namespace CsharpExtras.CustomExtensions
+namespace CsharpExtras.Extensions
 {
     public static class ArrayExtension
     {
-        public enum ArrayOrientation { ROW, COLUMN }
-
-
         //Non-mvp: Test this
         /// <returns>A pair indicating the first element found and its index, or (-1, default) if nothing found.</returns>
         public static (int index, T element) FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set)
@@ -56,18 +54,6 @@ namespace CsharpExtras.CustomExtensions
             return data.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
         }
 
-        public static T[] SliceRow<T>(this T[,] array, int row)
-        {
-            IEnumerable<T> enumSlice = array.SliceRowToEnum(row);
-            return enumSlice.ToArray();
-        }
-        
-        public static T[] SliceColumn<T>(this T[,] array, int column)
-        {
-            IEnumerable<T> enumSlice = array.SliceColumnToEnum(column);
-            return enumSlice.ToArray();
-        }
-
         public static T[,] To2DArray<T>(this T[] array, ArrayOrientation orientation)
         {
             T[,] outputArray;
@@ -92,19 +78,6 @@ namespace CsharpExtras.CustomExtensions
                 }
             }
             return outputArray;
-        }
-
-        public static T[,] Transpose<T>(this T[,] array)
-        {
-            T[,] transposed = new T[array.GetLength(1), array.GetLength(0)];
-            for (int i = 0; i < array.GetLength(0); i++)
-            {
-                for (int j = 0; j < array.GetLength(1); j++)
-                {
-                    transposed[j, i] = array[i, j];
-                }
-            }
-            return transposed;
         }
 
         //TODO: Test
@@ -182,26 +155,6 @@ namespace CsharpExtras.CustomExtensions
             return resultArrayZeroBased;
         }
 
-        /// <summary>
-        /// Zip two 2D arrays into a single 2D array using a custom zipper function.
-        /// If the two input arrays are of different sizes, the size of the output array is the intersection of the two input arrays.
-        /// </summary>
-        public static TResult[,] ZipArray<TVal, TOther, TResult>(this TVal[,] array, Func<TVal, TOther, TResult> zipper, TOther[,] other)
-        {
-            int zipLength0 = Math.Min(array.GetLength(0), other.GetLength(0));
-            int zipLength1 = Math.Min(array.GetLength(1), other.GetLength(1));
-            TResult[,] resultArrayZeroBased = new TResult[zipLength0, zipLength1];
-
-            for (int dim0 = 0; dim0 < zipLength0; dim0++)
-            {
-                for (int dim1 = 0; dim1 < zipLength1; dim1++)
-                {
-                    resultArrayZeroBased[dim0, dim1] = zipper(array[dim0, dim1], other[dim0, dim1]);
-                }
-            }
-            return resultArrayZeroBased;
-        }
-
         public static TResult[] ZipArray<TVal, TOther1, TOther2, TResult>(this TVal[] array, Func<TVal, TOther1, TOther2, TResult> zipper, TOther1[] other1, TOther2[] other2)
         {
             int zipLength = Math.Min(Math.Min(array.Length, other1.Length), other2.Length);
@@ -235,21 +188,6 @@ namespace CsharpExtras.CustomExtensions
             return currentZip;
         }
 
-        public static TResult[,] Map<TVal, TResult>(this TVal[,] array, Func<TVal, TResult> mapper)
-        {
-            int length0 = array.GetLength(0);
-            int length1 = array.GetLength(1);
-            TResult[,] resultArray = new TResult[length0, length1];
-            for (int i = 0; i < length0; i++)
-            {
-                for(int j = 0; j < length1; j++)
-                {
-                    resultArray[i, j] = mapper(array[i,j]);
-                }                
-            }
-            return resultArray;
-        }
-
         public static TResult[] Map<TVal, TResult>(this TVal[] array, Func<TVal, TResult> mapper)
         {
             int length = array.Length;
@@ -259,48 +197,6 @@ namespace CsharpExtras.CustomExtensions
                 resultArray[i] = mapper(array[i]);
             }
             return resultArray;
-        }
-
-        public static bool Any<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
-        {
-            for (int row = 0; row < array.GetLength(0); row++)
-            {
-                for (int column = 0; column < array.GetLength(1); column++)
-                {
-                    if (checkerFunction(array[row, column]))
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        public static bool All<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
-        {
-            Func<TVal, bool> inverseChecker = (value) => !checkerFunction(value);
-            return !array.Any(inverseChecker);
-        }
-
-        public static int Count<TVal>(this TVal[,] array)
-        {
-            return array.GetLength(0) * array.GetLength(1);
-        }
-
-        public static int Count<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
-        {
-            int count = 0;
-            for (int row = 0; row < array.GetLength(0); row++)
-            {
-                for (int column = 0; column < array.GetLength(1); column++)
-                {
-                    if (checkerFunction(array[row, column]))
-                    {
-                        count++;
-                    }
-                }
-            }
-            return count;
         }
 
         public static TVal FoldToSingleValue<TVal>(this TVal[] array, Func<TVal, TVal, TVal> foldFunction)
@@ -315,38 +211,6 @@ namespace CsharpExtras.CustomExtensions
                 result = foldFunction(result, array[index]);
             }
             return result;
-        }
-
-        public static TVal[] FoldToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
-        {
-            if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
-            {
-                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
-            }
-
-            TVal[] output = new TVal[array.GetLength(0)];
-            for (int row = 0; row < array.GetLength(0); row++)
-            {
-                TVal[] rowData = array.SliceRow(row);
-                output[row] = rowData.FoldToSingleValue(foldFunction);
-            }
-            return output;
-        }
-
-        public static TVal[] FoldToSingleRow<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
-        {
-            if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
-            {
-                throw new ArgumentOutOfRangeException("Cannot fold an empty array");
-            }
-
-            TVal[] output = new TVal[array.GetLength(1)];
-            for (int column = 0; column < array.GetLength(1); column++)
-            {
-                TVal[] columnData = array.SliceColumn(column);
-                output[column] = columnData.FoldToSingleValue(foldFunction);
-            }
-            return output;
         }
     }
 }

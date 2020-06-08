@@ -2,7 +2,8 @@
 using CsharpExtras.Enumerable.OneBased;
 using NUnit.Framework;
 using System;
-using static CsharpExtras.CustomExtensions.ArrayExtension;
+using static CsharpExtras.Extensions.ArrayOrientationClass;
+using static CsharpExtras.Extensions.ArrayExtension;
 
 namespace OneBased
 {

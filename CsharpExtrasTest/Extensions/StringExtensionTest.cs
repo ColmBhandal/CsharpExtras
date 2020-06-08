@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
-using CsharpExtras.CustomExtensions;
+using CsharpExtras.Extensions;
 
 namespace CustomExtensions
 {

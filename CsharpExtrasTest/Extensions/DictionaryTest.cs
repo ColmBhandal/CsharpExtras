@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
-using CsharpExtras.CustomExtensions;
+using CsharpExtras.Extensions;
 
 namespace CustomExtensions
 {

@@ -1,4 +1,5 @@
-﻿using CsharpExtras.CustomExtensions;
+﻿using CsharpExtras.Extensions;
+using CsharpExtras.Extensions;
 using System;
 
 namespace CsharpExtras.Enumerable.OneBased

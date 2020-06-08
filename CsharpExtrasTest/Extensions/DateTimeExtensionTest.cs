@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CsharpExtras.CustomExtensions;
+using CsharpExtras.Extensions;
 
 namespace CustomExtensions
 {
