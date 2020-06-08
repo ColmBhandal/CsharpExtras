@@ -98,5 +98,15 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.FoldToSingleRow(foldFunction));
         }
+
+        public void WriteToRow(IOneBasedArray<TVal> values, int row, int offset)
+        {
+            ZeroBasedEquivalent.WriteToRow(values.ZeroBasedEquivalent, row - 1, offset);
+        }
+
+        public void WriteToColumn(IOneBasedArray<TVal> values, int column, int offset)
+        {
+            ZeroBasedEquivalent.WriteToColumn(values.ZeroBasedEquivalent, column - 1, offset);
+        }
     }
 }
