@@ -30,7 +30,9 @@ namespace CsharpExtras.Api
         INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val);
         INonEmptyEnumerable<TVal> NewNonEmptyEnumerable<TVal>(TVal val);
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(TVal[] zeroBasedBackingArray);
+        IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size);
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(TVal[,] zeroBasedBackingArray);
+        IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns);
         IPathFacade NewPathFacade();
         IRandomStringGenerator NewRandomStringGenerator();
         IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>();
