@@ -162,22 +162,22 @@ namespace CsharpExtras.Extensions
         public static void WriteToRow<TVal>(this TVal[,] array, TVal[] rowValues, int row, int columnOffset)
         {
             array.AssertRowIndexIsInBounds(row);
-            int minimumExpectedColumnCount = rowValues.Length + columnOffset;
-            int minColumnCount = Math.Min(minimumExpectedColumnCount, array.GetLength(1));
-            for(int column = 0; column < minColumnCount; column++)
+            int minColumnCount = Math.Min(rowValues.Length, array.GetLength(1) - columnOffset);
+            int startColumn = Math.Max(0, -columnOffset);
+            for(int column = startColumn; column < minColumnCount; column++)
             {
-                array[row, column] = rowValues[column];
+                array[row, column + columnOffset] = rowValues[column];
             }
         }
 
         public static void WriteToColumn<TVal>(this TVal[,] array, TVal[] columnValues, int column, int rowOffset)
         {
             array.AssertColumnIndexIsInBounds(column);
-            int minimumExpectedRowCount = columnValues.Length + rowOffset;
-            int minRowCount = Math.Min(minimumExpectedRowCount, array.GetLength(0));
-            for (int row = 0; row < minRowCount; row++)
+            int minRowCount = Math.Min(columnValues.Length, array.GetLength(0) - rowOffset);
+            int startRow = Math.Max(0, -rowOffset);
+            for (int row = startRow; row < minRowCount; row++)
             {
-                array[row, column] = columnValues[row];
+                array[row + rowOffset, column] = columnValues[row];
             }
         }
     }
