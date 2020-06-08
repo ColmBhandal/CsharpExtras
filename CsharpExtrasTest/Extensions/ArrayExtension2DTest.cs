@@ -151,6 +151,87 @@ namespace CsharpExtrasTest.Extensions
             Assert.AreEqual(zipped, new string[,] { { "Hello", "world" }, { "13", "24" } });
         }
 
+        [Test, Category("Unit")]
+        [TestCaseSource("ProviderForWrite1DArrayTo2DRow")]
+        public void Given_2DArrayOfInts_When_Write1DArrayToRow_Then_ResultIsAsExpected
+            (int[,] data, int[] dataToWrite, int row, int offset, int[] expected)
+        {
+            data.WriteToRow(dataToWrite, row, offset);            
+            for(int i = 0; i < expected.Length; i++)
+            {
+                Assert.AreEqual(expected[i], data[row, i],
+                    string.Format("Mismatch at row {0} column {1} for offset {2}", row, i, offset));
+            }
+        }
+
+        [Test, Category("Unit")]
+        [TestCaseSource("ProviderForWrite1DArrayTo2DColumn")]
+        public void Given_2DArrayOfInts_When_Write1DArrayToColumn_Then_ResultIsAsExpected
+           (int[,] data, int[] dataToWrite, int column, int offset, int[] expected)
+        {
+            data.WriteToColumn(dataToWrite, column, offset);
+            for (int i = 0; i < expected.Length; i++)
+            {
+                Assert.AreEqual(expected[i], data[i, column],
+                    string.Format("Mismatch at row {0} column {1} for offset {2}", i, column, offset));
+            }
+        }
+
+        [Test, Category("Unit")]
+        [TestCase(-1), TestCase(2), TestCase(462)]
+        public void Given_2DArrayOfInts_WhenInvalidRowPassedToWrite_Then_ExceptionThrown(int row)
+        {
+            int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
+            Assert.Catch(() => data.WriteToRow(new int[] { }, row, 0),
+                string.Format("Expected exception for row {0}", row));
+        }
+
+        [Test, Category("Unit")]
+        [TestCase(-1), TestCase(4), TestCase(34)]
+        public void Given_2DArrayOfInts_WhenInvalidColumnPassedToWrite_Then_ExceptionThcolumnn(int column)
+        {
+            int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
+            Assert.Catch(() => data.WriteToColumn(new int[] { }, column, 0),
+                string.Format("Expected exception for column {0}", column));
+        }
+
+        #region Providers
+        private static IEnumerable<object[]> ProviderForWrite1DArrayTo2DColumn()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] {21, 22, 23}, 1, 1,
+                    new int[]{11, 21, 22, 23}},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] {21, 22, 23}, 1, 0,
+                    new int[]{21, 22, 23, 14}},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 1, 2, 3, 4 }, 0, 0,
+                    new int[]{1, 2, 3, 4}},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 1, 2, 3, 4 }, 0, 2,
+                    new int[]{1, 2, 1, 2}},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 21, 22, 23, 24 }, 0, 4,
+                    new int[]{1, 2, 3, 4}},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 21, 22, 23, 24 }, 0, -1,
+                    new int[]{22, 23, 24, 4}},
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForWrite1DArrayTo2DRow()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] {21, 22, 23}, 1, 1,
+                    new int[]{11, 21, 22, 23}},
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] {21, 22, 23}, 1, 0,
+                    new int[]{21, 22, 23, 14}},
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 1, 2, 3, 4 }, 0, 0,
+                    new int[]{1, 2, 3, 4}},
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 1, 2, 3, 4 }, 0, 2,
+                    new int[]{1, 2, 1, 2}},
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 21, 22, 23, 24 }, 0, 4,
+                    new int[]{1, 2, 3, 4}},
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 21, 22, 23, 24 }, 0, -1,
+                    new int[]{22, 23, 24, 4}},
+            };
+        }
+
         private static IEnumerable<object[]> ProviderForCheckAnyMatch()
         {
             return new List<object[]> {
@@ -197,5 +278,6 @@ namespace CsharpExtrasTest.Extensions
                 new object[] { new string[,] { { "a" }, { "1"} }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a", "1" }, },
             };
         }
+        #endregion
     }
 }
