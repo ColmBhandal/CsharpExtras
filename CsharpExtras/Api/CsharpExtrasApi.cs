@@ -43,7 +43,7 @@ namespace CsharpExtras.Api
         }
         public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns)
         {
-            TVal[,]? zeroBased = new TVal[rows, columns];
+            TVal[,] zeroBased = new TVal[rows, columns];
             return NewOneBasedArray2D(zeroBased);
         }
 
@@ -53,7 +53,7 @@ namespace CsharpExtras.Api
         }
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size)
         {
-            TVal[]? zeroBased = new TVal[size];
+            TVal[] zeroBased = new TVal[size];
             return NewOneBasedArray(zeroBased);
         }
 
