@@ -163,6 +163,17 @@ namespace CsharpExtras.Extensions
             }
         }
 
+        /// <summary>
+        /// Writes a 1D array to the specified row in a 2D array.
+        /// The 1D array is shifted relative to the row in the 2D array by either a positive or negative shift.
+        /// After the shift, the 1D array's values are written to any 2D array values that line up with it.
+        /// Note: not all values in the 1D array are guaranteed to be written
+        /// and not all values in the 2D row are guaranteed to be written.
+        /// Only overlapping values will be written.
+        /// </summary>        
+        /// <param name="rowValues">The 1D array to write.</param>
+        /// <param name="row">The row in the 2D array to which to write the array.</param>
+        /// <param name="columnOffset">A positive or negative value specifying the amount by which to shift the 1D array.</param>
         public static void WriteToRow<TVal>(this TVal[,] array, TVal[] rowValues, int row, int columnOffset)
         {
             array.AssertRowIndexIsInBounds(row);
@@ -174,6 +185,17 @@ namespace CsharpExtras.Extensions
             }
         }
 
+        /// <summary>
+        /// Writes a 1D array to the specified column in a 2D array.
+        /// The 1D array is shifted relative to the column in the 2D array by either a positive or negative shift.
+        /// After the shift, the 1D array's values are written to any 2D array values that line up with it.
+        /// Note: not all values in the 1D array are guaranteed to be written
+        /// and not all values in the 2D column are guaranteed to be written.
+        /// Only overlapping values will be written.
+        /// </summary>        
+        /// <param name="columnValues">The 1D array to write.</param>
+        /// <param name="column">The column in the 2D array to which to write the array.</param>
+        /// <param name="rowOffset">A positive or negative value specifying the amount by which to shift the 1D array.</param>h
         public static void WriteToColumn<TVal>(this TVal[,] array, TVal[] columnValues, int column, int rowOffset)
         {
             array.AssertColumnIndexIsInBounds(column);
