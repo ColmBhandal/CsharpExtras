@@ -41,10 +41,20 @@ namespace CsharpExtras.Api
         {
             return new OneBasedArray2DImpl<TVal>(zeroBasedBackingArray);
         }
+        public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns)
+        {
+            TVal[,] zeroBased = new TVal[rows, columns];
+            return NewOneBasedArray2D(zeroBased);
+        }
 
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(TVal[] zeroBasedBackingArray)
         {
             return new OneBasedArrayImpl<TVal>(zeroBasedBackingArray);
+        }
+        public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size)
+        {
+            TVal[] zeroBased = new TVal[size];
+            return NewOneBasedArray(zeroBased);
         }
 
         public IFileDecorator NewFileDecorator() => new FileDecoratorImpl(NewFileFacade());
@@ -63,7 +73,6 @@ namespace CsharpExtras.Api
         public IValidationError NewValidationError(bool isBlocker, string message)
             => new ValidationErrorImpl(isBlocker, message);
 
-        public IValidator<T> NewEmptyValidator<T>() => new EmptyValidatorImpl<T>();
-
+        public IValidator<T> NewEmptyValidator<T>() => new EmptyValidatorImpl<T>();        
     }
 }

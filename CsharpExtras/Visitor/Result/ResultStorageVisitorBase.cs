@@ -9,8 +9,9 @@ namespace CsharpExtras.Visitor.Result
 {
     public abstract class ResultStorageVisitorBase<TVisitable, TResult> : IVisitorBase<TVisitable>,
         IResultStorageVisitorBase<TVisitable, TResult> where TVisitable : IVisitableBase<TVisitable>
+        where TResult : class
     {
-        protected TResult _result;
+        protected TResult? _result;
         public TResult Result => GetResultOrDefault();
 
         private bool _visiting  = false;

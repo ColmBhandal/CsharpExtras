@@ -1,4 +1,4 @@
-﻿using CsharpExtras.CustomExtensions;
+﻿using CsharpExtras.Extensions;
 using NUnit.Framework;
 using System.Collections.Generic;
 

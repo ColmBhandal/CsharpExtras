@@ -47,5 +47,7 @@ namespace CsharpExtras.Enumerable.OneBased
         /// Returns an array with the folded values of all columns.
         /// </summary>
         IOneBasedArray<TVal> FoldToSingleRow(Func<TVal, TVal, TVal> foldFunction);
+        void WriteToRow(IOneBasedArray<TVal> values, int row, int offset);
+        void WriteToColumn(IOneBasedArray<TVal> values, int column, int offset);
     }
 }

@@ -1,4 +1,5 @@
-﻿using CsharpExtras.CustomExtensions;
+﻿using CsharpExtras.Extensions;
+using CsharpExtras.Extensions;
 using System;
 
 namespace CsharpExtras.Enumerable.OneBased
@@ -96,6 +97,16 @@ namespace CsharpExtras.Enumerable.OneBased
         public IOneBasedArray<TVal> FoldToSingleRow(Func<TVal, TVal, TVal> foldFunction)
         {
             return new OneBasedArrayImpl<TVal>(ZeroBasedEquivalent.FoldToSingleRow(foldFunction));
+        }
+
+        public void WriteToRow(IOneBasedArray<TVal> values, int row, int offset)
+        {
+            ZeroBasedEquivalent.WriteToRow(values.ZeroBasedEquivalent, row - 1, offset);
+        }
+
+        public void WriteToColumn(IOneBasedArray<TVal> values, int column, int offset)
+        {
+            ZeroBasedEquivalent.WriteToColumn(values.ZeroBasedEquivalent, column - 1, offset);
         }
     }
 }

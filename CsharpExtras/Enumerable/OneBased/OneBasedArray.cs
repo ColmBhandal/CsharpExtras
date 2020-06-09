@@ -1,8 +1,9 @@
-﻿using CsharpExtras.CustomExtensions;
+﻿using CsharpExtras.Extensions;
 using CsharpExtras.Dictionary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using static CsharpExtras.Extensions.ArrayOrientationClass;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
@@ -143,7 +144,7 @@ namespace CsharpExtras.Enumerable.OneBased
             return reversedZeroBased.MapValues(list => list.Map(i => i + 1));
         }
 
-        public IOneBasedArray2D<TVal> To2DArray(ArrayExtension.ArrayOrientation orientation)
+        public IOneBasedArray2D<TVal> To2DArray(ArrayOrientation orientation)
         {
             return new OneBasedArray2DImpl<TVal>(ZeroBasedEquivalent.To2DArray(orientation));
         }

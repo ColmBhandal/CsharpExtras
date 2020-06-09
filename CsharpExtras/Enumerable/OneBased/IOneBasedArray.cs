@@ -1,7 +1,8 @@
 ﻿using CsharpExtras.Dictionary;
 using System;
 using System.Collections.Generic;
-using static CsharpExtras.CustomExtensions.ArrayExtension;
+using static CsharpExtras.Extensions.ArrayOrientationClass;
+using static CsharpExtras.Extensions.ArrayExtension;
 
 namespace CsharpExtras.Enumerable.OneBased
 {

@@ -2,7 +2,9 @@
 using CsharpExtras.Enumerable.OneBased;
 using NUnit.Framework;
 using System;
-using static CsharpExtras.CustomExtensions.ArrayExtension;
+using static CsharpExtras.Extensions.ArrayOrientationClass;
+using static CsharpExtras.Extensions.ArrayExtension;
+using System.Collections.Generic;
 
 namespace OneBased
 {
@@ -97,6 +99,56 @@ namespace OneBased
             Assert.AreEqual(1, twoDimArray.GetLength(1), "New 2D array should have 1 column");
         }
 
+        [Test, TestCaseSource("ProviderForWrite1DArrayTo2DRow")]        
+        public void Given_2DArrayOfInts_When_Write1DArrayToRow_Then_ResultIsAsExpected
+            (int[,] data, int[] dataToWrite, int row, int offset, int[] expected)
+        {
+            IOneBasedArray2D<int> oneBasedData = new OneBasedArray2DImpl<int>(data);
+            IOneBasedArray<int> oneBasedDataToWrite = new OneBasedArrayImpl<int>(dataToWrite);
+            IOneBasedArray<int> oneBasedExpected = new OneBasedArrayImpl<int>(expected);
+            oneBasedData.WriteToRow(oneBasedDataToWrite, row, offset);
+            for (int i = 1; i <= oneBasedExpected.Length; i++)
+            {
+                Assert.AreEqual(oneBasedExpected[i], oneBasedData[row, i],
+                    string.Format("Mismatch at row {0} column {1} for offset {2}", row, i, offset));
+            }
+        }
+
+        [Test, TestCaseSource("ProviderForWrite1DArrayTo2DColumn")]
+        public void Given_2DArrayOfInts_When_Write1DArrayToColumn_Then_ResultIsAsExpected
+            (int[,] data, int[] dataToWrite, int column, int offset, int[] expected)
+        {
+            OneBasedArray2DImpl<int> oneBasedData = new OneBasedArray2DImpl<int>(data);
+            OneBasedArrayImpl<int> oneBasedDataToWrite = new OneBasedArrayImpl<int>(dataToWrite);
+            IOneBasedArray<int> oneBasedExpected = new OneBasedArrayImpl<int>(expected);
+            oneBasedData.WriteToColumn(oneBasedDataToWrite, column, offset);
+            for (int i = 1; i <= oneBasedExpected.Length; i++)
+            {
+                Assert.AreEqual(oneBasedExpected[i], oneBasedData[i, column],
+                    string.Format("Mismatch at row {0} column {1} for offset {2}", i, column, offset));
+            }
+        }
+
+        #region Test Data
+        private static IEnumerable<object[]> ProviderForWrite1DArrayTo2DColumn()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] {21, 22, 23}, 2, 1,
+                    new int[]{11, 21, 22, 23}},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 21, 22, 23, 24 }, 1, -1,
+                    new int[]{22, 23, 24, 4}},
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForWrite1DArrayTo2DRow()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] {21, 22, 23}, 2, 1,
+                    new int[]{11, 21, 22, 23}},
+                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 21, 22, 23, 24 }, 1, -1,
+                    new int[]{22, 23, 24, 4}},
+            };
+        }
         private IOneBasedArray2D<string> GenTestData()
         {
             string[,] testData = new string[,] {
@@ -104,5 +156,6 @@ namespace OneBased
                 { One + 2, Two + 2, Three + 2, Four + 2 } };
             return _api.NewOneBasedArray2D(testData);
         }
+        #endregion
     }
 }
