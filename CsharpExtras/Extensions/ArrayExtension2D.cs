@@ -144,18 +144,22 @@ namespace CsharpExtras.Extensions
 
         public static void AssertRowIndexIsInBounds<TVal>(this TVal[,] array, int row)
         {
-            if (row < 0 || row >= array.GetLength(0))
+            int length = array.GetLength(0);
+            if (row < 0 || row >= length)
             {
                 throw new ArgumentOutOfRangeException(string.Format(
-                    "Row index {0} is out of bounds for 2D array.", row));
+                    "Row index {0} is out of bounds for 2D array. Expected range: [{1}, {2}]",
+                    row, 0, length));
             }
         }
         public static void AssertColumnIndexIsInBounds<TVal>(this TVal[,] array, int column)
         {
-            if (column < 0 || column >= array.GetLength(1))
+            int length = array.GetLength(1);
+            if (column < 0 || column >= length)
             {
                 throw new ArgumentOutOfRangeException(string.Format(
-                    "Column index {0} is out of bounds for 2D array.", column));
+                    "Column index {0} is out of bounds for 2D array. Expected range: [{1}, {2}]",
+                    column, 0, length));
             }
         }
 
