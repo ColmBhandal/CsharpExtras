@@ -135,14 +135,6 @@ namespace OneBased
             return new List<object[]> {
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] {21, 22, 23}, 2, 1,
                     new int[]{11, 21, 22, 23}},
-                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] {21, 22, 23}, 2, 0,
-                    new int[]{21, 22, 23, 14}},
-                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 1, 2, 3, 4 }, 1, 0,
-                    new int[]{1, 2, 3, 4}},
-                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 1, 2, 3, 4 }, 1, 2,
-                    new int[]{1, 2, 1, 2}},
-                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 21, 22, 23, 24 }, 1, 4,
-                    new int[]{1, 2, 3, 4}},
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 21, 22, 23, 24 }, 1, -1,
                     new int[]{22, 23, 24, 4}},
             };
@@ -153,14 +145,6 @@ namespace OneBased
             return new List<object[]> {
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] {21, 22, 23}, 2, 1,
                     new int[]{11, 21, 22, 23}},
-                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] {21, 22, 23}, 2, 0,
-                    new int[]{21, 22, 23, 14}},
-                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 1, 2, 3, 4 }, 1, 0,
-                    new int[]{1, 2, 3, 4}},
-                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 1, 2, 3, 4 }, 1, 2,
-                    new int[]{1, 2, 1, 2}},
-                new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 21, 22, 23, 24 }, 1, 4,
-                    new int[]{1, 2, 3, 4}},
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 21, 22, 23, 24 }, 1, -1,
                     new int[]{22, 23, 24, 4}},
             };
