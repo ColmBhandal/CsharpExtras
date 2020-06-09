@@ -154,28 +154,20 @@ namespace CsharpExtrasTest.Extensions
         [Test, Category("Unit")]
         [TestCaseSource("ProviderForWrite1DArrayTo2DRow")]
         public void Given_2DArrayOfInts_When_Write1DArrayToRow_Then_ResultIsAsExpected
-            (int[,] data, int[] dataToWrite, int row, int offset, int[] expected)
+            (int[,] data, int[] dataToWrite, int row, int offset, int[,] expected)
         {
-            data.WriteToRow(dataToWrite, row, offset);            
-            for(int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], data[row, i],
-                    string.Format("Mismatch at row {0} column {1} for offset {2}", row, i, offset));
-            }
+            data.WriteToRow(dataToWrite, row, offset);
+            Assert.AreEqual(expected, data);
         }
 
         [Test, Category("Unit")]
         [TestCaseSource("ProviderForWrite1DArrayTo2DColumn")]
         public void Given_2DArrayOfInts_When_Write1DArrayToColumn_Then_ResultIsAsExpected
-           (int[,] data, int[] dataToWrite, int column, int offset, int[] expected)
+           (int[,] data, int[] dataToWrite, int column, int offset, int[,] expected)
         {
             data.WriteToColumn(dataToWrite, column, offset);
-            for (int i = 0; i < expected.Length; i++)
-            {
-                Assert.AreEqual(expected[i], data[i, column],
-                    string.Format("Mismatch at row {0} column {1} for offset {2}", i, column, offset));
-            }
-        }
+            Assert.AreEqual(expected, data);
+        }        
 
         [Test, Category("Unit")]
         [TestCase(-1), TestCase(2), TestCase(462)]
@@ -200,17 +192,17 @@ namespace CsharpExtrasTest.Extensions
         {
             return new List<object[]> {
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] {21, 22, 23}, 1, 1,
-                    new int[]{11, 21, 22, 23}},
+                    new int[,] { { 1, 11 }, { 2, 21 }, { 3, 22 }, { 4, 23 } }},
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] {21, 22, 23}, 1, 0,
-                    new int[]{21, 22, 23, 14}},
+                    new int[,] { { 1, 21 }, { 2, 22 }, { 3, 23 }, { 4, 14 }} },
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 1, 2, 3, 4 }, 0, 0,
-                    new int[]{1, 2, 3, 4}},
+                    new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }},
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 1, 2, 3, 4 }, 0, 2,
-                    new int[]{1, 2, 1, 2}},
+                    new int[,] { { 1, 11 }, { 2, 12 }, { 1, 13 }, { 2, 14 } }},
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 21, 22, 23, 24 }, 0, 4,
-                    new int[]{1, 2, 3, 4}},
+                    new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }},
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, new int[] { 21, 22, 23, 24 }, 0, -1,
-                    new int[]{22, 23, 24, 4}},
+                    new int[,] { { 22, 11 }, { 23, 12 }, { 24, 13 }, { 4, 14 } }},
             };
         }
 
@@ -218,17 +210,17 @@ namespace CsharpExtrasTest.Extensions
         {
             return new List<object[]> {
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] {21, 22, 23}, 1, 1,
-                    new int[]{11, 21, 22, 23}},
+                    new int[,] { { 1, 2, 3, 4 }, {11, 21, 22, 23 } } },
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] {21, 22, 23}, 1, 0,
-                    new int[]{21, 22, 23, 14}},
+                    new int[,] { { 1, 2, 3, 4 }, { 21, 22, 23, 14} }},
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 1, 2, 3, 4 }, 0, 0,
-                    new int[]{1, 2, 3, 4}},
+                    new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }},
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 1, 2, 3, 4 }, 0, 2,
-                    new int[]{1, 2, 1, 2}},
+                    new int[,] { { 1, 2, 1, 2 }, {11, 12, 13, 14} }},
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 21, 22, 23, 24 }, 0, 4,
-                    new int[]{1, 2, 3, 4}},
+                    new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }},
                 new object[] { new int[,] { { 1, 2, 3, 4 }, {11, 12, 13, 14} }, new int[] { 21, 22, 23, 24 }, 0, -1,
-                    new int[]{22, 23, 24, 4}},
+                    new int[,] { { 22, 23, 24, 4 }, {11, 12, 13, 14} }},
             };
         }
 
