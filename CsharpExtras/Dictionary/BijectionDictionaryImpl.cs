@@ -12,7 +12,7 @@ namespace CsharpExtras.Dictionary
         private IDictionary<TKey, TValue> _delegate = new Dictionary<TKey, TValue>();
         private IDictionary<TValue, TKey> _reverseDelegate = new Dictionary<TValue, TKey>();
 
-        private IBijectionDictionary<TValue, TKey> _reverse;
+        private IBijectionDictionary<TValue, TKey>? _reverse;
         public IBijectionDictionary<TValue, TKey> Reverse => _reverse ?? (_reverse = new BijectionDictionaryImpl<TValue, TKey>(_reverseDelegate, this));
 
         public BijectionDictionaryImpl()
