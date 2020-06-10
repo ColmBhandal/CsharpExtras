@@ -33,12 +33,18 @@ namespace CsharpExtras.Extensions
         }
 
 
-        public static T[] SubArray<T>(this T[] data, int startAt, int stopAt)
+        /// <summary>
+        /// Sub-array starting at a given index and stopping before another index.
+        /// </summary>        
+        /// <param name="startAt">Index to start at. Negative indices will be truncated to zero.</param>
+        /// <param name="stopBefore">Index before which to stop. Indices greater than array length will be truncated to the array length.</param>
+        /// <returns></returns>
+        public static T[] SubArray<T>(this T[] data, int startAt, int stopBefore)
         {
             startAt = Math.Max(startAt, 0);
-            stopAt = Math.Min(stopAt, data.Length);
+            stopBefore = Math.Min(stopBefore, data.Length);
 
-            int length = stopAt - startAt;
+            int length = stopBefore - startAt;
             T[] result = new T[length];
             Array.Copy(data, startAt, result, 0, length);
             return result;
