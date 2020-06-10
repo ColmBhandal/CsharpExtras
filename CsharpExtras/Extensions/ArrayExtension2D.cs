@@ -206,5 +206,38 @@ namespace CsharpExtras.Extensions
                 array[row + rowOffset, column] = columnValues[row];
             }
         }
+
+        /// <summary>
+        /// Rectangular sub array of this 2D array defined by the given coordinates.
+        /// </summary>
+        /// <param name="startAtRow">Row index to start at. Negative indices will be truncated to zero.</param>
+        /// <param name="startAtCol">Column index to start at. Negative indices will be truncated to zero.</param>
+        /// <param name="stopBeforeRow">Row index before which to stop. Indices greater than number of rows will be truncated to that number.</param>
+        /// <param name="stopBeforeCol">Column index before which to stop. Indices greater than number of columns will be truncated to that number.</param>
+        /// <returns></returns>
+        public static TVal[,] SubArray<TVal>(this TVal[,] array, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn)
+        {
+            startAtRow = Math.Max(startAtRow, 0);
+            stopBeforeRow = Math.Min(stopBeforeRow, array.GetLength(0));
+            startAtColumn = Math.Max(startAtColumn, 0);
+            stopBeforeColumn = Math.Min(stopBeforeColumn, array.GetLength(1));
+
+            int rowLength = stopBeforeRow - startAtRow;
+            int columnLength = stopBeforeColumn - startAtColumn;
+            //We want to return a canonical form of a zero size array. Don't want things like int[2, 0].
+            if(rowLength == 0 || columnLength == 0)
+            {
+                rowLength = columnLength = 0;
+            }
+            TVal[,] result = new TVal[rowLength, columnLength];
+            for(int row = startAtRow; row < stopBeforeRow; row++)
+            {
+                for(int col = startAtColumn; col < stopBeforeColumn; col++)
+                {
+                    result[row - startAtRow, col - startAtColumn] = array[row, col];
+                }
+            }
+            return result;
+        }
     }
 }

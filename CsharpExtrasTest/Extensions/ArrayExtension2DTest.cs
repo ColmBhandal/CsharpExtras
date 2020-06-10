@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 
 namespace CsharpExtrasTest.Extensions
@@ -171,7 +172,7 @@ namespace CsharpExtrasTest.Extensions
 
         [Test, Category("Unit")]
         [TestCase(-1), TestCase(2), TestCase(462)]
-        public void Given_2DArrayOfInts_WhenInvalidRowPassedToWrite_Then_ExceptionThrown(int row)
+        public void Given_2DArrayOfInts_When_InvalidRowPassedToWrite_Then_ExceptionThrown(int row)
         {
             int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
             Assert.Catch(() => data.WriteToRow(new int[] { }, row, 0),
@@ -180,14 +181,45 @@ namespace CsharpExtrasTest.Extensions
 
         [Test, Category("Unit")]
         [TestCase(-1), TestCase(4), TestCase(34)]
-        public void Given_2DArrayOfInts_WhenInvalidColumnPassedToWrite_Then_ExceptionThcolumnn(int column)
+        public void Given_2DArrayOfInts_When_InvalidColumnPassedToWrite_Then_ExceptionThcolumnn(int column)
         {
             int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
             Assert.Catch(() => data.WriteToColumn(new int[] { }, column, 0),
                 string.Format("Expected exception for column {0}", column));
         }
 
+        [Test, Category("Unit")]
+        [TestCaseSource("ProviderFor2DSubArrayTest")]
+        public void Given_2DArrayOfInts_When_SubArray_Then_ExpectedSubArrayReturned
+            (int[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, int[,] expected)
+        {
+            int[,] sub = data.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
+            Assert.AreEqual(expected, sub, string.Format(
+                "Failure for sub array with coordinates ({0}, {1}) --> ({2}, {3}))",
+                startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));
+        }
+
         #region Providers
+
+        private static IEnumerable<object[]> ProviderFor2DSubArrayTest()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, -6, -3, 7, 5,
+                    new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 0, 0, 4, 2,
+                    new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 1, 3, 2,
+                    new int[,] { { 12 }, { 13 } }},
+                new object[] { new int[,] { { 1, 11, 21, 31 }, { 2, 12, 22, 32 }, { 3, 13, 23, 33 }, { 4, 14, 24, 34 } },
+                    1, 1, 3, 3,
+                   new int[,] { { 12, 22 }, { 13, 23 } }},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 1, 3, 1,
+                    new int[,] {}},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 0, 1, 4,
+                    new int[,] {}},
+            };
+        }
+
         private static IEnumerable<object[]> ProviderForWrite1DArrayTo2DColumn()
         {
             return new List<object[]> {
