@@ -218,5 +218,15 @@ namespace CsharpExtras.Extensions
             }
             return result;
         }
+
+        public static void AssertIndexIsInBounds<TVal>(this TVal[] array, int index)
+        {
+            int length = array.Length;
+            if (index < 0 || index >= length)
+            {
+                throw new ArgumentOutOfRangeException(string.Format("Index {0} is outside of the bounds of the array. " +
+                    "Should be in the range [{1}, {2}]", 0, length));
+            }
+        }
     }
 }
