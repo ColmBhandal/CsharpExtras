@@ -214,9 +214,11 @@ namespace CsharpExtrasTest.Extensions
                     1, 1, 3, 3,
                    new int[,] { { 12, 22 }, { 13, 23 } }},
                 new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 1, 3, 1,
-                    new int[,] {}},
-                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 0, 1, 4,
-                    new int[,] {}},
+                    new int[2,0]},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 0, 1, 2,
+                    new int[0,2]},
+                new object[] { new int[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 2, 1, 2, 1,
+                    new int[0,0]},
             };
         }
 

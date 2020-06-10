@@ -224,11 +224,6 @@ namespace CsharpExtras.Extensions
 
             int rowLength = stopBeforeRow - startAtRow;
             int columnLength = stopBeforeColumn - startAtColumn;
-            //We want to return a canonical form of a zero size array. Don't want things like int[2, 0].
-            if(rowLength == 0 || columnLength == 0)
-            {
-                rowLength = columnLength = 0;
-            }
             TVal[,] result = new TVal[rowLength, columnLength];
             for(int row = startAtRow; row < stopBeforeRow; row++)
             {
