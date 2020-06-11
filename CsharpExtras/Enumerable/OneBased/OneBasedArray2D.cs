@@ -108,5 +108,10 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             ZeroBasedEquivalent.WriteToColumn(values.ZeroBasedEquivalent, column - 1, offset);
         }
+
+        public void WriteToArea(IOneBasedArray2D<TVal> values, int rowOffset, int columnOffset)
+        {
+            ZeroBasedEquivalent.WriteToArea(values.ZeroBasedEquivalent, rowOffset, columnOffset);
+        }
     }
 }

@@ -129,7 +129,29 @@ namespace OneBased
             }
         }
 
+        [Test, TestCaseSource("ProviderForWriteToArea")]
+        public void Given_2DArrayOfInts_When_WriteToArea_Then_ResultIsAsExpected
+            (int[,] data, int[,] dataToWrite, int rowOffset, int columnOffset, int[,] expected)
+        {
+            IOneBasedArray2D<int> oneBasedData = new OneBasedArray2DImpl<int>(data);
+            IOneBasedArray2D<int> oneBasedDataToWrite = new OneBasedArray2DImpl<int>(dataToWrite);            
+            oneBasedData.WriteToArea(oneBasedDataToWrite, rowOffset, columnOffset);
+            Assert.AreEqual(data, expected,
+                string.Format("Failure for (rowOffset, columnOffset) = ({0}, {1})", rowOffset, columnOffset));
+        }
+
         #region Test Data
+        
+        private static IEnumerable<object[]> ProviderForWriteToArea()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1, 11, 21, 31 }, { 2, 12, 22, 32 }, { 3, 13, 23, 33 }, { 4, 14, 24, 34 } },
+                    new int[,] { { 101, 111, 121 }, { 102, 112, 122 }, { 103, 113, 123 }},
+                    2, 2,
+                    new int[,] { { 1, 11, 21, 31 }, { 2, 12, 22, 32 }, { 3, 13, 101, 111 }, { 4, 14, 102, 112 } },
+                }
+            };
+        }
         private static IEnumerable<object[]> ProviderForWrite1DArrayTo2DColumn()
         {
             return new List<object[]> {
