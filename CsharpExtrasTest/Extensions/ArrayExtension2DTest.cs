@@ -201,9 +201,9 @@ namespace CsharpExtrasTest.Extensions
         [Test, Category("Unit")]
         [TestCaseSource("ProviderFor2DSubArrayTest")]
         public void Given_2DArrayOfInts_When_SubArray_Then_ExpectedSubArrayReturned
-            (int[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, int[,] expected)
+            (byte[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, byte[,] expected)
         {
-            int[,] sub = data.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
+            byte[,] sub = data.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
             Assert.AreEqual(expected, sub, string.Format(
                 "Failure for sub array with coordinates ({0}, {1}) --> ({2}, {3}))",
                 startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));
