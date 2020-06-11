@@ -177,9 +177,9 @@ namespace CsharpExtras.Extensions
         public static void WriteToRow<TVal>(this TVal[,] array, TVal[] rowValues, int row, int columnOffset)
         {
             array.AssertRowIndexIsInBounds(row);
-            int minColumnCount = Math.Min(rowValues.Length, array.GetLength(1) - columnOffset);
+            int stopBeforeColumn = Math.Min(rowValues.Length, array.GetLength(1) - columnOffset);
             int startColumn = Math.Max(0, -columnOffset);
-            for(int column = startColumn; column < minColumnCount; column++)
+            for(int column = startColumn; column < stopBeforeColumn; column++)
             {
                 array[row, column + columnOffset] = rowValues[column];
             }
@@ -199,11 +199,37 @@ namespace CsharpExtras.Extensions
         public static void WriteToColumn<TVal>(this TVal[,] array, TVal[] columnValues, int column, int rowOffset)
         {
             array.AssertColumnIndexIsInBounds(column);
-            int minRowCount = Math.Min(columnValues.Length, array.GetLength(0) - rowOffset);
+            int stopBeforeRow = Math.Min(columnValues.Length, array.GetLength(0) - rowOffset);
             int startRow = Math.Max(0, -rowOffset);
-            for (int row = startRow; row < minRowCount; row++)
+            for (int row = startRow; row < stopBeforeRow; row++)
             {
                 array[row + rowOffset, column] = columnValues[row];
+            }
+        }
+
+        /// <summary>
+        /// Writes one 2D array to another. The arrays do not need to be the same size.
+        /// The array to write is first aligned with the top left corner of the target array.
+        /// Then the array to write is shifted by a row & column offset, which could be negative.
+        /// After the shift, the 2 arrays will be overlapping by some rectangular area, possibly empty.
+        /// The values written to the target are exactly those which overlap after the shift.
+        /// </summary>
+        /// <param name="targetArray">Write to this array.</param>
+        /// <param name="arrayToWrite">Write values from this array.</param>
+        /// <param name="rowOffset">The amount by which to shift the row value of the values to write.</param>
+        /// <param name="columnOffset">The amout by which to shift the column value of the values to write.</param>
+        public static void WriteToArea<TVal>(this TVal[,] targetArray, TVal[,] arrayToWrite, int rowOffset, int columnOffset)
+        {
+            int stopBeforeRow = Math.Min(arrayToWrite.GetLength(0), targetArray.GetLength(0) - rowOffset);
+            int stopBeforeColumn = Math.Min(arrayToWrite.GetLength(1), targetArray.GetLength(1) - columnOffset);
+            int startRow = Math.Max(0, -rowOffset);
+            int startColumn = Math.Max(0, -columnOffset);
+            for (int row = startRow; row < stopBeforeRow; row++)
+            {
+                for (int column = startColumn; column < stopBeforeColumn; column++)
+                {
+                    targetArray[row + rowOffset, column + columnOffset] = arrayToWrite[row, column];
+                }
             }
         }
 
