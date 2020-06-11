@@ -113,5 +113,12 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             ZeroBasedEquivalent.WriteToArea(values.ZeroBasedEquivalent, rowOffset, columnOffset);
         }
+
+        public IOneBasedArray2D<TVal> SubArray(int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn)
+        {
+            TVal[,] zeroBased = ZeroBasedEquivalent.SubArray(startAtRow - 1, startAtColumn - 1,
+                stopBeforeRow - 1, stopBeforeColumn - 1);
+            return new OneBasedArray2DImpl<TVal>(zeroBased);
+        }
     }
 }

@@ -140,8 +140,28 @@ namespace OneBased
                 string.Format("Failure for (rowOffset, columnOffset) = ({0}, {1})", rowOffset, columnOffset));
         }
 
+        [Test, Category("Unit")]
+        [TestCaseSource("ProviderFor2DSubArrayTest")]
+        public void Given_2DArrayOfBytes_When_SubArray_Then_ExpectedSubArrayReturned
+        (byte[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, byte[,] expected)
+        {
+            IOneBasedArray2D<byte> oneBasedData = new OneBasedArray2DImpl<byte>(data);
+            IOneBasedArray2D<byte> oneBasedExpected = new OneBasedArray2DImpl<byte>(expected);
+            IOneBasedArray2D<byte> sub = oneBasedData.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
+            Assert.AreEqual(oneBasedExpected.ZeroBasedEquivalent, sub.ZeroBasedEquivalent, string.Format(
+                "Failure for sub array with coordinates ({0}, {1}) --> ({2}, {3}))",
+                startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));
+        }
+
         #region Test Data
-        
+        private static IEnumerable<object[]> ProviderFor2DSubArrayTest()
+        {
+            return new List<object[]> {
+                new object[] { new byte[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 1, 4, 4,
+                    new byte[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }}},
+            };
+        }
+
         private static IEnumerable<object[]> ProviderForWriteToArea()
         {
             return new List<object[]> {

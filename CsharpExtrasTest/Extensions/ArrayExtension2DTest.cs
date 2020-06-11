@@ -198,7 +198,7 @@ namespace CsharpExtrasTest.Extensions
 
         [Test, Category("Unit")]
         [TestCaseSource("ProviderFor2DSubArrayTest")]
-        public void Given_2DArrayOfInts_When_SubArray_Then_ExpectedSubArrayReturned
+        public void Given_2DArrayOfBytes_When_SubArray_Then_ExpectedSubArrayReturned
             (byte[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, byte[,] expected)
         {
             byte[,] sub = data.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
