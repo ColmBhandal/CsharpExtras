@@ -49,5 +49,7 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray<TVal> FoldToSingleRow(Func<TVal, TVal, TVal> foldFunction);
         void WriteToRow(IOneBasedArray<TVal> values, int row, int offset);
         void WriteToColumn(IOneBasedArray<TVal> values, int column, int offset);
+        void WriteToArea(IOneBasedArray2D<TVal> values, int rowOffset, int columnOffset);
+        IOneBasedArray2D<TVal> SubArray(int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn);
     }
 }

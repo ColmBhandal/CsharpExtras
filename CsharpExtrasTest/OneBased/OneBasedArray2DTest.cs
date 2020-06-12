@@ -129,7 +129,49 @@ namespace OneBased
             }
         }
 
+        [Test, TestCaseSource("ProviderForWriteToArea")]
+        public void Given_2DArrayOfInts_When_WriteToArea_Then_ResultIsAsExpected
+            (int[,] data, int[,] dataToWrite, int rowOffset, int columnOffset, int[,] expected)
+        {
+            IOneBasedArray2D<int> oneBasedData = new OneBasedArray2DImpl<int>(data);
+            IOneBasedArray2D<int> oneBasedDataToWrite = new OneBasedArray2DImpl<int>(dataToWrite);            
+            oneBasedData.WriteToArea(oneBasedDataToWrite, rowOffset, columnOffset);
+            Assert.AreEqual(data, expected,
+                string.Format("Failure for (rowOffset, columnOffset) = ({0}, {1})", rowOffset, columnOffset));
+        }
+
+        [Test, Category("Unit")]
+        [TestCaseSource("ProviderFor2DSubArrayTest")]
+        public void Given_2DArrayOfBytes_When_SubArray_Then_ExpectedSubArrayReturned
+        (byte[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, byte[,] expected)
+        {
+            IOneBasedArray2D<byte> oneBasedData = new OneBasedArray2DImpl<byte>(data);
+            IOneBasedArray2D<byte> oneBasedExpected = new OneBasedArray2DImpl<byte>(expected);
+            IOneBasedArray2D<byte> sub = oneBasedData.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
+            Assert.AreEqual(oneBasedExpected.ZeroBasedEquivalent, sub.ZeroBasedEquivalent, string.Format(
+                "Failure for sub array with coordinates ({0}, {1}) --> ({2}, {3}))",
+                startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));
+        }
+
         #region Test Data
+        private static IEnumerable<object[]> ProviderFor2DSubArrayTest()
+        {
+            return new List<object[]> {
+                new object[] { new byte[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }, { 4, 14 } }, 1, 1, 4, 4,
+                    new byte[,] { { 1, 11 }, { 2, 12 }, { 3, 13 }}},
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForWriteToArea()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1, 11, 21, 31 }, { 2, 12, 22, 32 }, { 3, 13, 23, 33 }, { 4, 14, 24, 34 } },
+                    new int[,] { { 101, 111, 121 }, { 102, 112, 122 }, { 103, 113, 123 }},
+                    2, 2,
+                    new int[,] { { 1, 11, 21, 31 }, { 2, 12, 22, 32 }, { 3, 13, 101, 111 }, { 4, 14, 102, 112 } },
+                }
+            };
+        }
         private static IEnumerable<object[]> ProviderForWrite1DArrayTo2DColumn()
         {
             return new List<object[]> {
