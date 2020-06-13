@@ -189,9 +189,8 @@ namespace CustomExtensions
             Assert.NotNull(tuple.input, "GIVEN: String array should not be null");
 
             string[] cleaned = tuple.input.RemoveBlankEntries();
-
-            Assert.AreEqual(tuple.expected.Length, cleaned.Length, "Expected all blank entries to be removed");
-            Assert.AreEqual(tuple.expected,cleaned);
+            
+            Assert.AreEqual(tuple.expected,cleaned, "Array should be equal to expected array");
             Assert.AreEqual(0, cleaned.Count(s => string.IsNullOrWhiteSpace(s)),
                 "No blank values should exist in the cleaned array");
         }
