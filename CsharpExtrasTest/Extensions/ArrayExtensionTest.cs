@@ -191,9 +191,6 @@ namespace CustomExtensions
         {
             Assert.NotNull(arr.Result, "GIVEN: String array should not be null");
 
-            int rawCount = arr.Result.Length;
-            int nonBlankCount = arr.Result.Count(s => !string.IsNullOrWhiteSpace(s));
-
             string[] cleaned = arr.Result.RemoveBlankEntries();
 
             Assert.AreEqual(arr.ExpectedBlanks, cleaned.Length, "Expected all blank entries to be removed");
