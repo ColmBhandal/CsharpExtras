@@ -172,30 +172,31 @@ namespace CustomExtensions
         //non-mvp: Consider changing test to take a tupple of input array and number of expected blanks
         // This will probably be a better test since the test uses the same code as the implementation
 
-        private static IEnumerable<string[]> StringArrayProviderForRemoveBlanksTesting()
+        private static IEnumerable<(string[] Result, int ExpectedBlanks)> TupleArrayProviderForRemoveBlanksTesting()
         {
-            return new List<string[]> {
-                new string[] { "a1", "", "a3", "a4", "  " },
-                new string[] {  },
-                new string[] { "a1" },
-                new string[] { "" },
-                new string[] { "  ", "a2" },
+            return new List<(string[] Result, int ExpectedBlanks)>
+            {
+                (Result: new string[] {"a1", "", "a3", "a4", "  "}, ExpectedBlanks: 3),
+                (Result: new string[] { }, ExpectedBlanks: 0),
+                (Result: new string[] {"a1"}, ExpectedBlanks: 1),
+                (Result: new string[] {""}, ExpectedBlanks: 0),
+                (Result: new string[] {"  ", "a2"}, ExpectedBlanks: 1),
             };
         }
 
         [Test]
         [Category("Unit")]
-        [TestCaseSource("StringArrayProviderForRemoveBlanksTesting")]
-        public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved(string[] arr)
+        [TestCaseSource("TupleArrayProviderForRemoveBlanksTesting")]
+        public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved((string[] Result, int ExpectedBlanks) arr)
         {
-            Assert.NotNull(arr, "GIVEN: String array should not be null");
+            Assert.NotNull(arr.Result, "GIVEN: String array should not be null");
 
-            int rawCount = arr.Length;
-            int nonBlankCount = arr.Count(s => !string.IsNullOrWhiteSpace(s));
+            int rawCount = arr.Result.Length;
+            int nonBlankCount = arr.Result.Count(s => !string.IsNullOrWhiteSpace(s));
 
-            string[] cleaned = arr.RemoveBlankEntries();
+            string[] cleaned = arr.Result.RemoveBlankEntries();
 
-            Assert.AreEqual(nonBlankCount, cleaned.Length, "Expected all blank entries to be removed");
+            Assert.AreEqual(arr.ExpectedBlanks, cleaned.Length, "Expected all blank entries to be removed");
             Assert.AreEqual(0, cleaned.Count(s => string.IsNullOrWhiteSpace(s)),
                 "No blank values should exist in the cleaned array");
         }
