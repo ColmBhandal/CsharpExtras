@@ -184,14 +184,14 @@ namespace CustomExtensions
         [Test]
         [Category("Unit")]
         [TestCaseSource("TupleArrayProviderForRemoveBlanksTesting")]
-        public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved((string[] input, string[] expected) arr)
+        public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved((string[] input, string[] expected) tuple)
         {
-            Assert.NotNull(arr.input, "GIVEN: String array should not be null");
+            Assert.NotNull(tuple.input, "GIVEN: String array should not be null");
 
-            string[] cleaned = arr.input.RemoveBlankEntries();
+            string[] cleaned = tuple.input.RemoveBlankEntries();
 
-            Assert.AreEqual(arr.expected.Length, cleaned.Length, "Expected all blank entries to be removed");
-            Assert.AreEqual(arr.expected,cleaned);
+            Assert.AreEqual(tuple.expected.Length, cleaned.Length, "Expected all blank entries to be removed");
+            Assert.AreEqual(tuple.expected,cleaned);
             Assert.AreEqual(0, cleaned.Count(s => string.IsNullOrWhiteSpace(s)),
                 "No blank values should exist in the cleaned array");
         }
