@@ -169,9 +169,6 @@ namespace CustomExtensions
         //non-mvp: Add test for getting subarray from out of bounds on only one side. 
         // For example: -1 to the middle of the source array
 
-        //non-mvp: Consider changing test to take a tupple of input array and number of expected blanks
-        // This will probably be a better test since the test uses the same code as the implementation
-
         private static IEnumerable<(string[] Result, int ExpectedBlanks)> TupleArrayProviderForRemoveBlanksTesting()
         {
             return new List<(string[] Result, int ExpectedBlanks)>
