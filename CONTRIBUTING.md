@@ -32,9 +32,9 @@
 
 ## C# Coding Conventions
 
-we typically follow these conventions when coding in most cases. We may request changes to your pull request based on the below. Please note that this doesn't always mean your code is "wrong", but it may be inconsistent relative to the conventions we've adopted. Where possible, we'll explain why we used certain conventions.
+We typically follow these conventions when coding in most cases. We may request changes to your pull request based on the below. Please note that this doesn't always mean your code is "wrong", but it may be inconsistent relative to the conventions we've adopted. Where possible, we'll explain why we used certain conventions.
 
 | Convenrtion | Explanation |
 |---|---|
-| Use Explicit Type | We always prefer explicit types vs `var`. We feel the code is easier to read when the type is right there. |
+| Use Explicit Types (not `var`) | We always prefer explicit types vs `var`. We feel the code is easier to read when the type is right there. |
 | Use Interface Types | Unless there's good reason to do so, avoid using raw classes. Use interfaces instead. This makes the code easily separable by the interface separation principle. So if you have a class `A` and a class `B` which uses `A`, rather than reference `A` directly from `B`, the recommendation is to create an interface `IA`, exposing only the public methods of `A` and then make `B` depend on `IA`.|
