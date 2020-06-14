@@ -6,13 +6,21 @@
 
 * If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/ColmBhandal/CsharpExtras/issues/new?assignees=&labels=bug&template=bug_report.md&title=). Note the new issue should follow the "Bug Report" issue template in this case.
 
-## **Did you write a patch that fixes a bug?**
+## **Do you Want to Contribute Code to the Repo?**
 
-* Open a new GitHub pull request with the patch.
+* Before writing any code, please ensure that you have been assigned an issue and it has been approved by the team.
+
+* To request assignment of an existing issue, comment on the issue and await assignment by the team. 
+
+* If you opened the issue yourself, then await approval by the project team prior to beginning work on it 
+
+* Note: code implementing functionality that is not related to an approved issue may not be accepted. 
+
+* Once you have been assigned an issue, you can contribute your code via a pull request (PR). 
 
 * Ensure the PR description clearly describes the problem and solution. LInk the PR to the issue(s) that it solves e.g. by including the relevant issue number(s) in the PR description.
 
-## **Do you intend to add a new feature or change an existing one?**
+## **Do you have an Idea for a New Feature or an Improvement to an Existing one?**
 
 * [Open a new issue](https://github.com/ColmBhandal/CsharpExtras/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=) on GitHub following the "Feature Request" template.
 
