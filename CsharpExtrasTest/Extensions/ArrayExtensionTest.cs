@@ -169,33 +169,28 @@ namespace CustomExtensions
         //non-mvp: Add test for getting subarray from out of bounds on only one side. 
         // For example: -1 to the middle of the source array
 
-        //non-mvp: Consider changing test to take a tupple of input array and number of expected blanks
-        // This will probably be a better test since the test uses the same code as the implementation
-
-        private static IEnumerable<string[]> StringArrayProviderForRemoveBlanksTesting()
+        private static IEnumerable<(string[] Result, string[] ExpectedBlanks)> TupleArrayProviderForRemoveBlanksTesting()
         {
-            return new List<string[]> {
-                new string[] { "a1", "", "a3", "a4", "  " },
-                new string[] {  },
-                new string[] { "a1" },
-                new string[] { "" },
-                new string[] { "  ", "a2" },
+            return new List<(string[] input, string[] expected)>
+            {
+                (input: new string[] {"a1", "", "a3", "a4", "  "}, expected: new string[] {"a1", "a3", "a4"}),
+                (input: new string[] { }, expected: new string[] {}),
+                (input: new string[] {"a1"}, expected: new string[] {"a1"}),
+                (input: new string[] {""}, expected: new string[] {}),
+                (input: new string[] {"  ", "a2"}, expected: new string[] {"a2"}),
             };
         }
 
         [Test]
         [Category("Unit")]
-        [TestCaseSource("StringArrayProviderForRemoveBlanksTesting")]
-        public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved(string[] arr)
+        [TestCaseSource("TupleArrayProviderForRemoveBlanksTesting")]
+        public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved((string[] input, string[] expected) tuple)
         {
-            Assert.NotNull(arr, "GIVEN: String array should not be null");
+            Assert.NotNull(tuple.input, "GIVEN: String array should not be null");
 
-            int rawCount = arr.Length;
-            int nonBlankCount = arr.Count(s => !string.IsNullOrWhiteSpace(s));
-
-            string[] cleaned = arr.RemoveBlankEntries();
-
-            Assert.AreEqual(nonBlankCount, cleaned.Length, "Expected all blank entries to be removed");
+            string[] cleaned = tuple.input.RemoveBlankEntries();
+            
+            Assert.AreEqual(tuple.expected,cleaned, "Array should be equal to expected array");
             Assert.AreEqual(0, cleaned.Count(s => string.IsNullOrWhiteSpace(s)),
                 "No blank values should exist in the cleaned array");
         }
