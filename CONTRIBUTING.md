@@ -40,4 +40,4 @@
 
 ## C# Coding Conventions
 
-You can find the latest coding conventions in the [wiki](https://github.com/ColmBhandal/CsharpExtras/wiki/Coding-Conventions).
+Code contributions should adhere to the coding conventions defined in the project [wiki](https://github.com/ColmBhandal/CsharpExtras/wiki/Coding-Conventions). We recommend you read them before you start working on something to reduce the chance of your pull request requiring changes.
