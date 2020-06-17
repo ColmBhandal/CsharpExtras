@@ -6,26 +6,32 @@ namespace CsharpExtras.ValidatedType
 {
     public abstract class Validated<TVal>
     {
-        private readonly TVal Value;
+        private readonly TVal _value;
         protected Validated(TVal value)
         {
             if (IsValid(value))
             {
-                Value = value;
+                _value = value;
             }
             else
             {
-                string valueAsString = value?.ToString() ?? "NULL";
+                string valueAsString = GetValueAsString();
                 string message = string.Format("The value {0} is invalid. {1}",
                     valueAsString, ValidityConditionTextDescription);
                 throw new ArgumentException(message);
             }
         }
 
-        public static implicit operator TVal(Validated<TVal> validated) => validated.Value;
+        private string GetValueAsString()
+        {
+            return _value?.ToString() ?? "NULL";
+        }
+
+        public static implicit operator TVal(Validated<TVal> validated) => validated._value;
 
         protected abstract bool IsValid(TVal t);
         protected abstract string ValidityConditionTextDescription { get; }
 
+        public override string ToString() => GetValueAsString();
     }
 }
