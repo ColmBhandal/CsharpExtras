@@ -15,16 +15,16 @@ namespace CsharpExtras.ValidatedType
             }
             else
             {
-                string valueAsString = GetValueAsString();
+                string valueAsString = GetValueAsString(value);
                 string message = string.Format("The value {0} is invalid. {1}",
                     valueAsString, ValidityConditionTextDescription);
                 throw new ArgumentException(message);
             }
         }
 
-        private string GetValueAsString()
+        private string GetValueAsString(TVal value)
         {
-            return _value?.ToString() ?? "NULL";
+            return value?.ToString() ?? "NULL";
         }
 
         public static implicit operator TVal(Validated<TVal> validated) => validated._value;
@@ -32,6 +32,6 @@ namespace CsharpExtras.ValidatedType
         protected abstract bool IsValid(TVal t);
         protected abstract string ValidityConditionTextDescription { get; }
 
-        public override string ToString() => GetValueAsString();
+        public override string ToString() => GetValueAsString(_value);
     }
 }
