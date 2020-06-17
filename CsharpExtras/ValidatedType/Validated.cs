@@ -6,7 +6,7 @@ namespace CsharpExtras.ValidatedType
 {
     public abstract class Validated<TVal>
     {
-        TVal Value;
+        private readonly TVal Value;
         protected Validated(TVal value)
         {
             if (IsValid(value))
