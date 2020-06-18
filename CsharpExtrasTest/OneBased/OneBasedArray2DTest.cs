@@ -18,7 +18,26 @@ namespace OneBased
         private const string Four = "Four";
 
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
-        
+
+        [Test]
+        public void Given_2DArray_When_IterateAsEnumerable_Then_RowMajorOrderSequenceReturned()
+        {
+            //assemble
+            int[,] zeroBased = new int[,] { { 1, 2 }, { 3, 4 } };
+            IOneBasedArray2D<int> oneBased = _api.NewOneBasedArray2D(zeroBased);
+            IList<int> actualSequence = new List<int>();
+            IList<int> expectedSequence = new List<int>(new int[] {1, 2, 3, 4});
+
+            //act
+            foreach (int i in oneBased)
+            {
+                actualSequence.Add(i);
+            }
+
+            //assert
+            Assert.AreEqual(expectedSequence, actualSequence);
+        }
+
         [Test]        
         public void OneBasedGetterYieldsCorrectResults()
         {
