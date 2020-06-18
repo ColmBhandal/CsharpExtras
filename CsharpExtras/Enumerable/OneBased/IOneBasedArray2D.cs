@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
-    public interface IOneBasedArray2D<TVal>
+    /// <summary>
+    /// This is a two dimensional (non-jagged) array whose indices are one-based.
+    /// As an enumerable, the elements of this array are sequenced in row major order.
+    /// </summary>
+    /// <typeparam name="TVal">The type of elements in the array.</typeparam>
+    public interface IOneBasedArray2D<TVal> : IEnumerable<TVal>
     {
         TVal this[int oneBasedIndex0, int oneBasedIndex1] { get; set; }
         TVal[,] ZeroBasedEquivalent { get; }
