@@ -10,6 +10,15 @@ namespace CsharpExtrasTest.ValidatedType.Numeric
     [Category("Unit")]
     class NumericValidatedTest
     {
+        [Test, TestCase(7423, "7423"), TestCase(1, "1")]
+        public void Given_PositiveInteger_When_ToString_Then_ValueIsAsExpected
+            (int value, string expected)
+        {
+            PositiveInteger posInt;
+            posInt = (PositiveInteger)value;
+            Assert.AreEqual(expected, posInt.ToString());
+        }
+
         [Test, TestCase(-7423), TestCase(-1), TestCase(0)]
         public void Given_NonPositiveInteger_When_AssignToPositiveInteger_Then_ExceptionThrown(int value)
         {
