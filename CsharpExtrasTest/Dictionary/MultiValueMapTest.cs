@@ -14,6 +14,7 @@ namespace CsharpExtrasTest.Dictionary
         [Category("Unit")]
         public void GivenMap_WhenTransform_ThenResultIsOfCorrectLengthAndContainsExpectedMappings()
         {
+            //Arrange
             IMultiValueMap<int, string> testMap = new MultiValueMapImpl<int, string>();
             testMap.Add(1, "Unity");
             testMap.Add(1, "One");
@@ -21,7 +22,11 @@ namespace CsharpExtrasTest.Dictionary
             //Intentionally add a value that'll map to the same as another value
             testMap.Add(2, "Dha");
             testMap.Add(3, "Three");
+            
+            //Act
             IMultiValueMap<int, int> transformedMap = testMap.TransformValues(s => s.Length);
+            
+            //Assert
             Assert.AreEqual(3, transformedMap.Count, "Transformed map should be the same length as original");
             Assert.IsTrue(new HashSet<int>(new int[] {5, 3}).SetEquals(transformedMap[1]));
             Assert.IsTrue(new HashSet<int>(new int[] {3}).SetEquals(transformedMap[2]));

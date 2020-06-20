@@ -11,11 +11,15 @@ namespace Random
         [Test]
         public void GivenRandomStringGeneratorWhen1000StringsGeneratedThenNoDuplicatesFound()
         {
+            //Arrange
             int rndStringLength = 6;
             int maxIterations = 1000;
+            
+            //Act
             IRandomStringGenerator generator = NewGenerator();
             ISet<string> resultSet = new HashSet<string>();
 
+            //Assert
             for (int index = 0; index < maxIterations; index++)
             {
                 string rnd = generator.RandomAlphaNumericUpperCaseString(rndStringLength);
@@ -27,14 +31,17 @@ namespace Random
         [Test]
         public void GivenRandomStringGeneratorWhenRandomStringsGeneratedThenAllCharactersAreUsed()
         {
+            //Arrange
             ISet<char> alphaChars = new HashSet<char> { '0', '1', '2', '3', '4', '5' };
             ISet<char> foundChars = new HashSet<char>();
 
+            //Act
             string alpha = string.Join("", alphaChars);
             int maxIterations = 100;
             int rndStringLength = 4;
             IRandomStringGenerator generator = NewGenerator();
 
+            //Assert
             for (int index = 0; index < maxIterations; index++)
             {
                 string rnd = generator.RandomString(rndStringLength, alpha);
@@ -54,14 +61,17 @@ namespace Random
         [Test]
         public void GivenRandomStringGeneratorWhenRandomStringsGeneratedThenAllCharactersHaveEvenDistributionWithin10Percent()
         {
+            //Arrange
             ISet<char> alphaChars = new HashSet<char> { '0', '1', '2', '3', '4', '5' };
             IDictionary<char, int> charCount = new Dictionary<char, int>();
 
+            //Act
             string alpha = string.Join("", alphaChars);
             int maxIterations = 10000;
             int rndStringLength = 1;
             IRandomStringGenerator generator = NewGenerator();
 
+            //Assert
             for (int index = 0; index < maxIterations; index++)
             {
                 string rnd = generator.RandomString(rndStringLength, alpha);

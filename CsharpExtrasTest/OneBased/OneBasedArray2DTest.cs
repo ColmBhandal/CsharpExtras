@@ -22,7 +22,12 @@ namespace OneBased
         [Test]        
         public void OneBasedGetterYieldsCorrectResults()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
+            
+            //Assert
             Assert.AreEqual(arrOneBased[1,1], One+1);
             Assert.AreEqual(arrOneBased[1,2], Two+1);
             Assert.AreEqual(arrOneBased[2,3], Three+2);
@@ -32,35 +37,60 @@ namespace OneBased
         [Test]
         public void ZeroIndexOutOfBoundsDim0()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
+            
+            //Assert
             Assert.Throws<IndexOutOfRangeException>(() => { _ = arrOneBased[0, 1]; });
         }
 
         [Test]
         public void ZeroIndexOutOfBoundsDim1()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
+            
+            //Assert
             Assert.Throws<IndexOutOfRangeException>(() => { _ = arrOneBased[1, 0]; });
         }
 
         [Test]
         public void UpperIndexOutOfBoundsDim0()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
+            
+            //Assert
             Assert.Throws<IndexOutOfRangeException>(() => { _ = arrOneBased[5, 2]; });
         }
 
         [Test]
         public void UpperIndexOutOfBoundsDim1()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
+            
+            //Assert
             Assert.Throws<IndexOutOfRangeException>(() => { _ = arrOneBased[2, 5]; });
         }
 
         [Test]
         public void Given_2DArray_When_SlicedIntoRows_Then_AllRowsHaveCorrectLength()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
+            
+            //Assert
             for (int row = 1; row <= array.GetLength(0); row++)
             {
                 IOneBasedArray<string> rowSlice = array.SliceRow(row);
@@ -71,7 +101,12 @@ namespace OneBased
         [Test]
         public void Given_2DArray_When_SlicedIntoColumns_Then_AllColumnsHaveCorrectLength()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
+            
+            //Assert
             for (int col = 1; col <= array.GetLength(1); col++)
             {
                 IOneBasedArray<string> colSlice = array.SliceColumn(col);
@@ -82,9 +117,13 @@ namespace OneBased
         [Test]
         public void Given_1dArray_When_ConvertedTo2dArrayAcrossColumns_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
             IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.COLUMN);
 
+            //Assert
             Assert.AreEqual(1, twoDimArray.GetLength(0), "New 2D array should have 1 row");
             Assert.AreEqual(4, twoDimArray.GetLength(1), "New 2D array should have 4 columns");
         }
@@ -92,9 +131,13 @@ namespace OneBased
         [Test]
         public void Given_1dArray_When_ConvertedTo2dArrayAcrossRows_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
         {
+            //Arrange
+            
+            //Act
             IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
             IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.ROW);
 
+            //Assert
             Assert.AreEqual(4, twoDimArray.GetLength(0), "New 2D array should have 4 rows");
             Assert.AreEqual(1, twoDimArray.GetLength(1), "New 2D array should have 1 column");
         }
@@ -103,10 +146,15 @@ namespace OneBased
         public void Given_2DArrayOfInts_When_Write1DArrayToRow_Then_ResultIsAsExpected
             (int[,] data, int[] dataToWrite, int row, int offset, int[] expected)
         {
+            //Arrange
             IOneBasedArray2D<int> oneBasedData = new OneBasedArray2DImpl<int>(data);
             IOneBasedArray<int> oneBasedDataToWrite = new OneBasedArrayImpl<int>(dataToWrite);
             IOneBasedArray<int> oneBasedExpected = new OneBasedArrayImpl<int>(expected);
+            
+            //Act
             oneBasedData.WriteToRow(oneBasedDataToWrite, row, offset);
+            
+            //Assert
             for (int i = 1; i <= oneBasedExpected.Length; i++)
             {
                 Assert.AreEqual(oneBasedExpected[i], oneBasedData[row, i],
@@ -118,10 +166,15 @@ namespace OneBased
         public void Given_2DArrayOfInts_When_Write1DArrayToColumn_Then_ResultIsAsExpected
             (int[,] data, int[] dataToWrite, int column, int offset, int[] expected)
         {
+            //Arrange
             OneBasedArray2DImpl<int> oneBasedData = new OneBasedArray2DImpl<int>(data);
             OneBasedArrayImpl<int> oneBasedDataToWrite = new OneBasedArrayImpl<int>(dataToWrite);
             IOneBasedArray<int> oneBasedExpected = new OneBasedArrayImpl<int>(expected);
+            
+            //Act
             oneBasedData.WriteToColumn(oneBasedDataToWrite, column, offset);
+            
+            //Assert
             for (int i = 1; i <= oneBasedExpected.Length; i++)
             {
                 Assert.AreEqual(oneBasedExpected[i], oneBasedData[i, column],
@@ -133,9 +186,14 @@ namespace OneBased
         public void Given_2DArrayOfInts_When_WriteToArea_Then_ResultIsAsExpected
             (int[,] data, int[,] dataToWrite, int rowOffset, int columnOffset, int[,] expected)
         {
+            //Arrange
             IOneBasedArray2D<int> oneBasedData = new OneBasedArray2DImpl<int>(data);
             IOneBasedArray2D<int> oneBasedDataToWrite = new OneBasedArray2DImpl<int>(dataToWrite);            
+            
+            //Act
             oneBasedData.WriteToArea(oneBasedDataToWrite, rowOffset, columnOffset);
+            
+            //Assert
             Assert.AreEqual(data, expected,
                 string.Format("Failure for (rowOffset, columnOffset) = ({0}, {1})", rowOffset, columnOffset));
         }
@@ -145,9 +203,14 @@ namespace OneBased
         public void Given_2DArrayOfBytes_When_SubArray_Then_ExpectedSubArrayReturned
         (byte[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, byte[,] expected)
         {
+            //Arrange
             IOneBasedArray2D<byte> oneBasedData = new OneBasedArray2DImpl<byte>(data);
             IOneBasedArray2D<byte> oneBasedExpected = new OneBasedArray2DImpl<byte>(expected);
+            
+            //Act
             IOneBasedArray2D<byte> sub = oneBasedData.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
+            
+            //Assert
             Assert.AreEqual(oneBasedExpected.ZeroBasedEquivalent, sub.ZeroBasedEquivalent, string.Format(
                 "Failure for sub array with coordinates ({0}, {1}) --> ({2}, {3}))",
                 startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));

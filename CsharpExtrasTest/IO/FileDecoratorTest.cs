@@ -18,10 +18,14 @@ namespace IO
         public void TestGivenStringWhenCheckIfValidFileNameThenCorrectResultReturned(
             string fileName, bool expectedResult)
         {
+            //Arrange
             ICsharpExtrasApi api = new CsharpExtrasApi();
             IFileDecorator fileDecorator = api.NewFileDecorator();
+            
+            //Act
             fileDecorator.FileNameChecker = new MockWindowsSpecificFileNameChecker();
 
+            //Assert
             Assert.AreEqual(expectedResult, fileDecorator.IsValidFileName(fileName), 
                 "Expected the file name check to match expected result");
         }

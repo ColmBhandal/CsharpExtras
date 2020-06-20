@@ -16,8 +16,13 @@ namespace Map
         [Category("Unit")]
         public void GivenEmptyMapWhenTwoItemsAddedToSameKeyThenBothItemsAreInSetForThatKey()
         {
+            //Arrange
+            
+            //Act
             IMultiValueMap<string, int> multiValueMap = new MultiValueMapImpl<string, int>();
             string key = "bob";
+            
+            //Assert
             Assert.IsFalse(multiValueMap.ContainsKey(key), string.Format(
                 "Given: expected test to start with empty map entry for key {0}, but map appears to contain value for that key."
                 , key));

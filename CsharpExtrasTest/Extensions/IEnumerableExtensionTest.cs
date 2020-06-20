@@ -15,9 +15,14 @@ namespace CustomExtensions
             [TestCaseSource("ValidIndexingData")]
             public void GivenEnumerableWhenIndexedThenResultantDictionaryIsAsExpected(int startIndex, int step, int[] expectedKeysInOrder)
             {
+                //Arrange
                 string[] mockData = new string[] { Zero, One, Two };
                 IDictionary<int, string> indexedDict = mockData.Index(startIndex, step);
+                
+                //Act
                 ICollection<int> actualKeys = indexedDict.Keys;
+                
+                //Assert
                 Assert.AreEqual(expectedKeysInOrder, actualKeys, "Keys in resultant dictionary differ from those expected.");
                 for(int originalIndex = 0; originalIndex < mockData.Length; originalIndex++)
                 {
