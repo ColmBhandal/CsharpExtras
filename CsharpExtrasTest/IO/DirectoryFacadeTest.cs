@@ -1,6 +1,5 @@
 ﻿using CsharpExtras.IO;
 using IO;
-using IO;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;

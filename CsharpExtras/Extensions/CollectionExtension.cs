@@ -8,7 +8,7 @@ namespace CsharpExtras.Extensions
 {
     public static class CollectionExtension
     {
-        public static bool TryGetSingleton<TValueType>(this ICollection<TValueType> collection, out TValueType singleton)
+        public static bool TryGetSingleton<TValueType>(this ICollection<TValueType> collection, out TValueType? singleton) where TValueType : class
         {
             singleton = default;
             if (collection.Count == 0)
