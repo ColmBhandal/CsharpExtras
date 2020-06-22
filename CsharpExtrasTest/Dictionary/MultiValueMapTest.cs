@@ -12,6 +12,28 @@ namespace CsharpExtrasTest.Dictionary
     {
         [Test]
         [Category("Unit")]
+        public void Given_TwoMaps_When_DifferentNumberOfElementsAdded_Then_MapsAreNotEqual()
+        {
+            //Assemble
+            IMultiValueMap<int, string> map1 = new MultiValueMapImpl<int, string>();
+            IMultiValueMap<int, string> map2 = new MultiValueMapImpl<int, string>();
+
+            //Act
+            map1.Add(1, "Unity");
+            map1.Add(1, "One");
+            map1.Add(1, "Uno");
+            map1.Add(2, "Two");
+
+            map2.Add(1, "Unity");
+            map2.Add(1, "One");
+            map2.Add(1, "Uno");
+
+            //Assert
+            Assert.IsFalse(map1.Equals(map2));
+        }
+
+        [Test]
+        [Category("Unit")]
         public void Given_TwoMaps_When_DifferentElementsAdded_Then_MapsAreNotEqual()
         {
             //Assemble

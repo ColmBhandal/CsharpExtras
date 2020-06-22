@@ -131,6 +131,10 @@ namespace CsharpExtras.Dictionary
         {
             if (obj is IMultiValueMap<TKey, TVal> otherMap)
             {
+                if(otherMap.Count != Count)
+                {
+                    return false;
+                }
                 foreach (KeyValuePair<TKey, ISet<TVal>> pair in _setValuedMap)
                 {
                     TKey key = pair.Key;
@@ -140,10 +144,10 @@ namespace CsharpExtras.Dictionary
                     }
                     ISet<TVal>? otherSet = otherMap[key];
                     ISet<TVal>? thisSet = pair.Value;
-                    bool otherNull = otherSet == null;
+                    bool isOtherNull = otherSet == null;
                     if (thisSet != null)
                     {
-                        if (otherNull)
+                        if (isOtherNull)
                         {
                             return false;
                         }
@@ -155,7 +159,7 @@ namespace CsharpExtras.Dictionary
                     }
                     else
                     {
-                        if (!otherNull)
+                        if (!isOtherNull)
                         {
                             return false;
                         }
