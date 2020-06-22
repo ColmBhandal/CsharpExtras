@@ -141,7 +141,7 @@ namespace CustomExtensions
                 sub = arr.SubArray(1, arr.Length - 1);
                 Assert.AreEqual(arr[1], sub[0],
                     "Expecting sub array to start at the right value");
-                Assert.AreEqual(arr[arr.Length - 2], sub[sub.Length - 1],
+                Assert.AreEqual(arr[^2], sub[^1],
                     "Expecting sub array to end at the right value");
             }
         }
