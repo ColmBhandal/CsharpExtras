@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [BREAKING] Move the ArrayOrientation enum to a new namespace (#9)
 - [BREAKING] Rename main namespace from `CustomExtensions` to `Extensions` (#9)
 - 2D one-based arrays are now enumerable (#45)
+- Multi-value maps are now comparable using set-equality as the default equals method (#48)
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)
