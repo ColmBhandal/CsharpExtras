@@ -158,8 +158,20 @@ namespace CsharpExtras.Dictionary
         public override int GetHashCode()
         {
             int hashCode = -170788016;
-            hashCode = hashCode * -1521134295 + EqualityComparer<ICollection<TKey>>.Default.GetHashCode(Keys);
-            hashCode = hashCode * -1521134295 + EqualityComparer<ICollection<ISet<TVal>>>.Default.GetHashCode(Values);
+            foreach (KeyValuePair<TKey, ISet<TVal>> pair in _setValuedMap)
+            {
+                if (pair.Key != null)
+                {
+                    hashCode ^= pair.Key.GetHashCode();
+                }
+                foreach (TVal value in pair.Value)
+                {
+                    if (value != null)
+                    {
+                        hashCode ^= value.GetHashCode();
+                    }
+                }
+            }
             return hashCode;
         }
     }
