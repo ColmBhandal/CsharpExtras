@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - [BREAKING] Move the ArrayOrientation enum to a new namespace (#9)
 - [BREAKING] Rename main namespace from `CustomExtensions` to `Extensions` (#9)
+- [BREAKING] The `TryGetSingleton` extension is now only available for collections with elements of type `class` (#49)
 - 2D one-based arrays are now enumerable (#45)
 - Multi-value maps are now comparable using set-equality as the default equals method (#48)
 - Project now treats all warnings as errors, minor changes made to fix all errors (#49)

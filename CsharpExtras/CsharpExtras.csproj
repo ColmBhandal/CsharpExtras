@@ -2,7 +2,6 @@
   <PropertyGroup>
     <Nullable>enable</Nullable>
     <LangVersion>8.0</LangVersion>
-    <WarningsAsErrors></WarningsAsErrors>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <TargetFramework>netstandard2.0</TargetFramework>
     <OutputType>Library</OutputType>

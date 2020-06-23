@@ -8,7 +8,7 @@ namespace CsharpExtras.Extensions
 {
     public static class CollectionExtension
     {
-        public static bool TryGetSingleton<TValueType>(this ICollection<TValueType> collection, out TValueType? singleton) where TValueType : class
+        public static bool TryGetSingleton<TValue>(this ICollection<TValue> collection, out TValue? singleton) where TValue : class
         {
             singleton = default;
             if (collection.Count == 0)
@@ -23,7 +23,7 @@ namespace CsharpExtras.Extensions
             return false;
         }
 
-        public static TValueType GetSingletonOrFail<TValueType>(this ICollection<TValueType> collection)
+        public static TValue GetSingletonOrFail<TValue>(this ICollection<TValue> collection)
         {
             if (collection.Count == 0)
             {

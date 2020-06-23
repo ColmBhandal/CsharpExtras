@@ -111,10 +111,10 @@ namespace CsharpExtrasTest.Dictionary
             map1.Add(2, "d");
             map1.Add(2, "e");
 
-            map2.Add(2, "d");
+            map2.Add(2, "e");
             map2.Add(1, "c");
             map2.Add(1, "a");
-            map2.Add(2, "e");
+            map2.Add(2, "d");
             map2.Add(1, "b");
 
             //Assert
