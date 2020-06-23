@@ -95,5 +95,51 @@ namespace CsharpExtrasTest.Dictionary
             Assert.IsTrue(new HashSet<int>(new int[] {3}).SetEquals(transformedMap[2]));
             Assert.IsTrue(new HashSet<int>(new int[] {5}).SetEquals(transformedMap[3]));
         }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_TwoMaps_When_TheSameDataIsAddedInDifferentOrders_Then_MapHashCodesMatch()
+        {
+            //Assemble
+            IMultiValueMap<int, string> map1 = new MultiValueMapImpl<int, string>();
+            IMultiValueMap<int, string> map2 = new MultiValueMapImpl<int, string>();
+
+            //Act
+            map1.Add(1, "a");
+            map1.Add(1, "b");
+            map1.Add(1, "c");
+            map1.Add(2, "d");
+            map1.Add(2, "e");
+
+            map2.Add(2, "e");
+            map2.Add(1, "c");
+            map2.Add(1, "a");
+            map2.Add(2, "d");
+            map2.Add(1, "b");
+
+            //Assert
+            Assert.IsTrue(map1.Equals(map2), "GIVEN: Maps should be equal");
+            Assert.AreEqual(map1.GetHashCode(), map2.GetHashCode(), "Map hash codes should match when the maps have the same data");
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_OneLargeMap_When_HashCodeGenerated_Then_NoExceptionThrown()
+        {
+            //Assemble
+            IMultiValueMap<int, string> map = new MultiValueMapImpl<int, string>();
+
+            //Act
+            for (int index1 = 0; index1 < 20; index1++)
+            {
+                for (int index2 = 0; index2 < 20; index2++)
+                {
+                    map.Add(index1, index1 + ":" + index2);
+                }
+            }
+
+            //Assert
+            Assert.DoesNotThrow(() => map.GetHashCode(), "GetHashCode should not throw an exception");
+        }
     }
 }

@@ -7,24 +7,10 @@ using System.Threading.Tasks;
 
 namespace CsharpExtras.Dictionary
 {
-    public interface IMultiValueMap<TKey, TVal> : IDictionary<TKey, ISet<TVal>>
-    {
-        void Add(TKey key, TVal value);
-        bool AnyValues();
-        /// <summary>
-        /// Generates a new multivalue map whose sets are the image of applying the transformer to this map's sets.
-        /// </summary>
-        /// <typeparam name="TOther">The return type of the transformer function.</typeparam>
-        /// <param name="transformer">A function which transforms each value to some other value.</param>
-        /// <returns>A new map, with the same keyset as this, whose values are sets resulting from applying the transformer
-        /// to all elements of the corresponding set in this map and then aggregating the mapped elements to a set.
-        /// Note: the sets in the resuling map may be smaller than those in the original map, if the transformer function maps many-to-one.</returns>
-        IMultiValueMap<TKey, TOther> TransformValues<TOther>(Func<TVal, TOther> transformer);
-    }
 
     class MultiValueMapImpl<TKey, TVal> : IMultiValueMap<TKey, TVal>, IDictionary<TKey, ISet<TVal>>
     {
-        private IDictionary<TKey, ISet<TVal>> _setValuedMap = new Dictionary<TKey, ISet<TVal>>();
+        private readonly IDictionary<TKey, ISet<TVal>> _setValuedMap = new Dictionary<TKey, ISet<TVal>>();
 
         public ISet<TVal> this[TKey key] { get => _setValuedMap[key]; set => _setValuedMap[key] = value; }
 
@@ -167,6 +153,26 @@ namespace CsharpExtras.Dictionary
                 }
             }
             return true;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -170788016;
+            foreach (KeyValuePair<TKey, ISet<TVal>> pair in _setValuedMap)
+            {
+                if (pair.Key != null)
+                {
+                    hashCode ^= pair.Key.GetHashCode();
+                }
+                foreach (TVal value in pair.Value)
+                {
+                    if (value != null)
+                    {
+                        hashCode ^= value.GetHashCode();
+                    }
+                }
+            }
+            return hashCode;
         }
     }
 }
