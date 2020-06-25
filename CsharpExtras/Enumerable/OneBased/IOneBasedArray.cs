@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
+using CsharpExtras.Dictionary.Collection;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
@@ -30,7 +31,7 @@ namespace CsharpExtras.Enumerable.OneBased
         /// </summary>
         IDictionary<TVal, TOther> ZipToDictionary<TOther>(IOneBasedArray<TOther> other);
         
-        IMultiValueMap<TVal, TOther> ZipToMultiValueMap<TOther>(IOneBasedArray<TOther> other);
+        ISetDictionary<TVal, TOther> ZipToSetDictionary<TOther>(IOneBasedArray<TOther> other);
 
         IOneBasedArray<TResult> ZipArray<TOther1, TOther2, TResult>(Func<TVal, TOther1, TOther2, TResult> zipper, IOneBasedArray<TOther1> other1, IOneBasedArray<TOther2> other2);
         IOneBasedArray<TResult> ZipArray<TOther1, TOther2, TOther3, TResult>(Func<TVal, TOther1, TOther2, TOther3, TResult> zipper, IOneBasedArray<TOther1> other1, IOneBasedArray<TOther2> other2, IOneBasedArray<TOther3> other3);

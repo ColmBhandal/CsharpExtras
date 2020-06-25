@@ -1,5 +1,6 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.Dictionary;
+using CsharpExtras.Dictionary.Collection;
 using CsharpExtras.Enumerable.NonEmpty;
 using CsharpExtras.Enumerable.OneBased;
 using CsharpExtras.IO;
@@ -28,8 +29,8 @@ namespace CsharpExtras.Api
             => new BijectionDictionaryImpl<TKey, TVal>();
         public IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>()
             => new RegexPatternDictionaryImpl<TVal>();
-        public IMultiValueMap<TKey, TVal> NewMultiValueMap<TKey, TVal>()
-            => new MultiValueMapImpl<TKey, TVal>();
+        public ISetDictionary<TKey, TVal> NewSetDictionary<TKey, TVal>()
+            => new SetDictionaryImpl<TKey, TVal>();
 
         public INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val)
             => new NonEmptyCollectionImpl<TVal>(val);
