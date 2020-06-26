@@ -31,6 +31,10 @@ namespace CsharpExtras.Dictionary.Collection
 
         public void Add(TKey key, TVal value)
         {
+            if (key == null)
+            {
+                throw new ArgumentNullException("Cannot add with a null key");
+            }
             if (!CollectionValuedDictionary.ContainsKey(key))
             {
                 CollectionValuedDictionary.Add(key, NewCollection());
