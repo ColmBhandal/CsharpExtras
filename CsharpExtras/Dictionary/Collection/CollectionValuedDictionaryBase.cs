@@ -6,8 +6,8 @@ using System.Text;
 
 namespace CsharpExtras.Dictionary.Collection
 {
-    abstract class CollectionDictionaryBase<TKey, TVal, TColl>
-        : ICollectionDictionary<TKey, TVal, TColl>, IDictionary<TKey, TColl>
+    abstract class CollectionValuedDictionaryBase<TKey, TVal, TColl>
+        : ICollectionValuedDictionary<TKey, TVal, TColl>, IDictionary<TKey, TColl>
         where TColl : class, ICollection<TVal>
     {
 
@@ -40,7 +40,7 @@ namespace CsharpExtras.Dictionary.Collection
 
         public TDict TransformValues<TOther, TOtherColl, TDict>(Func<TVal, TOther> transformer,
             Func<TDict> emptyDictionaryGenerator)
-            where TDict : ICollectionDictionary<TKey, TOther, TOtherColl>
+            where TDict : ICollectionValuedDictionary<TKey, TOther, TOtherColl>
             where TOtherColl : ICollection<TOther>
         {
             TDict transformedMap = emptyDictionaryGenerator();
@@ -69,7 +69,7 @@ namespace CsharpExtras.Dictionary.Collection
             return false;
         }
 
-        public bool DictEquals(ICollectionDictionary<TKey, TVal, TColl> otherDict)
+        public bool DictEquals(ICollectionValuedDictionary<TKey, TVal, TColl> otherDict)
         {
             if (otherDict.Count != Count)
             {

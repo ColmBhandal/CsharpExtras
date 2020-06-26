@@ -72,7 +72,7 @@ namespace CsharpExtras.Enumerable.OneBased
             return ZeroBasedEquivalent.ZipToDictionary(other.ZeroBasedEquivalent);
         }
 
-        public ISetDictionary<TVal, TOther> ZipToSetDictionary<TOther>(IOneBasedArray<TOther> other)
+        public ISetValuedDictionary<TVal, TOther> ZipToSetDictionary<TOther>(IOneBasedArray<TOther> other)
         {
             return ZeroBasedEquivalent.ZipToSetDictionary(other.ZeroBasedEquivalent);
         }

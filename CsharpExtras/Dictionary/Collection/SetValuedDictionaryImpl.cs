@@ -4,8 +4,8 @@ using System.Text;
 
 namespace CsharpExtras.Dictionary.Collection
 {
-    class SetDictionaryImpl<TKey, TVal>
-        : CollectionDictionaryBase<TKey, TVal, ISet<TVal>>, ISetDictionary<TKey, TVal>
+    class SetValuedDictionaryImpl<TKey, TVal>
+        : CollectionValuedDictionaryBase<TKey, TVal, ISet<TVal>>, ISetValuedDictionary<TKey, TVal>
     {
         protected override bool CollectionEquals(ISet<TVal> thisSet, ISet<TVal> otherSet)
         {
@@ -17,11 +17,11 @@ namespace CsharpExtras.Dictionary.Collection
             return new HashSet<TVal>();
         }
 
-        public ISetDictionary<TKey, TOther> TransformValues<TOther>
+        public ISetValuedDictionary<TKey, TOther> TransformValues<TOther>
             (Func<TVal, TOther> transformer)
         {
-            return TransformValues<TOther, ISet<TOther>, ISetDictionary<TKey, TOther>>(transformer,
-                () => new SetDictionaryImpl<TKey, TOther>());
+            return TransformValues<TOther, ISet<TOther>, ISetValuedDictionary<TKey, TOther>>(transformer,
+                () => new SetValuedDictionaryImpl<TKey, TOther>());
         }
     }
 }

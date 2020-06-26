@@ -17,7 +17,7 @@ namespace CustomExtensions
         {
             int[] keys = new int[] { 1, 2, 1 };
             string[] vals = new string[] { "One", "Two", "Three", "dasfash", "One" };
-            ISetDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
+            ISetValuedDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
             Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
             Assert.AreEqual(2, zipped[1].Count);
             Assert.AreEqual(1, zipped[2].Count);
@@ -28,7 +28,7 @@ namespace CustomExtensions
         {
             int[] keys = new int[] { 1, 2, 1, 3, 4, 5, 1, 2 };
             string[] vals = new string[] { "One", "Two", "Three" };
-            ISetDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
+            ISetValuedDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
             Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
             Assert.AreEqual(2, zipped[1].Count);
             Assert.AreEqual(1, zipped[2].Count);

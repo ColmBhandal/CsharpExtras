@@ -29,8 +29,8 @@ namespace CsharpExtras.Api
             => new BijectionDictionaryImpl<TKey, TVal>();
         public IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>()
             => new RegexPatternDictionaryImpl<TVal>();
-        public ISetDictionary<TKey, TVal> NewSetDictionary<TKey, TVal>()
-            => new SetDictionaryImpl<TKey, TVal>();
+        public ISetValuedDictionary<TKey, TVal> NewSetDictionary<TKey, TVal>()
+            => new SetValuedDictionaryImpl<TKey, TVal>();
 
         public INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val)
             => new NonEmptyCollectionImpl<TVal>(val);

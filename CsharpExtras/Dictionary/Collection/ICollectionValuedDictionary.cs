@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace CsharpExtras.Dictionary.Collection
 {
-    public interface ICollectionDictionary<TKey, TVal, TColl> : IDictionary<TKey, TColl>
+    public interface ICollectionValuedDictionary<TKey, TVal, TColl> : IDictionary<TKey, TColl>
     {
         void Add(TKey key, TVal value);
 
         bool AnyValues();
-        bool DictEquals(ICollectionDictionary<TKey, TVal, TColl> otherDict);
+        bool DictEquals(ICollectionValuedDictionary<TKey, TVal, TColl> otherDict);
 
         /// <summary>
         /// Generates a new dictionary of the given type whose collection values
@@ -22,7 +22,7 @@ namespace CsharpExtras.Dictionary.Collection
         /// e.g. if the collections are sets and the transformer function maps many-to-one.</returns>
         TDict TransformValues<TOther, TOtherColl, TDict>(Func<TVal, TOther> transformer,
             Func<TDict> emptyDictionaryGenerator)
-            where TDict : ICollectionDictionary<TKey, TOther, TOtherColl>
+            where TDict : ICollectionValuedDictionary<TKey, TOther, TOtherColl>
             where TOtherColl : ICollection<TOther>;
     }
 }
