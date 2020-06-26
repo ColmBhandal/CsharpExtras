@@ -1,5 +1,6 @@
 ﻿using CsharpExtras.Api;
 using CsharpExtras.Dictionary.Collection;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,43 @@ namespace CsharpExtrasTest.Dictionary.Collection
     [TestFixture, Category("Unit")]
     public class ListValuedDictionaryTest
     {
+        [Test]
+        public void Given_EmptyListValuedDictionary_When_InsertIndexZero_Then_ListAtThatIndexIsCorrect()
+        {
+            //Assemble
+            IListValuedDictionary<int, string> dict1 = new CsharpExtrasApi().NewListValuedDictionary<int, string>();
+
+            //Act
+            dict1.InsertAtIndex(1, "World", (NonnegativeInteger)0);
+            dict1.InsertAtIndex(1, "Hello", (NonnegativeInteger)0);
+
+            //Assert
+            Assert.IsTrue(dict1[1].SequenceEqual(new List<string> { "Hello", "World"}),
+                "Dictionary sequence at given key does not match the expected sequence");
+        }
+
+        [Test]
+        public void Given_ListValuedDictionaryWithElementsAdded_When_InsertAtIndex_Then_ListAtThatKeyIsCorrect()
+        {
+            //Assemble
+            IListValuedDictionary<int, double> dict1 = new CsharpExtrasApi().NewListValuedDictionary<int, double>();           
+            dict1.Add(1, 11);
+            dict1.Add(1, 12);
+            dict1.Add(1, 13);
+            dict1.Add(1, 14);
+            Assert.IsTrue(dict1[1].SequenceEqual(new List<double> { 11, 12, 13, 14}),
+                "GIVEN: List at given index is not as expected");
+
+            //Act
+            dict1.InsertAtIndex(1, 12.5, (NonnegativeInteger) 2);
+            dict1.InsertAtIndex(1, 12.4, (NonnegativeInteger)2);
+            dict1.InsertAtIndex(1, 12.6, (NonnegativeInteger)4);
+
+            //Assert
+            Assert.IsTrue(dict1[1].SequenceEqual(new List<double> { 11, 12, 12.4, 12.5, 12.6, 13, 14}),
+                "Dictionary sequence at given key does not match the expected sequence");
+        }
+
         [Test]
         public void Given_ListValuedDictionary_When_ElementsAddedToKey_Then_ListAtThatKeyPreservedInsertionOrder()
         {
