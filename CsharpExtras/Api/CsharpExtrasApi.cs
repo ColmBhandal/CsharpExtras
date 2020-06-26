@@ -23,6 +23,11 @@ namespace CsharpExtras.Api
             StaticLogManager.Logger = logger;
         }
 
+        public IListValuedDictionary<TKey, TVal> NewListValuedDictionary<TKey, TVal>()
+        {
+            return new ListValuedDictionaryImpl<TKey, TVal>();
+        }
+
         public IComparer<T> NewDescendingComparer<T>() => new DescendingComparer<T>();
 
         public IBijectionDictionary<TKey, TVal> NewBijectionDictionary<TKey, TVal>()

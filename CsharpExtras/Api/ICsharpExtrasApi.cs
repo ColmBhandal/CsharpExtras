@@ -40,5 +40,6 @@ namespace CsharpExtras.Api
         IValidationError NewValidationError(bool isBlocker, string message);
         IValidationErrorCollection NewValidationErrorCollection();
         void SetLogger(ILogger logger);
+        IListValuedDictionary<TKey, TVal> NewListValuedDictionary<TKey, TVal>();
     }
 }
