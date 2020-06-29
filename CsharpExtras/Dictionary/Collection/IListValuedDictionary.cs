@@ -11,5 +11,7 @@ namespace CsharpExtras.Dictionary.Collection
         /// Adds the value at the given index to the list at the given key.
         /// </summary>       
         void InsertAtIndex(TKey key, TVal val, NonnegativeInteger index);
+
+        IListValuedDictionary<TKey, TOther> TransformValues<TOther>(Func<TVal, TOther> transformer);
     }
 }

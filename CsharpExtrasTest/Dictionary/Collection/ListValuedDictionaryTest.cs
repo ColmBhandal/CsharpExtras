@@ -71,6 +71,28 @@ namespace CsharpExtrasTest.Dictionary.Collection
         }
 
         [Test]
+        public void Given_ListDictionaries_When_SameElementsAddedWithDifferentOrderForJustOneKey_Then_DictionariesNotEqual()
+        {
+            //Assemble
+            IListValuedDictionary<int, int> dict1 = new CsharpExtrasApi().NewListValuedDictionary<int, int>();
+            IListValuedDictionary<int, int> dict2 = new CsharpExtrasApi().NewListValuedDictionary<int, int>();
+
+            //Act
+            dict1.Add(1, 11);
+            dict1.Add(1, 12);
+            dict1.Add(2, 21);
+            dict1.Add(2, 22);
+
+            dict2.Add(1, 11);
+            dict2.Add(2, 22);
+            dict2.Add(2, 21);
+            dict2.Add(1, 12);
+
+            //Assert
+            Assert.IsFalse(dict1.DictEquals(dict2), "Expected dictionaries to be unequal");
+        }
+
+        [Test]
         public void Given_ListDictionaries_When_SameElementsAddedInSameOrderPerKey_Then_DictionariesEqual()
         {
             //Assemble

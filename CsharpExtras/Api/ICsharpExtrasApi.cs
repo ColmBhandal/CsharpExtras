@@ -27,7 +27,6 @@ namespace CsharpExtras.Api
         IIntegerTree NewIntegerTree(int payload);
         ILazyFunctionMap<TKey, TVal> NewLazyFunctionMap<TKey, TVal>(Func<TKey, TVal> backingFunction);
         ILeafBase<TVal> NewLeaf<TVal>(TVal payload);
-        ISetValuedDictionary<TKey, TVal> NewSetDictionary<TKey, TVal>();
         INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val);
         INonEmptyEnumerable<TVal> NewNonEmptyEnumerable<TVal>(TVal val);
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(TVal[] zeroBasedBackingArray);
@@ -40,6 +39,7 @@ namespace CsharpExtras.Api
         IValidationError NewValidationError(bool isBlocker, string message);
         IValidationErrorCollection NewValidationErrorCollection();
         void SetLogger(ILogger logger);
+        ISetValuedDictionary<TKey, TVal> NewSetValuedDictionary<TKey, TVal>();
         IListValuedDictionary<TKey, TVal> NewListValuedDictionary<TKey, TVal>();
     }
 }

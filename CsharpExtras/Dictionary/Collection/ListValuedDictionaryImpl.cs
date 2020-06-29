@@ -38,6 +38,12 @@ namespace CsharpExtras.Dictionary.Collection
             }
         }
 
+        public IListValuedDictionary<TKey, TOther> TransformValues<TOther>(Func<TVal, TOther> transformer)
+        {
+            return TransformValues<TOther, IList<TOther>, IListValuedDictionary<TKey, TOther>>(transformer,
+                () => new ListValuedDictionaryImpl<TKey, TOther>());
+        }
+
         protected override bool CollectionEquals(IList<TVal> thisList, IList<TVal> otherList) =>
             thisList.SequenceEqual(otherList);
 

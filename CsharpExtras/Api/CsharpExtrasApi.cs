@@ -34,7 +34,7 @@ namespace CsharpExtras.Api
             => new BijectionDictionaryImpl<TKey, TVal>();
         public IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>()
             => new RegexPatternDictionaryImpl<TVal>();
-        public ISetValuedDictionary<TKey, TVal> NewSetDictionary<TKey, TVal>()
+        public ISetValuedDictionary<TKey, TVal> NewSetValuedDictionary<TKey, TVal>()
             => new SetValuedDictionaryImpl<TKey, TVal>();
 
         public INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val)
