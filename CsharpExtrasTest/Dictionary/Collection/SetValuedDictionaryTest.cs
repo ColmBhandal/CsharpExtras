@@ -9,7 +9,7 @@ using CsharpExtras.Dictionary.Collection;
 namespace CsharpExtrasTest.Dictionary
 {
     [TestFixture]
-    class SetDictionaryTest
+    class SetValuedDictionaryTest
     {
         [Test]
         [Category("Unit")]
