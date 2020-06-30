@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Dictionary;
+using CsharpExtras.Dictionary.Collection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,10 +139,10 @@ namespace CsharpExtras.Extensions
             return dict;
         }
 
-        public static IMultiValueMap<TVal, TOther> ZipToMultiValueMap<TVal, TOther>(this TVal[] array, TOther[] other)
+        public static ISetValuedDictionary<TVal, TOther> ZipToSetDictionary<TVal, TOther>(this TVal[] array, TOther[] other)
         {
             (TVal s, TOther u)[] zippedValues = array.ZipArray<TVal, TOther, (TVal, TOther)>((s, u) => (s, u), other);
-            IMultiValueMap<TVal, TOther> dict = new MultiValueMapImpl<TVal, TOther>();
+            ISetValuedDictionary<TVal, TOther> dict = new SetValuedDictionaryImpl<TVal, TOther>();
             foreach ((TVal leftValue, TOther rightValue) in zippedValues)
             {
                 dict.Add(leftValue, rightValue);

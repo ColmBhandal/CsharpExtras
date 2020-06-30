@@ -11,6 +11,7 @@ using CsharpExtras.Tree.Integer;
 using CsharpExtras.Tree.Base;
 using CsharpExtras.RandomDataGen;
 using CsharpExtras.Validation;
+using CsharpExtras.Dictionary.Collection;
 
 namespace CsharpExtras.Api
 {
@@ -26,7 +27,6 @@ namespace CsharpExtras.Api
         IIntegerTree NewIntegerTree(int payload);
         ILazyFunctionMap<TKey, TVal> NewLazyFunctionMap<TKey, TVal>(Func<TKey, TVal> backingFunction);
         ILeafBase<TVal> NewLeaf<TVal>(TVal payload);
-        IMultiValueMap<TKey, TVal> NewMultiValueMap<TKey, TVal>();
         INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val);
         INonEmptyEnumerable<TVal> NewNonEmptyEnumerable<TVal>(TVal val);
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(TVal[] zeroBasedBackingArray);
@@ -39,5 +39,7 @@ namespace CsharpExtras.Api
         IValidationError NewValidationError(bool isBlocker, string message);
         IValidationErrorCollection NewValidationErrorCollection();
         void SetLogger(ILogger logger);
+        ISetValuedDictionary<TKey, TVal> NewSetValuedDictionary<TKey, TVal>();
+        IListValuedDictionary<TKey, TVal> NewListValuedDictionary<TKey, TVal>();
     }
 }
