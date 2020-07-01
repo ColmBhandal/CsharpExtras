@@ -204,11 +204,11 @@ namespace CustomExtensions
         public void EqualsIgnoreDigitsTrueWhenBothSidesHaveDifferentDigits()
         {
             //Arrange
-            string value = "s000df11asd1hf23las";
-            string digits = "sdf33asdhf057la12389s";
+            string value1 = "s000df11asd1hf23las";
+            string value2 = "sdf33asdhf057la12389s";
 
             //Act
-            bool result = value.EqualsIgnoreDigits("sdf33asdhf057la12389s");
+            bool result = value1.EqualsIgnoreDigits(value2);
             
             //Assert
             Assert.IsTrue(result);
