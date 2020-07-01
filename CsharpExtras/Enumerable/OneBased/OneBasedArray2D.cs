@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.Extensions;
-using CsharpExtras.Extensions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
@@ -120,5 +121,18 @@ namespace CsharpExtras.Enumerable.OneBased
                 stopBeforeRow - 1, stopBeforeColumn - 1);
             return new OneBasedArray2DImpl<TVal>(zeroBased);
         }
+
+        public IEnumerator<TVal> GetEnumerator()
+        {
+            for(int i = 1; i <= GetLength(0); i++)
+            {
+                for(int j = 1; j <= GetLength(1); j++)
+                {
+                    yield return this[i, j];
+                }
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

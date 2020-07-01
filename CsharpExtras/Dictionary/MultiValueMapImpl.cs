@@ -7,49 +7,35 @@ using System.Threading.Tasks;
 
 namespace CsharpExtras.Dictionary
 {
-    public interface IMultiValueMap<K, U> : IDictionary<K, ISet<U>>
+
+    class MultiValueMapImpl<TKey, TVal> : IMultiValueMap<TKey, TVal>, IDictionary<TKey, ISet<TVal>>
     {
-        void Add(K key, U value);
-        bool AnyValues();
-        /// <summary>
-        /// Generates a new multivalue map whose sets are the image of applying the transformer to this map's sets.
-        /// </summary>
-        /// <typeparam name="V">The return type of the transformer function.</typeparam>
-        /// <param name="transformer">A function which transforms each value to some other value.</param>
-        /// <returns>A new map, with the same keyset as this, whose values are sets resulting from applying the transformer
-        /// to all elements of the corresponding set in this map and then aggregating the mapped elements to a set.
-        /// Note: the sets in the resuling map may be smaller than those in the original map, if the transformer function maps many-to-one.</returns>
-        IMultiValueMap<K, V> TransformValues<V>(Func<U, V> transformer);
-    }
+        private readonly IDictionary<TKey, ISet<TVal>> _setValuedMap = new Dictionary<TKey, ISet<TVal>>();
 
-    class MultiValueMapImpl<K, U> : IMultiValueMap<K, U>, IDictionary<K, ISet<U>>
-    {
-        private IDictionary<K, ISet<U>> _setValuedMap = new Dictionary<K, ISet<U>>();
+        public ISet<TVal> this[TKey key] { get => _setValuedMap[key]; set => _setValuedMap[key] = value; }
 
-        public ISet<U> this[K key] { get => _setValuedMap[key]; set => _setValuedMap[key] = value; }
+        public ICollection<TKey> Keys => _setValuedMap.Keys;
 
-        public ICollection<K> Keys => _setValuedMap.Keys;
-
-        public ICollection<ISet<U>> Values => _setValuedMap.Values;
+        public ICollection<ISet<TVal>> Values => _setValuedMap.Values;
 
         public int Count => _setValuedMap.Count;
 
         public bool IsReadOnly => _setValuedMap.IsReadOnly;
 
-        public void Add(K key, U value)
+        public void Add(TKey key, TVal value)
         {
             if (!_setValuedMap.ContainsKey(key))
             {
-                _setValuedMap.Add(key, new HashSet<U>());
+                _setValuedMap.Add(key, new HashSet<TVal>());
             }
             _setValuedMap[key].Add(value);
         }
-        public IMultiValueMap<K, V> TransformValues<V>(Func<U, V> transformer)
+        public IMultiValueMap<TKey, V> TransformValues<V>(Func<TVal, V> transformer)
         {
-            IMultiValueMap<K, V> transformedMap = new MultiValueMapImpl<K, V>();
-            foreach(K key in Keys)
+            IMultiValueMap<TKey, V> transformedMap = new MultiValueMapImpl<TKey, V>();
+            foreach(TKey key in Keys)
             {
-                ISet<U> thisSet = this[key];
+                ISet<TVal> thisSet = this[key];
                 IEnumerable<V> transformedValues = thisSet.Select(transformer);
                 foreach(V transformedValue in transformedValues)
                 {
@@ -59,12 +45,12 @@ namespace CsharpExtras.Dictionary
             return transformedMap;
         }
 
-        public void Add(K key, ISet<U> value)
+        public void Add(TKey key, ISet<TVal> value)
         {
             _setValuedMap.Add(key, value);
         }
 
-        public void Add(KeyValuePair<K, ISet<U>> item)
+        public void Add(KeyValuePair<TKey, ISet<TVal>> item)
         {
             _setValuedMap.Add(item);
         }
@@ -72,7 +58,7 @@ namespace CsharpExtras.Dictionary
         //Non-mvp: Test
         public bool AnyValues()
         {
-            foreach(ISet<U> set in Values)
+            foreach(ISet<TVal> set in Values)
             {
                 if (set.Any())
                 {
@@ -87,37 +73,37 @@ namespace CsharpExtras.Dictionary
             _setValuedMap.Clear();
         }
 
-        public bool Contains(KeyValuePair<K, ISet<U>> item)
+        public bool Contains(KeyValuePair<TKey, ISet<TVal>> item)
         {
             return _setValuedMap.Contains(item);
         }
 
-        public bool ContainsKey(K key)
+        public bool ContainsKey(TKey key)
         {
             return _setValuedMap.ContainsKey(key);
         }
 
-        public void CopyTo(KeyValuePair<K, ISet<U>>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, ISet<TVal>>[] array, int arrayIndex)
         {
             _setValuedMap.CopyTo(array, arrayIndex);
         }
 
-        public IEnumerator<KeyValuePair<K, ISet<U>>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, ISet<TVal>>> GetEnumerator()
         {
             return _setValuedMap.GetEnumerator();
         }
 
-        public bool Remove(K key)
+        public bool Remove(TKey key)
         {
             return _setValuedMap.Remove(key);
         }
 
-        public bool Remove(KeyValuePair<K, ISet<U>> item)
+        public bool Remove(KeyValuePair<TKey, ISet<TVal>> item)
         {
             return _setValuedMap.Remove(item);
         }
 
-        public bool TryGetValue(K key, out ISet<U> value)
+        public bool TryGetValue(TKey key, out ISet<TVal> value)
         {
             return _setValuedMap.TryGetValue(key, out value);
         }
@@ -125,6 +111,68 @@ namespace CsharpExtras.Dictionary
         IEnumerator IEnumerable.GetEnumerator()
         {
             return _setValuedMap.GetEnumerator();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is IMultiValueMap<TKey, TVal> otherMap)
+            {
+                if(otherMap.Count != Count)
+                {
+                    return false;
+                }
+                foreach (KeyValuePair<TKey, ISet<TVal>> pair in _setValuedMap)
+                {
+                    TKey key = pair.Key;
+                    if (!otherMap.ContainsKey(key))
+                    {
+                        return false;
+                    }
+                    ISet<TVal>? otherSet = otherMap[key];
+                    ISet<TVal>? thisSet = pair.Value;
+                    bool isOtherNull = otherSet == null;
+                    if (thisSet != null)
+                    {
+                        if (isOtherNull)
+                        {
+                            return false;
+                        }
+                        bool setEquals = thisSet.SetEquals(otherSet);
+                        if (!setEquals)
+                        {
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        if (!isOtherNull)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -170788016;
+            foreach (KeyValuePair<TKey, ISet<TVal>> pair in _setValuedMap)
+            {
+                if (pair.Key != null)
+                {
+                    hashCode ^= pair.Key.GetHashCode();
+                }
+                foreach (TVal value in pair.Value)
+                {
+                    if (value != null)
+                    {
+                        hashCode ^= value.GetHashCode();
+                    }
+                }
+            }
+            return hashCode;
         }
     }
 }

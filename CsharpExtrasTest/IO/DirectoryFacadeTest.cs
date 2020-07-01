@@ -1,6 +1,5 @@
 ﻿using CsharpExtras.IO;
 using IO;
-using IO;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ namespace IO
     [TestFixture]
     public class DirectoryFacadeTest
     {
-        IDirectoryFacade DirectoryFacade = new DirectoryFacadeImpl();
+        private readonly IDirectoryFacade _directoryFacade = new DirectoryFacadeImpl();
 
         [Test, Category("Unit")]
         public void TestGivenRootAndRelativeSubDirWhenCombineThenGetDifferenceThenResultEqualsRelativeSubDir()
@@ -26,7 +25,7 @@ namespace IO
             string absoluteSubDir = Path.Combine(root, relativeSubDir);
             
             //Act
-            string diff = DirectoryFacade.GetRelativeDifferenceBetweenPaths(root, absoluteSubDir);
+            string diff = _directoryFacade.GetRelativeDifferenceBetweenPaths(root, absoluteSubDir);
             
             //Assert
             Assert.AreEqual(relativeSubDir, diff);

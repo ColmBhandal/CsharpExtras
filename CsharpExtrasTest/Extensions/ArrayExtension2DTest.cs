@@ -1,4 +1,5 @@
-﻿using CsharpExtras.Extensions;
+﻿using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras.Extensions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,6 @@ namespace CsharpExtrasTest.Extensions
     [TestFixture]
     public class ArrayExtension2DTest
     {
-
         [Test]
         [Category("Unit")]
         [TestCaseSource("ProviderForFoldingArrayToSingleRow")]

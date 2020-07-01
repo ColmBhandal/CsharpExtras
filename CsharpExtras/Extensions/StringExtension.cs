@@ -83,8 +83,7 @@ namespace CsharpExtras.Extensions
         /// <returns>Empty string if conversion fails, or a date value in ISO format otherwise</returns>
         public static string TryConvertOadDateStringToFormattedDate(this string oadDate)
         {
-            double parsedDate;
-            if (double.TryParse(oadDate, out parsedDate))
+            if (double.TryParse(oadDate, out double parsedDate))
             {
                 DateTime conv = DateTime.FromOADate(parsedDate);
                 return conv.ToString("yyyy-MM-dd");

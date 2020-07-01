@@ -108,8 +108,7 @@ namespace CsharpExtras.Extensions
                 }
                 else
                 {
-                    IList<int> lst = new List<int>();
-                    lst.Add(index);
+                    IList<int> lst = new List<int> { index };
                     inverseMap.Add(value, lst);
                 }
             }
