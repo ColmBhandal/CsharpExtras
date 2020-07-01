@@ -31,7 +31,10 @@ namespace CustomExtensions
         public void GivenStringWhenInsertSpacesThenResultHasSpacesInsertedAsExpected
             (string input, string expected)
         {
+            //Act
             string actual = input.InsertSpaceBetweenEachLetternAndFollowingUppercaseLetter();
+            
+            //Assert
             Assert.AreEqual(expected, actual);
         }
 
@@ -50,12 +53,17 @@ namespace CustomExtensions
         [Test, Category("Unit")]
         public void TestGivenStringWithVariedNewlineCharsWhenGetLinesThenSetContainsSegmentsBetweenTheLines()
         {
+            //Arrange
             string segment1 = "asdfads";
             string segment2 = "3742936";
             string segment3 = "adefldhask";
             string segment4 = "'#xcv;#a";
             string joinedString = segment1 + "\r\n" + segment2 + "\r" + segment3 + "\n" + segment4 + "\r\n";
+            
+            //Act
             ISet<string> lines = joinedString.Lines();
+            
+            //Assert
             Assert.AreEqual(new HashSet<string>() { segment1, segment2, segment3, segment4 }, lines);
         }
 
@@ -69,7 +77,10 @@ namespace CustomExtensions
             string splitter,
             int expectedCount)
         {
+            //Act
             string[] pieces = input.Split(splitter);
+            
+            //Assert
             Assert.AreEqual(expectedCount, pieces.Length);
         }
 
@@ -77,49 +88,101 @@ namespace CustomExtensions
         [Category("Unit")]
         public void ContainsAnyTrueWithNoMatchesInMany()
         {
-            Assert.IsFalse("AxBfd-afd_ sf".ContainsAny("adgfkjadhsfas", "afgadlsfgaksfjads", "Bfdxxxxs"));
+            //Arrange
+            string value = "AxBfd-afd_ sf";
+            
+            //Act
+            bool result = value.ContainsAny("adgfkjadhsfas", "afgadlsfgaksfjads", "Bfdxxxxs");
+            
+            //Assert
+            Assert.IsFalse(result);
         }
 
         [Test]
         [Category("Unit")]
         public void ContainsAnyTrueWithOneMatchInMany()
         {
-            Assert.IsTrue("AxBfd-afd_ sf".ContainsAny("adgfkjadhsfas", "afgadlsfgaksfjads", "Bfd"));
+            //Arrange
+            string value = "AxBfd-afd_ sf";
+            
+            //Act
+            bool result = value.ContainsAny("adgfkjadhsfas", "afgadlsfgaksfjads", "Bfd");
+            Assert.IsTrue(result);
         }
 
         [Test]
         [Category("Unit")]
         public void RemoveRegexMatchesRemovesMoreThanOneMatch()
         {
-            Assert.AreEqual("AxBfd-afd_ sf".RemoveRegexMatches("[ _-]"), "AxBfdafdsf");
+            //Arrange
+            string value = "AxBfd-afd_ sf";
+            string expected="AxBfdafdsf";
+            
+            //Act
+            string result = value.RemoveRegexMatches("[ _-]");
+            
+            //Assert
+            Assert.AreEqual(expected,result);
         }
 
         [Test]
         [Category("Unit")]
         public void GivenStringWithSpacesWhenRemoveWhitespaceThenStringWithoutWhitespaceReturned()
         {
-            Assert.AreEqual(" A  b C    d   E   f  G".RemoveWhitespace(), "AbCdEfG");
+            //Arrange
+            string value = " A  b C    d   E   f  G";
+            string expected = "AbCdEfG";
+
+            //Act
+            string result = value.RemoveWhitespace();
+            
+            //Arrange
+            Assert.AreEqual(expected,result);
         }
 
         [Test]
         [Category("Unit")]
         public void GivenStringWithSlashRSlashNWhenRemoveNewlinesThenBothNewlineCharactersRemoved()
         {
-            Assert.AreEqual("FirstLine\r\nSecondLine".RemoveNewlines(), "FirstLineSecondLine");
+            //Arrange
+            string value = "FirstLine\r\nSecondLine";
+            string expected = "FirstLineSecondLine";
+
+            //Act
+            string result = value.RemoveNewlines();
+            
+            //Assert
+            Assert.AreEqual(expected, result);
         }
 
         [Test]
         [Category("Unit")]
         public void GivenStringWithSlashNWhenRemoveNewlinesThenSlashNIsRemoved()
         {
-            Assert.AreEqual("FirstLine\nSecondLine".RemoveNewlines(), "FirstLineSecondLine");
+            //Arrange
+            string value = "FirstLine\nSecondLine";
+            string expected = "FirstLineSecondLine";
+
+            //Act
+            string result = value.RemoveNewlines();
+            
+            //Assert
+            Assert.AreEqual(expected,result);
         }
 
         [Test]
         [Category("Unit")]
         public void GivenStringWithSlashRWhenRemoveNewlinesThenSlashRIsRemoved()
         {
-            Assert.AreEqual("FirstLine\rSecondLine".RemoveNewlines(), "FirstLineSecondLine");
+            //Arrange
+            string value = "FirstLine\rSecondLine";
+            string expected = "FirstLineSecondLine";
+
+            //Act
+            string result = value.RemoveNewlines();
+            
+            //Assert
+            Assert.AreEqual(expected,result);
         }
 
         [Test]
@@ -136,7 +199,15 @@ namespace CustomExtensions
         [Category("Unit")]
         public void EqualsIgnoreDigitsTrueWhenBothSidesHaveDifferentDigits()
         {
-            Assert.IsTrue("s000df11asd1hf23las".EqualsIgnoreDigits("sdf33asdhf057la12389s"));
+            //Arrange
+            string value1 = "s000df11asd1hf23las";
+            string value2 = "sdf33asdhf057la12389s";
+
+            //Act
+            bool result = value1.EqualsIgnoreDigits(value2);
+            
+            //Assert
+            Assert.IsTrue(result);
         }
     }
 }

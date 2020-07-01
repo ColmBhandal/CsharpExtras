@@ -16,10 +16,14 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenUniqueKeyValuePairsWhenAddedToTwoWayDictionaryThenCanBeAccessed()
         {
+            //Arrange
             int maxCount = 10;
             int lastIndex = maxCount - 1;
+            
+            //Act
             IBijectionDictionary<int, string> dict = GenerateNewTestDictionary(maxCount);
 
+            //Assert
             Assert.AreEqual(maxCount, dict.Count);
             Assert.AreEqual(GetTestStringBasedOnIndex(0), dict[0]);
             Assert.AreEqual(GetTestStringBasedOnIndex(lastIndex), dict[lastIndex]);
@@ -29,10 +33,14 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenUniqueKeyValuePairsWhenAddedToTwoWayDictionaryThenReverseDictionaryCanBeAccessed()
         {
+            //Arrange
             int maxCount = 10;
             int lastIndex = maxCount - 1;
+            
+            //Act
             IBijectionDictionary<int, string> dict = GenerateNewTestDictionary(maxCount);
 
+            //Assert
             Assert.AreEqual(maxCount, dict.Count);
             Assert.AreEqual(dict.Count, dict.Reverse.Count);
 
@@ -44,11 +52,14 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenNonUniqueKeyValuePairsWhenAddedToTwoWayDictionaryThenExceptionsThrownForDuplicates()
         {
+            //Arrange
             IBijectionDictionary<int, string> dict = new BijectionDictionaryImpl<int, string>();
 
+            //Act
             dict.Add(0, GetTestStringBasedOnIndex(0));
             int countBefore = dict.Count;
 
+            //Assert
             // Exception thrown for duplicate keys
             Assert.Throws<ArgumentException>(() => dict.Add(0, GetTestStringBasedOnIndex(0)));
             Assert.AreEqual(countBefore, dict.Count, "Item added to dictionary after exception thrown");
@@ -67,12 +78,16 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenRemoveItemsFromOriginalVersionThenItemsAlsoRemovedFromReversedVersion()
         {
+            //Arrange
             int maxCount = 10;
             IBijectionDictionary<int, string> dict = GenerateNewTestDictionary(maxCount);
 
             int indexToRemove = 5;
+            
+            //Act
             string valueToRemove = GetTestStringBasedOnIndex(indexToRemove);
 
+            //Assert
             Assert.AreEqual(valueToRemove, dict[indexToRemove], "GIVEN: Dictionary is not setup correctly");
             Assert.AreEqual(indexToRemove, dict.Reverse[valueToRemove], "GIVEN: Dictionary is not setup correctly");
 
@@ -87,12 +102,16 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenRemoveItemsFromReversedVersionThenItemsAlsoRemovedFromOriginalVersion()
         {
+            //Arrange
             int maxCount = 10;
             IBijectionDictionary<int, string> dict = GenerateNewTestDictionary(maxCount);
 
             int indexToRemove = 5;
+            
+            //Act
             string valueToRemove = GetTestStringBasedOnIndex(indexToRemove);
 
+            //Assert
             Assert.AreEqual(valueToRemove, dict[indexToRemove], "GIVEN: Dictionary is not setup correctly");
             Assert.AreEqual(indexToRemove, dict.Reverse[valueToRemove], "GIVEN: Dictionary is not setup correctly");
 
@@ -107,9 +126,13 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenGettingReverseOfReverseThenReverseOfReverseIsTheSameObjectAsOriginal()
         {
+            //Arrange
             int maxCount = 10;
+            
+            //Act
             IBijectionDictionary<int, string> dict = GenerateNewTestDictionary(maxCount);
 
+            //Assert
             Assert.AreEqual(maxCount, dict.Count);
             Assert.AreEqual(maxCount, dict.Reverse.Count);
             Assert.AreEqual(maxCount, dict.Reverse.Reverse.Count);
@@ -121,9 +144,13 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenTwoWayDictionaryWhenAllItemsClearedThenReverseVersionIsAlsoEmpty()
         {
+            //Arrange
             int maxCount = 10;
+            
+            //Act
             IBijectionDictionary<int, string> dict = GenerateNewTestDictionary(maxCount);
 
+            //Assert
             Assert.AreEqual(maxCount, dict.Count, "GIVEN: Dictionary not setup correctly");
             Assert.AreEqual(maxCount, dict.Reverse.Count, "GIVEN: Dictionary not setup correctly");
 
@@ -137,13 +164,17 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenExistingDictionaryWhenWrappedInTwoWayDictionaryThenReverseVersionIsPopulated()
         {
+            //Arrange
             int maxCount = 10;
+            
+            //Act
             IDictionary<int, string> dict = new Dictionary<int, string>();
             for (int i = 0; i < maxCount; i++)
             {
                 dict.Add(i, GetTestStringBasedOnIndex(i));
             }
 
+            //Assert
             Assert.AreEqual(maxCount, dict.Count, "GIVEN: Source dictionary has incorrect length");
 
             IBijectionDictionary<int, string> twoWayDict = new BijectionDictionaryImpl<int, string>(dict);
@@ -157,13 +188,17 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenExistingDictionaryWithDuplicateValuesWhenWrappedInTwoWayDictionaryThenExceptionIsThrown()
         {
+            //Arrange
             int maxCount = 2;
+            
+            //Act
             IDictionary<int, string> dict = new Dictionary<int, string>();
             for (int i = 0; i < maxCount; i++)
             {
                 dict.Add(i, "duplicate");
             }
 
+            //Assert
             Assert.AreEqual(maxCount, dict.Count, "GIVEN: Source dictionary has incorrect length");
             Assert.Throws<ArgumentException>(() => new BijectionDictionaryImpl<int, string>(dict),
                 "Should throw exception if source dictionary has duplicate values");

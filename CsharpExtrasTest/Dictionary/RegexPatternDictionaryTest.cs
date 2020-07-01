@@ -16,8 +16,10 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWhenCheckingForMatchesThenCorrectResultReturned()
         {
+            //Act
             IRegexPatternDictionary<string> regexDict = BuildTestRegexPatternDict();
 
+            //Assert
             Assert.True(regexDict.HasMatch("hello"), "Expected 'hello' to have a match in the dictionary");
             Assert.True(regexDict.HasMatch("a day ago"), "Expected 'hi' to have a match in the dictionary");
             Assert.True(regexDict.HasMatch("world"), "Expected 'world' to have a match in the dictionary");
@@ -29,8 +31,10 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWhenFindingAllMatchesThenCorrectResultReturned()
         {
+            //Act
             IRegexPatternDictionary<string> regexDict = BuildTestRegexPatternDict();
 
+            //Assert
             string allMatches = string.Join(" ", regexDict.FindAllValuesThatMatch("a hello world day"));
             Assert.AreEqual("this is good", allMatches,
                 "Expected all matches for 'a hello world' to form the sentence 'this is good'. No other results should be returned.");
@@ -50,13 +54,16 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWithEscapedPatternWhenCheckingForMatchesThenCorrectResultReturned()
         {
+            //Arrange
             IRegexPatternDictionary<string> regexDict = new RegexPatternDictionaryImpl<string>();
 
+            //Act
             regexDict.AddEscapedFullMatchPattern("hello", "this");
             regexDict.AddEscapedFullMatchPattern("wo+rld", "is");
             regexDict.AddEscapedFullMatchPattern("a.*y", "good");
             regexDict.AddEscapedFullMatchPattern("b.*", "bad");
 
+            //Assert
             Assert.True(regexDict.HasMatch("hello"), "Expected 'hello' to have a match in the dictionary");
             Assert.True(regexDict.HasMatch("a.*y"), "Expected 'a.*y' to have a match in the dictionary");
             Assert.False(regexDict.HasMatch("hi"), "Expected 'hi' to not have a match in the dictionary");
@@ -69,12 +76,16 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWithEscapedPatternWhenGetValueByPatternThenCorrectValueReturned()
         {
+            //Arrange
             IRegexPatternDictionary<string> regexDict = new RegexPatternDictionaryImpl<string>();
 
             string pattern = "hel+o";
             string value = "world";
+            
+            //Act
             regexDict.AddEscapedFullMatchPattern(pattern, value);
 
+            //Assert
             Assert.True(regexDict.ContainsKey(pattern), "Pattern should exist as dictionary key");
             Assert.AreEqual(value, regexDict[pattern], "Value tied to pattern should be correct");
         }
@@ -83,13 +94,16 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWithFullMatchPatternWhenCheckingForMatchesThenCorrectResultReturned()
         {
+            //Arrange
             IRegexPatternDictionary<string> regexDict = new RegexPatternDictionaryImpl<string>();
 
+            //Act
             regexDict.AddFullMatchPattern("hello", "this");
             regexDict.AddFullMatchPattern("wo+rld", "is");
             regexDict.AddFullMatchPattern("a.*y", "good");
             regexDict.AddFullMatchPattern("b.*", "bad");
 
+            //Assert
             Assert.True(regexDict.HasMatch("hello"), "Expected 'hello' to have a match in the dictionary");
             Assert.True(regexDict.HasMatch("wooorld"), "Expected 'wooorld' to have a match in the dictionary");
             Assert.True(regexDict.HasMatch("a day"), "Expected 'a day' to have a match in the dictionary");

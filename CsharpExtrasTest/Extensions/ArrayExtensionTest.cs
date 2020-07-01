@@ -15,9 +15,14 @@ namespace CustomExtensions
         [Test, Category("Unit")]
         public void GivenTwoArraysWithLongerValArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
         {
+            //Arrange
             int[] keys = new int[] { 1, 2, 1 };
             string[] vals = new string[] { "One", "Two", "Three", "dasfash", "One" };
+            
+            //Act
             ISetValuedDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
+            
+            //Assert
             Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
             Assert.AreEqual(2, zipped[1].Count);
             Assert.AreEqual(1, zipped[2].Count);
@@ -26,9 +31,14 @@ namespace CustomExtensions
         [Test, Category("Unit")]
         public void GivenTwoArraysWithLongerKeyArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
         {
+            //Arrange
             int[] keys = new int[] { 1, 2, 1, 3, 4, 5, 1, 2 };
             string[] vals = new string[] { "One", "Two", "Three" };
+            
+            //Act
             ISetValuedDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
+            
+            //Assert
             Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
             Assert.AreEqual(2, zipped[1].Count);
             Assert.AreEqual(1, zipped[2].Count);
@@ -38,9 +48,14 @@ namespace CustomExtensions
         [Test, Category("Unit")]
         public void GivenArrayOfUniqueValuesAndOtherArrayOfDifferentLengthWhenZippedToDictionaryThenAllExpectedMappingsAreInDictionary()
         {
+            //Arrange
             int[] keys = new int[] { 1, 2 };
             string[] vals = new string[] { "One", "Two", "Three", "dasfash"};
+            
+            //Act
             IDictionary<int, string> zipped = keys.ZipToDictionary(vals);
+            
+            //Assert
             Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
             Assert.AreEqual("One", zipped[1]);
             Assert.AreEqual("Two", zipped[2]);
@@ -49,30 +64,45 @@ namespace CustomExtensions
         [Test, Category("Unit")]
         public void GivenArraysOfStringsOfDifferingLengthsWhenZipArrayWithConcatThenArrayOfConcatsOfShortestLengthReturned()
         {
+            //Arrange
             string[] first = new string[] { "Hel", "wo", "adfs", "35230j" };
             string[] second = new string[] { "lo", "rld!"};
+            
+            //Act
             string[] zipped = first.ZipArray((s1, s2) => s1 + s2, second);
+            
+            //Assert
             Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
         }
 
         [Test, Category("Unit")]
         public void GivenArraysRepresentingRowsOfLettersWhenZipMultiWithConcatThenSingleArrayOfColumnsIsReturned()
         {
+            //Arrange
             string[] row1 = new string[] { "H", "w" };
             string[] row2 = new string[] { "e", "o" };
             string[] row3 = new string[] { "l", "r" };
             string[] row4 = new string[] { "l", "l" };
             string[] row5 = new string[] { "o", "d" };
             string[] row6 = new string[] { "", "!" };
+            
+            //Act
             string[] zipped = row1.ZipMulti((s1, s2) => s1 + s2, row2, row3, row4, row5, row6);
+            
+            //Assert
             Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
         }
         
         [Test, Category("Unit")]
         public void TestGivenArrayWithMultipleElementsWhenMapAppliedWithKnownFunctionThenArrayWithMappedelementsReturned()
         {
+            //Arrange
             string[] arr = new string[] { "a", "aa", "aas", "sdfs", " )0Pr" };
+            
+            //Act
             int[] mapped = arr.Map(s => s.Length);
+            
+            //Assert
             Assert.AreEqual(new int[] {1, 2, 3, 4, 5}, mapped);
         }
 
@@ -225,12 +255,15 @@ namespace CustomExtensions
         // TODO: Automate test to automatically check against an expected average time
         public void TestGivenArrayWithLargeNumberOfElementsWhenCheckForDuplicatesThenCheckIsFast()
         {
+            //Arrange
             int arraySize = 20_000;
             int stringLength = 5;
             int repetitions = 100;
 
+            //Act
             string[] arr = PopulateRandomStringArray(arraySize, stringLength);
 
+            //Assert
             for (int i = 0; i < repetitions; i++)
             {
                 IDictionary<string, IList<int>> duplicates = FindDuplicates(arr);
@@ -244,7 +277,10 @@ namespace CustomExtensions
         public void Given_Array_When_FoldingToSingleValue_Then_CorrectValueReturned(
             string[] data, Func<string, string, string> foldFunction, string expectedResult)
         {
+            //Act
             string result = data.FoldToSingleValue(foldFunction);
+            
+            //Assert
             Assert.AreEqual(expectedResult, result, "Folded value should equal expected value");
         }
 
@@ -259,9 +295,11 @@ namespace CustomExtensions
 
         private string[] PopulateRandomStringArray(int length, int stringLength)
         {
+            //Act
             IRandomStringGenerator stringGen = new RandomStringGeneratorImpl();
             string[] arr = new string[length];
 
+            //Assert
             for (int i = 0; i < length; i++)
             {
                 arr[i] = stringGen.RandomAlphaNumericMixedCaseString(stringLength);

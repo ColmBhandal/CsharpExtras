@@ -17,10 +17,15 @@ namespace CustomExtensions
         [Category("Unit")]
         public void GivenStringIntDictionaryAndStringBoolDictionaryWhenZippedWithNegationOperatorThenResultantDictionaryIsAsExpected()
         {
+            //Arrange
             IDictionary<string, int> mockDict = MockStrIntDictionary();
             IDictionary<string, bool> mockBoolDict = MockStrBoolDictionary();
+            
+            //Act
             //Zip with simple function that negates values when the boolean is false
             IDictionary<string, int> zippedDict = mockDict.ZipValues(mockBoolDict, (i, b) => b ? i : -i);
+            
+            //Assert
             Assert.AreEqual(zippedDict.Keys, new string[] {"1", "2", "3"}, "Result dictionary keys are incorrect");
             Assert.AreEqual(0, zippedDict["1"]);
             Assert.AreEqual(-2, zippedDict["2"]);
@@ -31,11 +36,16 @@ namespace CustomExtensions
         [Category("Unit")]
         public void GivenStringIntDictionaryWhenValuesMappedToStringThenValuesMatchExpectedMapValues()
         {
+            //Arrange
             IDictionary<string, int> mockDict = MockStrIntDictionary();
+            
+            //Act
             IDictionary<string, string> mappedDictionary = mockDict.MapValues(MockIntToStringMap);
             ICollection<int> sourceValues = mockDict.Values;
             IEnumerable<string> mappedValues = mappedDictionary.Values;
             IEnumerable<string> mappedFromSource = sourceValues.Select(MockIntToStringMap);
+            
+            //Assert
             Assert.AreEqual(mappedValues, mappedFromSource);
         }
 
@@ -43,8 +53,13 @@ namespace CustomExtensions
         [Category("Unit")]
         public void GivenStringIntDictionaryWhenValuesMappedToStringThenKeysRemainUnchanged()
         {
+            //Arrange
             IDictionary<string, int> mockDict = MockStrIntDictionary();
+            
+            //Act
             IDictionary<string, string> mappedDictionary = mockDict.MapValues(MockIntToStringMap);
+            
+            //Assert
             Assert.AreEqual(mockDict.Keys, mappedDictionary.Keys);
         }
 

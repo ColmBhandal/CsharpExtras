@@ -16,10 +16,15 @@ namespace GeneralPurpose
         [Category("Unit")]
         public void TestThatDictionaryMatchesPureFunction()
         {
+            //Arrange
             ILazyFunctionMap<string, string> lazyDict = new LazyFunctionMapImpl<string, string>(TestFunction);
             var input = "AaaaaA xox";
             string expected = TestFunction(input);
+            
+            //Act
             string actual = lazyDict[input];
+            
+            //Assert
             Assert.AreEqual(expected, actual, "Expected lazy dictionary to equal function on first access");
             expected = TestFunction(input);
             Assert.AreEqual(expected, actual, "Expected lazy dictionary to equal function on second access");

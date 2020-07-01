@@ -17,7 +17,10 @@ namespace Tree.Visitor
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedByProductVisitorThenProductOfPayloadsReturned()
         {
+            //Act
             IIntegerAccumulationVisitor visitor = new IntegerProductVisitorImpl();
+            
+            //Assert
             RunIntegerAccumulatorAndAssertCorrectResult(visitor, 1, 1330065408);
         }
 
@@ -25,7 +28,10 @@ namespace Tree.Visitor
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedBySummationVisitorThenSumOfPayloadsReturned()
         {
+            //Act
             IIntegerAccumulationVisitor visitor = new IntegerSummationVisitorImpl();
+            
+            //Assert
             RunIntegerAccumulatorAndAssertCorrectResult(visitor, 0, 12);
         }
 
@@ -42,7 +48,10 @@ namespace Tree.Visitor
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedByNodeCounterThenCorrectNumberOfNodesIsReturned()
         {
+            //Act
             NodeCounterVisitorImpl<int> visitor = new NodeCounterVisitorImpl<int>();
+            
+            //Assert
             RunCountAndAssertionsForCounterVisitorTest(visitor, 9);
         }
 
@@ -50,7 +59,10 @@ namespace Tree.Visitor
         [Category("Unit")]
         public void GivenMockTreeWhenVisitedByLeafNodeCounterThenCountOfLeafNodesOnlyReturned()
         {
+            //Act
             LeaftCounterVisitorImpl<int> visitor = new LeaftCounterVisitorImpl<int>();
+            
+            //Assert
             RunCountAndAssertionsForCounterVisitorTest(visitor, 6);
         }
 

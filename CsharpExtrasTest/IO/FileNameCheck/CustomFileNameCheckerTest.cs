@@ -14,7 +14,10 @@ namespace CsharpExtrasTest.IO.FileNameCheck
         public void Given_CustomFileNameChecker_When_CheckIfFileNameContainsInvalidChars_Then_ReturnCorrectResult(
             string fileName, char[] invalidChars, bool expectedResult)
         {
+            //Act
             IFileNameChecker fileNameChecker = new CustomFileNameChecker(invalidChars);
+            
+            //Assert
             Assert.AreEqual(expectedResult, fileNameChecker.DoesFileNameContainInvalidCharacters(fileName),
                 "Expected the file name check to match expected result");
         }

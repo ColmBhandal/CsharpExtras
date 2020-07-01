@@ -15,7 +15,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_MultiDimensionalArray_When_FoldingToSingleRow_Then_CorrectValueReturned(
             string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
         {
+            //Act
             string[] result = data.FoldToSingleRow(foldFunction);
+            
+            //Assert
             Assert.AreEqual(expectedResult, result, "Folded row should equal expected value");
         }
 
@@ -25,7 +28,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_MultiDimensionalArray_When_FoldingToSingleColumn_Then_CorrectValueReturned(
             string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
         {
+            //Act
             string[] result = data.FoldToSingleColumn(foldFunction);
+            
+            //Assert
             Assert.AreEqual(expectedResult, result, "Folded column should equal expected value");
         }
 
@@ -35,7 +41,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_MultidimensionalArray_When_CheckingThatAnyMatch_Then_CorrectValueReturned(
             string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
         {
+            //Act
             bool result = data.Any(checkerFunction);
+            
+            //Assert
             Assert.AreEqual(expectedResult, result, "Check for any should return the correct result");
         }
 
@@ -45,7 +54,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_MultidimensionalArray_When_CheckingThatAllMatch_Then_CorrectValueReturned(
             string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
         {
+            //Act
             bool result = data.All(checkerFunction);
+            
+            //Assert
             Assert.AreEqual(expectedResult, result, "Check that all match should return the correct result");
         }
 
@@ -55,7 +67,11 @@ namespace CsharpExtrasTest.Extensions
         public void Given_MultidimensionalArray_When_CountingMatches_Then_CorrectValueReturned(
             string[,] data, Func<string, bool> checkerFunction, int expectedResult)
         {
+            //
+            //Act
             int result = data.Count(checkerFunction);
+            
+            //Assert
             Assert.AreEqual(expectedResult, result, "Counting matches should return the correct result");
         }
 
@@ -64,8 +80,13 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given2dArrayWhenMappedThenResultantArrayIsAsExpected()
         {
+            //Arrange
             string[,] grid = new string[,] { { "H", "el", "lo " }, { "Wor", "ld", "!" } };
+            
+            //Act
             int[,] charCount = grid.Map(s => s.Length);
+            
+            //Assert
             Assert.AreEqual(1, charCount[0, 0]);
             Assert.AreEqual(2, charCount[0, 1]);
             Assert.AreEqual(3, charCount[0, 2]);
@@ -78,8 +99,10 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void TestGiven2DArrayInputWhenTransposedThenArrayDimensionsAreFlipped()
         {
+            //Act
             IList<string[,]> testData = GenerateArrayTranspositionTestData();
 
+            //Assert
             foreach (string[,] testCase in testData)
             {
                 AssertTransposedArrayFlipsDimensions(testCase);
@@ -99,8 +122,10 @@ namespace CsharpExtrasTest.Extensions
 
         private void AssertTransposedArrayFlipsDimensions(string[,] input)
         {
+            //Act
             string[,] transposed = input.Transpose();
-
+            
+            //Assert
             Assert.AreEqual(transposed.GetLength(0), input.GetLength(1));
             Assert.AreEqual(transposed.GetLength(1), input.GetLength(0));
         }
@@ -109,8 +134,10 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void TestGiven2DArrayInputWhenTransposedThenArrayDataIsTransposed()
         {
+            //Act
             IList<string[,]> testData = GenerateArrayTranspositionTestData();
 
+            //Assert
             foreach (var testCase in testData)
             {
                 AssertTransposedArrayFlipsData(testCase);
@@ -133,20 +160,28 @@ namespace CsharpExtrasTest.Extensions
         [Test, Category("Unit")]
         public void Given2DArraysOfStringsWhenZipArrayWithConcatThen2DArrayReturned()
         {
+            //Arrange
             string[,] first = new string[,] { { "Hel", "wo" }, { "1", "2" } };
             string[,] second = new string[,] { { "lo", "rld" }, { "3", "4" } };
+            
+            //Act
             string[,] zipped = first.ZipArray((s1, s2) => s1 + s2, second);
-
+            
+            //Assert
             Assert.AreEqual(zipped, new string[,] { { "Hello", "world" }, { "13", "24" } });
         }
 
         [Test, Category("Unit")]
         public void Given2DArraysOfStringsOfDifferentSizesWhenZipArrayWithConcatThen2DArrayReturnedWithArrayIntersection()
         {
+            //Arrange
             string[,] first = new string[,] { { "Hel", "wo", "a" }, { "1", "2", "b" } };
             string[,] second = new string[,] { { "lo", "rld" }, { "3", "4" }, { "5", "6" } };
+            
+            //Act
             string[,] zipped = first.ZipArray((s1, s2) => s1 + s2, second);
 
+            //Assert
             Assert.AreEqual(zipped, new string[,] { { "Hello", "world" }, { "13", "24" } });
         }
 
@@ -155,7 +190,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_2DArrayOfBytes_When_Write1DArrayToRow_Then_ResultIsAsExpected
             (byte[,] data, byte[] dataToWrite, int row, int offset, byte[,] expected)
         {
+            //Act
             data.WriteToRow(dataToWrite, row, offset);
+            
+            //Assert
             Assert.AreEqual(expected, data);
         }
 
@@ -164,7 +202,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_2DArrayOfBytes_When_Write1DArrayToColumn_Then_ResultIsAsExpected
            (byte[,] data, byte[] dataToWrite, int column, int offset, byte[,] expected)
         {
+            //Act
             data.WriteToColumn(dataToWrite, column, offset);
+            
+            //Assert
             Assert.AreEqual(expected, data);
         }
 
@@ -173,7 +214,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_2DArrayOfBytes_When_WriteToArea_Then_ResultIsAsExpected
            (byte[,] data, byte[,] dataToWrite, int rowOffset, int columnOffset, byte[,] expected)
         {
+            //Act
             data.WriteToArea(dataToWrite, rowOffset, columnOffset);
+            
+            //Assert
             Assert.AreEqual(expected, data,
                 string.Format("Failure for (rowOffset, columnOffset) = ({0}, {1})", rowOffset, columnOffset));
         }
@@ -182,7 +226,10 @@ namespace CsharpExtrasTest.Extensions
         [TestCase(-1), TestCase(2), TestCase(462)]
         public void Given_2DArrayOfInts_When_InvalidRowPassedToWrite_Then_ExceptionThrown(int row)
         {
+            //Act
             int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
+            
+            //Assert
             Assert.Catch(() => data.WriteToRow(new int[] { }, row, 0),
                 string.Format("Expected exception for row {0}", row));
         }
@@ -191,7 +238,10 @@ namespace CsharpExtrasTest.Extensions
         [TestCase(-1), TestCase(4), TestCase(34)]
         public void Given_2DArrayOfInts_When_InvalidColumnPassedToWrite_Then_ExceptionThcolumnn(int column)
         {
+            //Act
             int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
+            
+            //Assert
             Assert.Catch(() => data.WriteToColumn(new int[] { }, column, 0),
                 string.Format("Expected exception for column {0}", column));
         }
@@ -201,7 +251,10 @@ namespace CsharpExtrasTest.Extensions
         public void Given_2DArrayOfBytes_When_SubArray_Then_ExpectedSubArrayReturned
             (byte[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, byte[,] expected)
         {
+            //Act
             byte[,] sub = data.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
+            
+            //Assert
             Assert.AreEqual(expected, sub, string.Format(
                 "Failure for sub array with coordinates ({0}, {1}) --> ({2}, {3}))",
                 startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));
