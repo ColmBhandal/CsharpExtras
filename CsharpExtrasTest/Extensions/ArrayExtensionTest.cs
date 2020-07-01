@@ -5,6 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CsharpExtras.Dictionary.Collection;
 
 namespace CustomExtensions
 {
@@ -19,7 +20,7 @@ namespace CustomExtensions
             string[] vals = new string[] { "One", "Two", "Three", "dasfash", "One" };
             
             //Act
-            IMultiValueMap<int, string> zipped = keys.ZipToMultiValueMap(vals);
+            ISetValuedDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
             
             //Assert
             Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");
@@ -35,7 +36,7 @@ namespace CustomExtensions
             string[] vals = new string[] { "One", "Two", "Three" };
             
             //Act
-            IMultiValueMap<int, string> zipped = keys.ZipToMultiValueMap(vals);
+            ISetValuedDictionary<int, string> zipped = keys.ZipToSetDictionary(vals);
             
             //Assert
             Assert.AreEqual(2, zipped.Count, "Expected the resultant array count to be equal to the minimum of the key & value array counts");

@@ -1,5 +1,6 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.Dictionary;
+using CsharpExtras.Dictionary.Collection;
 using CsharpExtras.Enumerable.NonEmpty;
 using CsharpExtras.Enumerable.OneBased;
 using CsharpExtras.IO;
@@ -22,14 +23,19 @@ namespace CsharpExtras.Api
             StaticLogManager.Logger = logger;
         }
 
+        public IListValuedDictionary<TKey, TVal> NewListValuedDictionary<TKey, TVal>()
+        {
+            return new ListValuedDictionaryImpl<TKey, TVal>();
+        }
+
         public IComparer<T> NewDescendingComparer<T>() => new DescendingComparer<T>();
 
         public IBijectionDictionary<TKey, TVal> NewBijectionDictionary<TKey, TVal>()
             => new BijectionDictionaryImpl<TKey, TVal>();
         public IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>()
             => new RegexPatternDictionaryImpl<TVal>();
-        public IMultiValueMap<TKey, TVal> NewMultiValueMap<TKey, TVal>()
-            => new MultiValueMapImpl<TKey, TVal>();
+        public ISetValuedDictionary<TKey, TVal> NewSetValuedDictionary<TKey, TVal>()
+            => new SetValuedDictionaryImpl<TKey, TVal>();
 
         public INonEmptyCollection<TVal> NewNonEmptyCollection<TVal>(TVal val)
             => new NonEmptyCollectionImpl<TVal>(val);

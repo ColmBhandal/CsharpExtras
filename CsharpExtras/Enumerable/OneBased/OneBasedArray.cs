@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
+using CsharpExtras.Dictionary.Collection;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
@@ -71,9 +72,9 @@ namespace CsharpExtras.Enumerable.OneBased
             return ZeroBasedEquivalent.ZipToDictionary(other.ZeroBasedEquivalent);
         }
 
-        public IMultiValueMap<TVal, TOther> ZipToMultiValueMap<TOther>(IOneBasedArray<TOther> other)
+        public ISetValuedDictionary<TVal, TOther> ZipToSetDictionary<TOther>(IOneBasedArray<TOther> other)
         {
-            return ZeroBasedEquivalent.ZipToMultiValueMap(other.ZeroBasedEquivalent);
+            return ZeroBasedEquivalent.ZipToSetDictionary(other.ZeroBasedEquivalent);
         }
 
         public IOneBasedArray<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray<TOther> other)
