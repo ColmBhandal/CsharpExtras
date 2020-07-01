@@ -10,8 +10,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_Yes_String_When_IsYes_Then_True_Returned()
         {
-            //Arrange
-            
             //Act
             bool result = BoolExtension.IsYes("Yes");
             
@@ -23,8 +21,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_Random_String_When_IsYes_Then_True_Returned()
         {
-            //Arrange
-            
             //Act
             bool result = BoolExtension.IsYes("fake");
             
@@ -36,8 +32,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_No_String_When_IsYes_Then_False_Returned()
         {
-            //Arrange
-            
             //Act
             bool result = BoolExtension.IsYes("No");
             
@@ -49,8 +43,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_Yes_String_When_TryParseYesNo_Then_True_Returned_Result_True_Returned()
         {
-            //Arrange
-            
             //Act
             bool response = BoolExtension.TryParseYesNo("Yes", out bool result);
             
@@ -63,8 +55,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_No_String_When_TryParseYesNo_Then_True_Returned_Result_False_Returned()
         {
-            //Arrange
-            
             //Act
             bool response = BoolExtension.TryParseYesNo("No", out bool result);
             
@@ -77,8 +67,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_Random_String_When_TryParseYesNo_Then_False_Returned_Result_False_Returned()
         {
-            //Arrange
-            
             //Act
             bool response = BoolExtension.TryParseYesNo("Fake", out bool result);
             
@@ -91,8 +79,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_True_When_ToYesNoString_Then_Yes_String_Returned()
         {
-            //Arrange
-            
             //Act
             string response = true.ToYesNoString();
             
@@ -104,8 +90,6 @@ namespace CsharpExtrasTest.Extensions
         [Category("Unit")]
         public void Given_False_When_ToYesNoString_Then_No_String_Returned()
         {
-            //Arrange
-            
             //Act
             string response = false.ToYesNoString();
             

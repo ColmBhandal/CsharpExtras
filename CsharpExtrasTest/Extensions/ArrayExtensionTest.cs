@@ -276,8 +276,6 @@ namespace CustomExtensions
         public void Given_Array_When_FoldingToSingleValue_Then_CorrectValueReturned(
             string[] data, Func<string, string, string> foldFunction, string expectedResult)
         {
-            //Arrange
-            
             //Act
             string result = data.FoldToSingleValue(foldFunction);
             
@@ -296,8 +294,6 @@ namespace CustomExtensions
 
         private string[] PopulateRandomStringArray(int length, int stringLength)
         {
-            //Arrange
-            
             //Act
             IRandomStringGenerator stringGen = new RandomStringGeneratorImpl();
             string[] arr = new string[length];

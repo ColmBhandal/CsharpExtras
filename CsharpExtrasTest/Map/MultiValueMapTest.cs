@@ -16,8 +16,6 @@ namespace Map
         [Category("Unit")]
         public void GivenEmptyMapWhenTwoItemsAddedToSameKeyThenBothItemsAreInSetForThatKey()
         {
-            //Arrange
-            
             //Act
             IMultiValueMap<string, int> multiValueMap = new MultiValueMapImpl<string, int>();
             string key = "bob";

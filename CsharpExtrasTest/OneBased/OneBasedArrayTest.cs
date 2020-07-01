@@ -52,8 +52,6 @@ namespace OneBased
         [Test]
         public void GivenTwoOneBasedArraysOfDifferentTypesAndLengthsWhenZippedThenResultIsAsExpected()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray<string> stringArr = GenTestStringArray();
             IOneBasedArray<int> intArr = GenTestIntArray();
@@ -70,8 +68,6 @@ namespace OneBased
         [Test]
         public void OneBasedGetterYieldsCorrectResults()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray<string> arrOneBased = GenTestStringArray();
             
@@ -85,8 +81,6 @@ namespace OneBased
         [Test]
         public void ZeroIndexOutOfBounds()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray<string> arrOneBased = GenTestStringArray();
             
@@ -97,8 +91,6 @@ namespace OneBased
         [Test]
         public void UpperIndexOutOfBounds()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray<string> arrOneBased = GenTestStringArray();
             

@@ -16,8 +16,6 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWhenCheckingForMatchesThenCorrectResultReturned()
         {
-            //Arrange
-            
             //Act
             IRegexPatternDictionary<string> regexDict = BuildTestRegexPatternDict();
 
@@ -33,8 +31,6 @@ namespace Dictionary
         [Category("Unit")]
         public void TestGivenRegexPatternToStringDictionaryWhenFindingAllMatchesThenCorrectResultReturned()
         {
-            //Arrange
-            
             //Act
             IRegexPatternDictionary<string> regexDict = BuildTestRegexPatternDict();
 

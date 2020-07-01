@@ -41,8 +41,6 @@ namespace OneBased
         [Test]        
         public void OneBasedGetterYieldsCorrectResults()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
             
@@ -56,8 +54,6 @@ namespace OneBased
         [Test]
         public void ZeroIndexOutOfBoundsDim0()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
             
@@ -68,8 +64,6 @@ namespace OneBased
         [Test]
         public void ZeroIndexOutOfBoundsDim1()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
             
@@ -80,8 +74,6 @@ namespace OneBased
         [Test]
         public void UpperIndexOutOfBoundsDim0()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
             
@@ -92,8 +84,6 @@ namespace OneBased
         [Test]
         public void UpperIndexOutOfBoundsDim1()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray2D<string> arrOneBased = GenTestData();
             
@@ -104,8 +94,6 @@ namespace OneBased
         [Test]
         public void Given_2DArray_When_SlicedIntoRows_Then_AllRowsHaveCorrectLength()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
             
@@ -120,8 +108,6 @@ namespace OneBased
         [Test]
         public void Given_2DArray_When_SlicedIntoColumns_Then_AllColumnsHaveCorrectLength()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "1", "2" }, { "a", "b" }, { "5", "6" } });
             
@@ -136,8 +122,6 @@ namespace OneBased
         [Test]
         public void Given_1dArray_When_ConvertedTo2dArrayAcrossColumns_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
             IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.COLUMN);
@@ -150,8 +134,6 @@ namespace OneBased
         [Test]
         public void Given_1dArray_When_ConvertedTo2dArrayAcrossRows_Then_New2dArrayHasCorrectNumberOfRowsAndColumns()
         {
-            //Arrange
-            
             //Act
             IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
             IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.ROW);

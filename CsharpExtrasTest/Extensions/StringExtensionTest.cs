@@ -31,8 +31,6 @@ namespace CustomExtensions
         public void GivenStringWhenInsertSpacesThenResultHasSpacesInsertedAsExpected
             (string input, string expected)
         {
-            //Arrange
-            
             //Act
             string actual = input.InsertSpaceBetweenEachLetternAndFollowingUppercaseLetter();
             
@@ -79,8 +77,6 @@ namespace CustomExtensions
             string splitter,
             int expectedCount)
         {
-            //Arrange
-            
             //Act
             string[] pieces = input.Split(splitter);
             
