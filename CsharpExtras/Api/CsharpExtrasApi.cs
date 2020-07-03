@@ -12,6 +12,7 @@ using CsharpExtras.Tree.Integer;
 using CsharpExtras.Validation;
 using System;
 using System.Collections.Generic;
+using CsharpExtras.Map.Dictionary.Variant;
 
 namespace CsharpExtras.Api
 {
@@ -79,6 +80,17 @@ namespace CsharpExtras.Api
         public IValidationError NewValidationError(bool isBlocker, string message)
             => new ValidationErrorImpl(isBlocker, message);
 
-        public IValidator<T> NewEmptyValidator<T>() => new EmptyValidatorImpl<T>();        
+        public IValidator<T> NewEmptyValidator<T>() => new EmptyValidatorImpl<T>();
+
+        public IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>()
+        {
+            IDictionary<TKey, TVal> backingDictionary = new Dictionary<TKey, TVal>();
+            return NewVariantDictionary(backingDictionary);
+        }
+
+        public IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary)
+        {
+            return new VariantDictionaryImpl<TKey, TVal>(backingDictionary);
+        }
     }
 }

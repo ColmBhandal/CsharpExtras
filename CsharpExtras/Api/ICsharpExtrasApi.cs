@@ -12,6 +12,7 @@ using CsharpExtras.Tree.Base;
 using CsharpExtras.RandomDataGen;
 using CsharpExtras.Validation;
 using CsharpExtras.Map.Dictionary.Collection;
+using CsharpExtras.Map.Dictionary.Variant;
 
 namespace CsharpExtras.Api
 {
@@ -41,5 +42,7 @@ namespace CsharpExtras.Api
         void SetLogger(ILogger logger);
         ISetValuedDictionary<TKey, TVal> NewSetValuedDictionary<TKey, TVal>();
         IListValuedDictionary<TKey, TVal> NewListValuedDictionary<TKey, TVal>();
+        IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>();
+        IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary);
     }
 }
