@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [BREAKING] Rename main namespace from `CustomExtensions` to `Extensions` (#9)
 - [BREAKING] The `TryGetSingleton` extension is now only available for collections with elements of type `class` (#49)
 - [BREAKING] The `IMultiValueMap` has been renamed to `ISetValuedDictionary` and its package is different (#53)
+- [BREAKING] The dictionary package has now been moved under map
 - 2D one-based arrays are now enumerable (#45)
 - Multi-value maps are now comparable using set-equality as the default equals method (#48)
 - Project now treats all warnings as errors, minor changes made to fix all errors (#49)

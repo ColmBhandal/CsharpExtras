@@ -1,6 +1,6 @@
 ﻿using CsharpExtras.Compare;
-using CsharpExtras.Dictionary;
-using CsharpExtras.Dictionary.Collection;
+using CsharpExtras.Map.Dictionary;
+using CsharpExtras.Map.Dictionary.Collection;
 using CsharpExtras.Enumerable.NonEmpty;
 using CsharpExtras.Enumerable.OneBased;
 using CsharpExtras.IO;

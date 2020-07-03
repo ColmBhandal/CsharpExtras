@@ -1,5 +1,5 @@
-﻿using CsharpExtras.Dictionary;
-using CsharpExtras.Dictionary.Collection;
+﻿using CsharpExtras.Map.Dictionary;
+using CsharpExtras.Map.Dictionary.Collection;
 using System;
 using System.Collections.Generic;
 using System.Linq;

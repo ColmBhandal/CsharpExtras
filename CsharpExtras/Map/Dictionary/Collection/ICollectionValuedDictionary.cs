@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CsharpExtras.Dictionary.Collection
+namespace CsharpExtras.Map.Dictionary.Collection
 {
     public interface ICollectionValuedDictionary<TKey, TVal, TColl> : IDictionary<TKey, TColl>
     {

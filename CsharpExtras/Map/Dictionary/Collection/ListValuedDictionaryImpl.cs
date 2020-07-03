@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace CsharpExtras.Dictionary.Collection
+namespace CsharpExtras.Map.Dictionary.Collection
 {
     class ListValuedDictionaryImpl<TKey, TVal> : CollectionValuedDictionaryBase<TKey, TVal, IList<TVal>>,
         IListValuedDictionary<TKey, TVal>

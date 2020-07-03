@@ -1,4 +1,4 @@
-﻿using CsharpExtras.Dictionary;
+﻿using CsharpExtras.Map.Dictionary;
 using Dictionary;
 using NUnit.Framework;
 using System;

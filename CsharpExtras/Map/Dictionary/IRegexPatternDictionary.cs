@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace CsharpExtras.Dictionary
+namespace CsharpExtras.Map.Dictionary
 {
     /// <summary>
     /// A RegexPatternDictionary is defined as a dictionary that maps a regex pattern to a value. For that reason it is only generic

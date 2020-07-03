@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CsharpExtras.Dictionary.Collection
+namespace CsharpExtras.Map.Dictionary.Collection
 {
     abstract class CollectionValuedDictionaryBase<TKey, TVal, TColl>
         : ICollectionValuedDictionary<TKey, TVal, TColl>, IDictionary<TKey, TColl>

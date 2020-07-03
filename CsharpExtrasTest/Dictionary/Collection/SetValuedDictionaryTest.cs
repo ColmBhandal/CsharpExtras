@@ -1,10 +1,10 @@
 ﻿using CsharpExtras.Extensions;
-using CsharpExtras.Dictionary;
+using CsharpExtras.Map.Dictionary;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CsharpExtras.Dictionary.Collection;
+using CsharpExtras.Map.Dictionary.Collection;
 
 namespace CsharpExtrasTest.Dictionary
 {
