@@ -18,6 +18,19 @@ namespace OneBased
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
         [Test]
+        public void Given_OneBasedArray_WhenGetOneBasedFirstIndexOfMatchingElement_Then_OneBasedIndexReturned()
+        {
+            //Arrange
+            IOneBasedArray<byte> arr = new OneBasedArrayImpl<byte>(new byte[] { 0, 2, 4, 3, 6, 10 });
+
+            //Act
+            int firstIndex = arr.OneBasedFirstIndexOf(b => b % 2 == 1);
+
+            //Assert
+            Assert.AreEqual(4, firstIndex);
+        }
+        
+        [Test]
         public void GivenOneBasedArrayWhenMapAppliedThenResultIsArrayOfMappedValues()
         {
             //Arrange
@@ -36,7 +49,7 @@ namespace OneBased
         public void GivenOneBasedArrayWhenPairAndExecuteSumProductOnSelfThenSumOfSquaresResults()
         {
             //Arrange
-            IOneBasedArray<int> intArr = GenTestIntArray();
+            IOneBasedArray<int> intArr = GenTestIntArray();            
             int totalSum = 0;
             Action<int, int> sumProdAccumulator = (i, j) => totalSum += i * j;
             
