@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CsharpExtras.Extensions;
 
 namespace OneBased
 {
@@ -17,6 +18,20 @@ namespace OneBased
         private const string Four = "Four";        
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
+        [Test]
+        public void Given_OneBasedArray_WhenGetOneBasedFirstIndexOfMatchingElement_Then_OneBasedIndexReturned()
+        {
+            //Arrange
+            byte[] zeroBased = new byte[] { 0, 2, 4, 3, 6, 10 };
+            IOneBasedArray<byte> arr = new OneBasedArrayImpl<byte>(zeroBased);
+
+            //Act
+            int firstIndex = arr.FirstIndexOf(b => b % 2 == 1);           
+
+            //Assert
+            Assert.AreEqual(4, firstIndex);
+        }
+        
         [Test]
         public void GivenOneBasedArrayWhenMapAppliedThenResultIsArrayOfMappedValues()
         {
@@ -36,7 +51,7 @@ namespace OneBased
         public void GivenOneBasedArrayWhenPairAndExecuteSumProductOnSelfThenSumOfSquaresResults()
         {
             //Arrange
-            IOneBasedArray<int> intArr = GenTestIntArray();
+            IOneBasedArray<int> intArr = GenTestIntArray();            
             int totalSum = 0;
             Action<int, int> sumProdAccumulator = (i, j) => totalSum += i * j;
             

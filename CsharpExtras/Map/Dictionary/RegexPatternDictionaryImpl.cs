@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace CsharpExtras.Dictionary
+namespace CsharpExtras.Map.Dictionary
 {
     public class RegexPatternDictionaryImpl<TValue> : IRegexPatternDictionary<TValue>
     {

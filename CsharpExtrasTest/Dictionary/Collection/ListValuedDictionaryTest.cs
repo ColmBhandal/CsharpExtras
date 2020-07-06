@@ -1,5 +1,5 @@
 ﻿using CsharpExtras.Api;
-using CsharpExtras.Dictionary.Collection;
+using CsharpExtras.Map.Dictionary.Collection;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using NUnit.Framework;
 using System;

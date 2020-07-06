@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CsharpExtras.Dictionary.Collection
+namespace CsharpExtras.Map.Dictionary.Collection
 {
     class SetValuedDictionaryImpl<TKey, TVal>
         : CollectionValuedDictionaryBase<TKey, TVal, ISet<TVal>>, ISetValuedDictionary<TKey, TVal>

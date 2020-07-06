@@ -1,18 +1,93 @@
 ﻿using CsharpExtras.Extensions;
-using CsharpExtras.Dictionary;
+using CsharpExtras.Map.Dictionary;
 using CsharpExtras.RandomDataGen;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using CsharpExtras.Dictionary.Collection;
+using CsharpExtras.Map.Dictionary.Collection;
 
 namespace CustomExtensions
 {
-    [TestFixture]
+    [TestFixture, Category("Unit")]
     public class ArrayExtensionTest
     {
-        [Test, Category("Unit")]
+        [Test, TestCase(0), TestCase(1), TestCase(7)]
+        public void Given_BijectiveArrayOfBytes_When_ConvertToReverseListDictionary_ThenDictionaryPairsAreAsExpected(int offset)
+        {
+            //Assemble
+            byte[] array = new byte[] { 1, 2, 1, 2, 1};
+
+            //Act
+            IListValuedDictionary<byte, int> dict = array.ConvertToReverseListValuedDictionary(offset);
+
+            //Assert
+            IEnumerable<(byte Key, IList<int> Value)> actualPairs = dict.AsEnumerable().Select(p => (p.Key, p.Value));            
+            IList<int> list1 = new List<int>(); list1.Add(offset); list1.Add(offset + 2); list1.Add(offset + 4);
+            List<int> list2 = new List<int>(); list2.Add(offset+1); list2.Add(offset + 3);
+            IEnumerable<(byte Key, IList<int> Value)> expectedPairs = new (byte Key, IList<int> Value)[]
+            {(1, list1), (2, list2)};
+            Assert.AreEqual(expectedPairs, actualPairs);
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(7)]
+        public void Given_BijectiveArrayOfBytes_When_ConvertToBijectionDictionary_ThenBothDirectionsInResultAreAsExpected(int offset)
+        {
+            //Assemble
+            byte[] array = new byte[] { 1, 2, 3, 5, 8 };
+
+            //Act
+            IBijectionDictionary<int, byte> biDict = array.ConvertToBijectionDictionary(offset);
+
+            //Assert
+
+            //Forwards
+            IEnumerable<(int Key, byte Value)> actualPairsFwd = biDict.AsEnumerable().Select(p => (p.Key, p.Value));
+            IEnumerable<(int index, byte val)> expectedPairsFwd = new (int index, byte val)[]
+            {(offset, 1), (offset+1, 2), (offset+2, 3), (offset+3, 5), (offset+4, 8)};
+            Assert.AreEqual(expectedPairsFwd, actualPairsFwd);
+
+            //Backwards
+            IBijectionDictionary<byte, int> reverse = biDict.Reverse;
+            IEnumerable<(byte Key, int Value)> actualPairsRev = reverse.AsEnumerable().Select(p => (p.Key, p.Value));
+            IEnumerable<(byte Key, int Value)> expectedPairsRev = new (byte Key, int Value)[]
+            {(1, offset), (2, offset+1), (3, offset+2), (5, offset+3), (8, offset+4)};
+            Assert.AreEqual(expectedPairsRev, actualPairsRev);
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(7)]
+        public void Given_BijectiveArrayOfBytes_When_ConvertToReverseDictionary_ThenDictionaryPairsAreAsExpected(int offset)
+        {
+            //Assemble
+            byte[] array = new byte[] { 1, 2, 3, 5, 8 };
+
+            //Act
+            IDictionary<byte, int> dict = array.ConvertToReverseDictionary(offset);
+
+            //Assert
+            IEnumerable<(byte Key, int Value)> actualPairs = dict.AsEnumerable().Select(p => (p.Key, p.Value));
+            IEnumerable<(byte Key, int Value)> expectedPairs = new (byte Key, int Value)[]
+            {(1, offset), (2, offset+1), (3, offset+2), (5, offset+3), (8, offset+4)};
+            Assert.AreEqual(expectedPairs, actualPairs);
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(7)]
+        public void Given_ArrayOfBytes_When_ConvertToDictionary_ThenDictionaryPairsAreAsExpected(int offset)
+        {
+            //Assemble
+            byte[] array = new byte[] { 1, 2, 3, 5, 8};
+
+            //Act
+            IDictionary<int, byte> dict = array.ConvertToDictionary(offset);
+
+            //Assert
+            IEnumerable<(int Key, byte Value)> actualPairs = dict.AsEnumerable().Select(p => (p.Key, p.Value));
+            IEnumerable<(int index, byte val)> expectedPairs = new (int index, byte val)[]
+            {(offset, 1), (offset+1, 2), (offset+2, 3), (offset+3, 5), (offset+4, 8)};
+            Assert.AreEqual(expectedPairs, actualPairs);
+        }
+        
+        [Test]
         public void GivenTwoArraysWithLongerValArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
         {
             //Arrange
@@ -28,7 +103,7 @@ namespace CustomExtensions
             Assert.AreEqual(1, zipped[2].Count);
         }
 
-        [Test, Category("Unit")]
+        [Test]
         public void GivenTwoArraysWithLongerKeyArrayWhenZippedToMultiValueMapThenAllExpectedMappingsAreInMap()
         {
             //Arrange
@@ -45,7 +120,7 @@ namespace CustomExtensions
             Assert.False(zipped.ContainsKey(3));
         }
 
-        [Test, Category("Unit")]
+        [Test]
         public void GivenArrayOfUniqueValuesAndOtherArrayOfDifferentLengthWhenZippedToDictionaryThenAllExpectedMappingsAreInDictionary()
         {
             //Arrange
@@ -61,7 +136,7 @@ namespace CustomExtensions
             Assert.AreEqual("Two", zipped[2]);
         }
         
-        [Test, Category("Unit")]
+        [Test]
         public void GivenArraysOfStringsOfDifferingLengthsWhenZipArrayWithConcatThenArrayOfConcatsOfShortestLengthReturned()
         {
             //Arrange
@@ -75,7 +150,7 @@ namespace CustomExtensions
             Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
         }
 
-        [Test, Category("Unit")]
+        [Test]
         public void GivenArraysRepresentingRowsOfLettersWhenZipMultiWithConcatThenSingleArrayOfColumnsIsReturned()
         {
             //Arrange
@@ -93,7 +168,7 @@ namespace CustomExtensions
             Assert.AreEqual(zipped, new string[] { "Hello", "world!" });
         }
         
-        [Test, Category("Unit")]
+        [Test]
         public void TestGivenArrayWithMultipleElementsWhenMapAppliedWithKnownFunctionThenArrayWithMappedelementsReturned()
         {
             //Arrange
@@ -117,7 +192,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ArrayProviderForSubArrayTesting")]
         public void TestGivenStringArrayWhenGetSubArrayThenCorrectSizeReturned(string[] arr)
         {
@@ -151,7 +225,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ArrayProviderForSubArrayTesting")]
         public void TestGivenStringArrayWhenGetSubArrayThenCorrectDataReturned(string[] arr)
         {
@@ -178,7 +251,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ArrayProviderForSubArrayTesting")]
         public void TestGivenStringArrayWhenGetSubArrayWithInvalidValuesThenFullArrayReturned(string[] arr)
         {
@@ -213,7 +285,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("TupleArrayProviderForRemoveBlanksTesting")]
         public void TestGivenStringArrayWhenRemoveBlankEntriesCalledThenAllBlankEntriesAreRemoved((string[] input, string[] expected) tuple)
         {
@@ -227,7 +298,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         public void TestGivenArrayWithDuplicatesWhenFindDuplicatesThenCorrectRowsIdentified()
         {
             string[] array = new string[] {
@@ -272,7 +342,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ProviderForFoldingArrayToSingleValue")]
         public void Given_Array_When_FoldingToSingleValue_Then_CorrectValueReturned(
             string[] data, Func<string, string, string> foldFunction, string expectedResult)

@@ -1,9 +1,9 @@
-﻿using CsharpExtras.Dictionary;
+﻿using CsharpExtras.Map.Dictionary;
 using System;
 using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
-using CsharpExtras.Dictionary.Collection;
+using CsharpExtras.Map.Dictionary.Collection;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
@@ -13,7 +13,7 @@ namespace CsharpExtras.Enumerable.OneBased
         TVal[] ZeroBasedEquivalent { get; }
         int Length { get; }
 
-        int OneBasedFirstIndexOf(Func<TVal, bool> matchFunction);
+        int FirstIndexOf(Func<TVal, bool> matchFunction);
         void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor);
         void Resize(int newSize);
 

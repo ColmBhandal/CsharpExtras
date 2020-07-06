@@ -1,10 +1,10 @@
 ﻿using CsharpExtras.Extensions;
-using CsharpExtras.Dictionary;
+using CsharpExtras.Map.Dictionary;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
-using CsharpExtras.Dictionary.Collection;
+using CsharpExtras.Map.Dictionary.Collection;
 
 namespace CsharpExtras.Enumerable.OneBased
 {
@@ -57,7 +57,7 @@ namespace CsharpExtras.Enumerable.OneBased
             return (oneBasedIndex, element);
         }
 
-        public int OneBasedFirstIndexOf(Func<TVal, bool> matchFunction)
+        public int FirstIndexOf(Func<TVal, bool> matchFunction)
         {
             return ZeroBasedEquivalent.FirstIndexOf(matchFunction) + 1;
         }

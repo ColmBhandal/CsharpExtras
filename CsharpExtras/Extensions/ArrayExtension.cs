@@ -1,5 +1,5 @@
-﻿using CsharpExtras.Dictionary;
-using CsharpExtras.Dictionary.Collection;
+﻿using CsharpExtras.Map.Dictionary;
+using CsharpExtras.Map.Dictionary.Collection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -227,6 +227,101 @@ namespace CsharpExtras.Extensions
                 throw new ArgumentOutOfRangeException(string.Format("Index {0} is outside of the bounds of the array. " +
                     "Should be in the range [{1}, {2}]", 0, length));
             }
+        }
+
+        /// <summary>
+        /// Converts this array to a reverse list-based dictionary
+        /// </summary>
+        public static IListValuedDictionary<TVal, int> ConvertToReverseListValuedDictionary<TVal>(this TVal[] array, int indexOffset)
+        {
+            IListValuedDictionary<TVal, int> dict =
+                array.ConvertToReverseCollectionValuedDictionary<TVal, IList<int>, IListValuedDictionary<TVal, int>>
+                (() => new ListValuedDictionaryImpl<TVal, int>(), indexOffset);
+            return dict;
+        }
+
+
+        /// <summary>
+        /// Converts this array to a reverse set-based dictionary
+        /// </summary>
+        public static ISetValuedDictionary<TVal, int> ConvertToReverseSetValuedDictionary<TVal>(this TVal[] array, int indexOffset)
+        {
+            ISetValuedDictionary<TVal, int> dict =
+                array.ConvertToReverseCollectionValuedDictionary<TVal, ISet<int>, ISetValuedDictionary<TVal, int>>
+                (() => new SetValuedDictionaryImpl<TVal, int>(), indexOffset);
+            return dict;
+        }
+
+        /// <summary>
+        /// Converts this array to a reverse colleciton-based dictionary
+        /// Each element is mapped to its pre-image under the normal index->value mapping of the array
+        /// </summary>
+        public static TDict ConvertToReverseCollectionValuedDictionary<TVal, TColl, TDict>
+            (this TVal[] array, Func<TDict> newCollection, int indexOffset)
+            where TColl : ICollection<int>
+            where TDict : ICollectionValuedDictionary<TVal, int, TColl>
+        {
+            TDict dictionary = array.ConvertToDictAbstract(
+                newCollection,
+                (dict, i, val) => dict.Add(val, i), indexOffset);
+            return dictionary;
+        }
+
+        /// <summary>
+        /// Converts this array to a reverse dictionary, or throws an error if the array is not bijective
+        /// </summary>
+        public static IDictionary<TVal, int> ConvertToReverseDictionary<TVal>(this TVal[] array, int indexOffset)
+        {
+            IDictionary<TVal, int> dictionary
+                = array.ConvertToDictAbstract(
+                () => new Dictionary<TVal, int>(),
+                (dict, i, val) => dict.Add(val, i), indexOffset);
+            return dictionary;
+        }
+
+        /// <summary>
+        /// Converts this array to a bijection dictionary, or throws an error if the array is not bijective
+        /// </summary>
+        public static IBijectionDictionary<int, TVal> ConvertToBijectionDictionary<TVal>(this TVal[] array, int indexOffset)
+        {
+            IBijectionDictionary<int, TVal> dictionary
+                = array.ConvertToDictAbstract(
+                () => new BijectionDictionaryImpl<int, TVal>(),
+                (dict, i, val) => dict.Add(i, val), indexOffset);
+            return dictionary;
+        }
+
+        /// <summary>
+        /// Converts this array to a dictionary keyed on the indices of the array
+        /// </summary>
+        public static IDictionary<int, TVal> ConvertToDictionary<TVal>(this TVal[] array, int indexOffset)
+        {
+            IDictionary<int, TVal> dictionary
+                = array.ConvertToDictAbstract(
+                () => new Dictionary<int, TVal>(),
+                (dict, i, val) => dict.Add(i, val), indexOffset);
+            return dictionary;
+        }
+        
+        /// <param name="indexOffset">Add this to array indices before storing them in the dictionary.</param>
+        private static TDict ConvertToDictAbstract<TVal, TDict>(this TVal[] array,
+            Func<TDict> newDict, Action<TDict, int, TVal> addToDict, int indexOffset)
+        {
+            TDict dictionary = newDict();
+            for (int i = 0; i < array.Length; i++)
+            {
+                try
+                {
+                    int dictIndex = indexOffset + i;
+                    addToDict(dictionary, dictIndex, array[i]);
+                }
+                catch(Exception e)
+                {
+                    throw new InvalidOperationException(string.Format(
+                        "Error trying to add array element at index {0} to dictionary", i), e);
+                }
+            }
+            return dictionary;
         }
     }
 }
