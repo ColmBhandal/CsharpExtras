@@ -13,7 +13,7 @@ namespace CsharpExtras.Enumerable.OneBased
         TVal[] ZeroBasedEquivalent { get; }
         int Length { get; }
 
-        int OneBasedFirstIndexOf(Func<TVal, bool> matchFunction);
+        int FirstIndexOf(Func<TVal, bool> matchFunction);
         void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor);
         void Resize(int newSize);
 

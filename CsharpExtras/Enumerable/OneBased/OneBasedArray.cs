@@ -57,7 +57,7 @@ namespace CsharpExtras.Enumerable.OneBased
             return (oneBasedIndex, element);
         }
 
-        public int OneBasedFirstIndexOf(Func<TVal, bool> matchFunction)
+        public int FirstIndexOf(Func<TVal, bool> matchFunction)
         {
             return ZeroBasedEquivalent.FirstIndexOf(matchFunction) + 1;
         }

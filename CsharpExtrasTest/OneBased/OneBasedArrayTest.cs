@@ -21,10 +21,11 @@ namespace OneBased
         public void Given_OneBasedArray_WhenGetOneBasedFirstIndexOfMatchingElement_Then_OneBasedIndexReturned()
         {
             //Arrange
-            IOneBasedArray<byte> arr = new OneBasedArrayImpl<byte>(new byte[] { 0, 2, 4, 3, 6, 10 });
+            byte[] zeroBased = new byte[] { 0, 2, 4, 3, 6, 10 };
+            IOneBasedArray<byte> arr = new OneBasedArrayImpl<byte>(zeroBased);
 
             //Act
-            int firstIndex = arr.OneBasedFirstIndexOf(b => b % 2 == 1);
+            int firstIndex = arr.FirstIndexOf(b => b % 2 == 1);            
 
             //Assert
             Assert.AreEqual(4, firstIndex);
