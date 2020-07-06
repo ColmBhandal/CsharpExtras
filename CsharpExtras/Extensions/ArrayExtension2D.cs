@@ -1,11 +1,6 @@
-﻿using CsharpExtras.Extensions;
-using CsharpExtras.ValidatedType.Numeric.Integer;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace CsharpExtras.Extensions
 {
@@ -266,6 +261,7 @@ namespace CsharpExtras.Extensions
 
         /// <summary>
         /// Flattens this 2D array into a 1D array using row major order.
+        /// </summary>
         public static TVal[] FlattenRowMajor<TVal>(this TVal[,] array)
         {
             TVal[] flattenedArray = new TVal[array.Length];
@@ -284,6 +280,7 @@ namespace CsharpExtras.Extensions
 
         /// <summary>
         /// Flattens this 2D array into a 1D array using column major order.
+        /// </summary>
         public static TVal[] FlattenColumnMajor<TVal>(this TVal[,] array)
         {
             TVal[] flattenedArray = new TVal[array.Length];

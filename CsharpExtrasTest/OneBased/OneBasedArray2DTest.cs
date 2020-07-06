@@ -217,45 +217,70 @@ namespace OneBased
                 startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));
         }
 
-        [Test]
-        public void Given_2DArrayOfByes_When_FlattenRowMajor_Then_ExpectedOneDimArrayReturned()
+        [Test, TestCaseSource("ProviderForFlattenRowMajorTest")]
+        public void Given_2DArrayOfByes_When_FlattenRowMajor_Then_ExpectedOneDimArrayReturned(
+            byte[,] zeroBasedInput, byte[] expected)
         {
             //Assemble
-            byte[,] zeroBased = new byte[,]
-            {
-                {00, 01, 02},
-                {10, 11, 12},
-                {20, 21, 22}
-            };
-            OneBasedArray2DImpl<byte> oneBased = new OneBasedArray2DImpl<byte>(zeroBased);
+            OneBasedArray2DImpl<byte> oneBased = new OneBasedArray2DImpl<byte>(zeroBasedInput);
 
             //Act
             IOneBasedArray<byte> flattened = oneBased.FlattenRowMajor();
 
             //Assert
-            Assert.AreEqual(new byte[] { 00, 01, 02, 10, 11, 12, 20, 21, 22 }, flattened.ZeroBasedEquivalent);
+            Assert.AreEqual(expected, flattened.ZeroBasedEquivalent);
         }
 
-        [Test]
-        public void Given_2DArrayOfByes_When_FlattenColumnRoMajor_Then_ExpectedOneDimArrayReturned()
+        [Test, TestCaseSource("ProviderForFlattenColumnMajorTest")]
+        public void Given_2DArrayOfByes_When_FlattenColumnRoMajor_Then_ExpectedOneDimArrayReturned(
+            byte[,] zeroBasedInput, byte[] expected)
         {
             //Assemble
-            byte[,] zeroBased = new byte[,]
-            {
-                {00, 01, 02},
-                {10, 11, 12},
-                {20, 21, 22}
-            };
-            OneBasedArray2DImpl<byte> oneBased = new OneBasedArray2DImpl<byte>(zeroBased);
+            OneBasedArray2DImpl<byte> oneBased = new OneBasedArray2DImpl<byte>(zeroBasedInput);
 
             //Act
             IOneBasedArray<byte> flattened = oneBased.FlattenColumnMajor();
 
             //Assert
-            Assert.AreEqual(new byte[] { 00, 10, 20, 01, 11, 21, 02, 12, 22 }, flattened.ZeroBasedEquivalent);
+            Assert.AreEqual(expected, flattened.ZeroBasedEquivalent);
         }
 
         #region Test Data
+        
+        private static IEnumerable<object[]> ProviderForFlattenColumnMajorTest()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    new byte[,]
+                    {
+                        {00, 01, 02},
+                        {10, 11, 12},
+                        {20, 21, 22}
+                    },
+                    new byte[] { 00, 10, 20, 01, 11, 21, 02, 12, 22 }
+                },
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForFlattenRowMajorTest()
+        {
+            return new List<object[]>
+            {
+                new object[]
+                {
+                    new byte[,]
+                    {
+                        {00, 01, 02},
+                        {10, 11, 12},
+                        {20, 21, 22}
+                    },
+                    new byte[] { 00, 01, 02, 10, 11, 12, 20, 21, 22 }
+                },
+            };
+        }
+
         private static IEnumerable<object[]> ProviderFor2DSubArrayTest()
         {
             return new List<object[]> {
