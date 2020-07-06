@@ -4,6 +4,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CsharpExtras.Extensions;
 
 namespace OneBased
 {
@@ -25,7 +26,7 @@ namespace OneBased
             IOneBasedArray<byte> arr = new OneBasedArrayImpl<byte>(zeroBased);
 
             //Act
-            int firstIndex = arr.FirstIndexOf(b => b % 2 == 1);            
+            int firstIndex = arr.FirstIndexOf(b => b % 2 == 1);           
 
             //Assert
             Assert.AreEqual(4, firstIndex);
