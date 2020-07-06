@@ -1,7 +1,10 @@
 ﻿using CsharpExtras.Extensions;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace CsharpExtras.Extensions
@@ -259,6 +262,42 @@ namespace CsharpExtras.Extensions
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// Flattens this 2D array into a 1D array using row major order.
+        public static TVal[] FlattenRowMajor<TVal>(this TVal[,] array)
+        {
+            TVal[] flattenedArray = new TVal[array.Length];
+            int numRows = array.GetLength(0);
+            int numCols = array.GetLength(1);
+            for (int row = 0; row < numRows; row++)
+            {
+                for (int col = 0; col < numCols; col++)
+                {
+                    int flatIndex = row * numCols + col;
+                    flattenedArray[flatIndex] = array[row, col];
+                }
+            }
+            return flattenedArray;
+        }
+
+        /// <summary>
+        /// Flattens this 2D array into a 1D array using column major order.
+        public static TVal[] FlattenColumnMajor<TVal>(this TVal[,] array)
+        {
+            TVal[] flattenedArray = new TVal[array.Length];
+            int numRows = array.GetLength(0);
+            int numCols = array.GetLength(1);
+            for (int col = 0; col < numCols; col++) 
+            {
+                for (int row = 0; row < numRows; row++)
+                {
+                    int flatIndex = col * numRows + row;
+                    flattenedArray[flatIndex] = array[row, col];
+                }
+            }
+            return flattenedArray;
         }
     }
 }

@@ -134,5 +134,16 @@ namespace CsharpExtras.Enumerable.OneBased
         }
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        public IOneBasedArray<TVal> FlattenRowMajor()
+        {
+            TVal[] zeroBasedFlattened = ZeroBasedEquivalent.FlattenRowMajor();
+            return new OneBasedArrayImpl<TVal>(zeroBasedFlattened);
+        }
+        public IOneBasedArray<TVal> FlattenColumnMajor()
+        {
+            TVal[] zeroBasedFlattened = ZeroBasedEquivalent.FlattenColumnMajor();
+            return new OneBasedArrayImpl<TVal>(zeroBasedFlattened);
+        }
     }
 }
