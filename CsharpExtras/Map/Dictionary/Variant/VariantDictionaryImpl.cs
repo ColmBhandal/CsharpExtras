@@ -15,11 +15,8 @@ namespace CsharpExtras.Map.Dictionary.Variant
             _backingDictionary = backingDictionary ?? throw new ArgumentNullException(nameof(backingDictionary));
         }
 
-        public V this[K key] { set => _backingDictionary[key] = value; }
+        public V this[K key] { get => _backingDictionary[key]; set => _backingDictionary[key] = value; }
 
-        V IInKeyOutValueSemiDictionary<K, V>.this[K key] => _backingDictionary[key];
-
-        V IDictionary<K, V>.this[K key] { get => _backingDictionary[key]; set => _backingDictionary[key] = value; }
 
         public int Count => _backingDictionary.Count;
 
