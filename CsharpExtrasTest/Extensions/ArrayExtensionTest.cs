@@ -353,25 +353,6 @@ namespace CustomExtensions
             Assert.AreEqual(expectedResult, result, "Folded value should equal expected value");
         }
 
-        [Test]
-        public void Given_MultiDimensionalArray_When_ConvertedToJaggedArray_Then_CorrectValueReturned()
-        {
-            //Arrange
-            int[][] expectedArray = new int[][] { new int[] { 1,2}, new int[] { 3,4} };
-            int[,] multiArray = new int[2, 2] { { 1,2},{3,4 } };
-
-            //Act
-            int[][] actualArray = ArrayExtension.ConvertToJaggedArray(multiArray);
-
-            //Assert
-            for(int i=0; i < actualArray.Length; i++)
-            {
-                for(int j=0; j <= i; j++)
-                {
-                    Assert.AreEqual(actualArray[i][j], expectedArray[i][j]);
-                }
-            }
-        }
         private static IEnumerable<object[]> ProviderForFoldingArrayToSingleValue()
         {
             return new List<object[]> {

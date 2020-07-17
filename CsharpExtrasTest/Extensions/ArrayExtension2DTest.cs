@@ -17,7 +17,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             string[] result = data.FoldToSingleRow(foldFunction);
-            
+
             //Assert
             Assert.AreEqual(expectedResult, result, "Folded row should equal expected value");
         }
@@ -30,7 +30,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             string[] result = data.FoldToSingleColumn(foldFunction);
-            
+
             //Assert
             Assert.AreEqual(expectedResult, result, "Folded column should equal expected value");
         }
@@ -43,7 +43,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             bool result = data.Any(checkerFunction);
-            
+
             //Assert
             Assert.AreEqual(expectedResult, result, "Check for any should return the correct result");
         }
@@ -56,7 +56,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             bool result = data.All(checkerFunction);
-            
+
             //Assert
             Assert.AreEqual(expectedResult, result, "Check that all match should return the correct result");
         }
@@ -70,7 +70,7 @@ namespace CsharpExtrasTest.Extensions
             //
             //Act
             int result = data.Count(checkerFunction);
-            
+
             //Assert
             Assert.AreEqual(expectedResult, result, "Counting matches should return the correct result");
         }
@@ -82,10 +82,10 @@ namespace CsharpExtrasTest.Extensions
         {
             //Arrange
             string[,] grid = new string[,] { { "H", "el", "lo " }, { "Wor", "ld", "!" } };
-            
+
             //Act
             int[,] charCount = grid.Map(s => s.Length);
-            
+
             //Assert
             Assert.AreEqual(1, charCount[0, 0]);
             Assert.AreEqual(2, charCount[0, 1]);
@@ -124,7 +124,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             string[,] transposed = input.Transpose();
-            
+
             //Assert
             Assert.AreEqual(transposed.GetLength(0), input.GetLength(1));
             Assert.AreEqual(transposed.GetLength(1), input.GetLength(0));
@@ -163,10 +163,10 @@ namespace CsharpExtrasTest.Extensions
             //Arrange
             string[,] first = new string[,] { { "Hel", "wo" }, { "1", "2" } };
             string[,] second = new string[,] { { "lo", "rld" }, { "3", "4" } };
-            
+
             //Act
             string[,] zipped = first.ZipArray((s1, s2) => s1 + s2, second);
-            
+
             //Assert
             Assert.AreEqual(zipped, new string[,] { { "Hello", "world" }, { "13", "24" } });
         }
@@ -177,7 +177,7 @@ namespace CsharpExtrasTest.Extensions
             //Arrange
             string[,] first = new string[,] { { "Hel", "wo", "a" }, { "1", "2", "b" } };
             string[,] second = new string[,] { { "lo", "rld" }, { "3", "4" }, { "5", "6" } };
-            
+
             //Act
             string[,] zipped = first.ZipArray((s1, s2) => s1 + s2, second);
 
@@ -192,7 +192,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             data.WriteToRow(dataToWrite, row, offset);
-            
+
             //Assert
             Assert.AreEqual(expected, data);
         }
@@ -204,7 +204,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             data.WriteToColumn(dataToWrite, column, offset);
-            
+
             //Assert
             Assert.AreEqual(expected, data);
         }
@@ -216,7 +216,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             data.WriteToArea(dataToWrite, rowOffset, columnOffset);
-            
+
             //Assert
             Assert.AreEqual(expected, data,
                 string.Format("Failure for (rowOffset, columnOffset) = ({0}, {1})", rowOffset, columnOffset));
@@ -228,10 +228,21 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
-            
+
             //Assert
             Assert.Catch(() => data.WriteToRow(new int[] { }, row, 0),
                 string.Format("Expected exception for row {0}", row));
+        }
+
+        [Test, Category("Unit")]
+        [TestCaseSource("ProviderForArrayToJaggedArray")]
+        public void Given_MultiDimensionalArray_When_ConvertedToJaggedArray_Then_CorrectValueReturned(int[,] array, int[][] expectedArray)
+        {
+            //Act
+            int[][] actualArray = ArrayExtension2D.ConvertToJaggedArray(array);
+
+            //Assert
+            Assert.AreEqual(actualArray, expectedArray);
         }
 
         [Test, Category("Unit")]
@@ -240,7 +251,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             int[,] data = new int[,] { { 1, 2, 3, 4 }, { 11, 12, 13, 14 } };
-            
+
             //Assert
             Assert.Catch(() => data.WriteToColumn(new int[] { }, column, 0),
                 string.Format("Expected exception for column {0}", column));
@@ -253,7 +264,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Act
             byte[,] sub = data.SubArray(startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn);
-            
+
             //Assert
             Assert.AreEqual(expected, sub, string.Format(
                 "Failure for sub array with coordinates ({0}, {1}) --> ({2}, {3}))",
@@ -386,6 +397,14 @@ namespace CsharpExtrasTest.Extensions
                 new object[] { new string[,] { { "a", "b" }, { "1", "2" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "ab", "12" }, },
                 new object[] { new string[,] { { "a", "b", "c" }, { "1", "2", "3" } }, (Func<string, string, string>)((a, b) => a + b), new string[] { "abc", "123" }, },
                 new object[] { new string[,] { { "a" }, { "1"} }, (Func<string, string, string>)((a, b) => a + b), new string[] { "a", "1" }, },
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForArrayToJaggedArray()
+        {
+            return new List<object[]> {
+                new object[] { new int[,] { { 1,2},{3,4 } } ,new int[][] { new int[] { 1, 2 }, new int[] { 3, 4 } }},
+                new object[] { new int[,] { { -1, -2 }, { -3, -4 } }, new int[][] { new int[] { -1, -2 }, new int[] { -3, -4 } } }
             };
         }
         #endregion

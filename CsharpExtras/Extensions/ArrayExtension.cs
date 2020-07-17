@@ -323,34 +323,5 @@ namespace CsharpExtras.Extensions
             }
             return dictionary;
         }
-
-        /// <summary>
-        /// Returns a jagged array from the multi-dimensional array
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="multiDimensionalArray"></param>
-        /// <returns></returns>
-        public static T[][] ConvertToJaggedArray<T>(this T[,] multiDimensionalArray)
-        {
-            int rowsFirstIndex = multiDimensionalArray.GetLowerBound(0);
-            int rowsLastIndex = multiDimensionalArray.GetUpperBound(0);
-            int numberOfRows = rowsLastIndex + 1;
-
-            int columnsFirstIndex = multiDimensionalArray.GetLowerBound(1);
-            int columnsLastIndex = multiDimensionalArray.GetUpperBound(1);
-            int numberOfColumns = columnsLastIndex + 1;
-
-            T[][] jaggedArray = new T[numberOfRows][];
-            for (int i = rowsFirstIndex; i <= rowsLastIndex; i++)
-            {
-                jaggedArray[i] = new T[numberOfColumns];
-
-                for (int j = columnsFirstIndex; j <= columnsLastIndex; j++)
-                {
-                    jaggedArray[i][j] = multiDimensionalArray[i, j];
-                }
-            }
-            return jaggedArray;
-        }
     }
 }

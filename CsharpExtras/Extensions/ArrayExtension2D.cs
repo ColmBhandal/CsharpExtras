@@ -296,5 +296,36 @@ namespace CsharpExtras.Extensions
             }
             return flattenedArray;
         }
+        /// <summary>
+        /// Returns a jagged array from the multi-dimensional array
+        /// Jagged array's indices always start at zero. 
+        /// If the lower bounds of the multidimensional array are non-zero, a number of blank entries will be inserted into the jagged array, 
+        /// such that the indices of elements in the jagged array match those in the original array
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="dimensionalArray"></param>
+        /// <returns></returns>
+        public static T[][] ConvertToJaggedArray<T>(this T[,] dimensionalArray)
+        {
+            int rowsFirstIndex = dimensionalArray.GetLowerBound(0);
+            int rowsLastIndex = dimensionalArray.GetUpperBound(0);
+            int numberOfRows = rowsLastIndex + 1;
+
+            int columnsFirstIndex = dimensionalArray.GetLowerBound(1);
+            int columnsLastIndex = dimensionalArray.GetUpperBound(1);
+            int numberOfColumns = columnsLastIndex + 1;
+
+            T[][] jaggedArray = new T[numberOfRows][];
+            for (int i = rowsFirstIndex; i <= rowsLastIndex; i++)
+            {
+                jaggedArray[i] = new T[numberOfColumns];
+
+                for (int j = columnsFirstIndex; j <= columnsLastIndex; j++)
+                {
+                    jaggedArray[i][j] = dimensionalArray[i, j];
+                }
+            }
+            return jaggedArray;
+        }
     }
 }
