@@ -242,7 +242,7 @@ namespace CsharpExtrasTest.Extensions
             int[][] actualArray = ArrayExtension2D.ConvertToJaggedArray(array);
 
             //Assert
-            Assert.AreEqual(actualArray, expectedArray);
+            Assert.AreEqual(expectedArray, actualArray);
         }
 
         [Test, Category("Unit")]
@@ -404,7 +404,8 @@ namespace CsharpExtrasTest.Extensions
         {
             return new List<object[]> {
                 new object[] { new int[,] { { 1,2},{3,4 } } ,new int[][] { new int[] { 1, 2 }, new int[] { 3, 4 } }},
-                new object[] { new int[,] { { -1, -2 }, { -3, -4 } }, new int[][] { new int[] { -1, -2 }, new int[] { -3, -4 } } }
+                new object[] { new int[,] {  }, new int[][] {  } },
+                new object[] { new int[,] { { 1},{ 2}  }, new int[][] { new int[] { 1 }, new int[] { 2 } } }
             };
         }
         #endregion
