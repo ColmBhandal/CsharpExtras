@@ -385,8 +385,16 @@ namespace CustomExtensions
 
             //Assert
             Assert.AreEqual(expectedArray, actualArray);
-            expectedArray = new int[] { 4, 5, 6 };
-            Assert.AreNotEqual(expectedArray, actualArray);
+
+            //condition to avoid the IndexOutOfRangeException for the empty array test case
+            if (actualArray.Length > 0)
+            {
+                actualArray[0] += 20;
+                actualArray[1] += 10;
+                actualArray[2] += 15;
+                Assert.AreNotEqual(expectedArray, actualArray,"When the resultant array is modified, the source array shouldn't be modified");
+            }
+            
         }
 
         [Test]
