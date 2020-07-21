@@ -26,14 +26,10 @@ namespace CsharpExtrasTest.Map
             int expectedCount = 4;
             int actualCount = variantDict.Count;
             bool actualResult = variantDict.ContainsKey(4);
-            string value = variantDict[1];
-            variantDict[2] = "Five";
 
             //Assert
             Assert.AreEqual(expectedCount, actualCount);
             Assert.IsTrue(actualResult);
-            Assert.IsTrue(value?.Equals("One"));
-            Assert.IsTrue("Five".Equals(variantDict[2]));
         }
 
         [Test]
@@ -188,6 +184,22 @@ namespace CsharpExtrasTest.Map
                 Assert.AreEqual(actualValues.ElementAt(i), expectedValus.ElementAt(i));
             }
 
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_VariantDictionary_When_VariantDictionaryIndexed_Then_CorrectValueReturned()
+        {
+            //Arrange
+            IVariantDictionary<int, string> variantDict = new VariantDictionaryImpl<int, string>(MockDictionary());
+
+            //Act
+            string value = variantDict[1];
+            variantDict[2] = "five";
+
+            //Assert
+            Assert.IsTrue(value?.Equals("One"));
+            Assert.IsTrue("five".Equals(variantDict[2]));
         }
 
         private static IDictionary<int,string> MockDictionary()
