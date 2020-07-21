@@ -354,7 +354,7 @@ namespace CustomExtensions
         }
 
         [Test]
-        [TestCaseSource("ProviderForFindFirstOccurrenceOfSet")]
+        [TestCaseSource("ProviderForFindFirstOccurrenceOfSet_WithArrayAndSet")]
         public void Given_Array_When_FindFirstOccurrenceOfSet_Then_CorrectValueReturned(int[] arr,ISet<int> set,int expectedIndex, int expectedElement)
         {
             //Act
@@ -366,7 +366,7 @@ namespace CustomExtensions
         }
 
         [Test]
-        [TestCaseSource("ProviderForTo2DArray")]
+        [TestCaseSource("ProviderForTo2DArray_With_1DArray_Expected2DArray_Orientation")]
         public void Given_Array_When_To2DArray_Then_CorrectValueReturned(int[] array1D, int[,] expectedArray, ArrayOrientationClass.ArrayOrientation arrayOrientation)
         {
             //Act
@@ -377,7 +377,7 @@ namespace CustomExtensions
         }
 
         [Test]
-        [TestCaseSource("ProviderForDeepCopy")]
+        [TestCaseSource("ProviderForDeepCopy_With_Array")]
         public void Given_Array_When_DeepCopy_Then_CorrectValueReturned(int[] expectedArray)
         {
             //Act
@@ -385,10 +385,12 @@ namespace CustomExtensions
 
             //Assert
             Assert.AreEqual(expectedArray, actualArray);
+            expectedArray = new int[] { 4, 5, 6 };
+            Assert.AreNotEqual(expectedArray, actualArray);
         }
 
         [Test]
-        [TestCaseSource("ProviderForInverse")]
+        [TestCaseSource("ProviderForInverse_With_Array_ResultingDictionary")]
         public void Given_Array_When_Inverse_Then_CorrectValueReturned(int[] array, IDictionary<int, IList<int>> expected)
         {
             //Act
@@ -413,6 +415,20 @@ namespace CustomExtensions
         }
 
         [Test]
+        public void Given_ThreeArraysOfStringsWithDifferentLengths_When_ZipArray_Then_CorrectValueReturnedWithSmallestArraySize()
+        {
+            //Arrange
+            string[] first = new string[] { "H", "L" };
+            string[] second = new string[] { "E", "O","1","A" };
+            string[] third = new string[] { "L", "!","A","B","C","D" };
+            string[] expected = new string[] { "HEL", "LO!" };
+            //Act
+            string[] actual = ArrayExtension.ZipArray(first, (s1, s2, s3) => s1 + s2 + s3, second, third);
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
         public void Given_FourArraysOfStrings_When_ZipArray_Then_CorrectValueReturned()
         {
             //Arrange
@@ -428,6 +444,23 @@ namespace CustomExtensions
             //Assert
             Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void Given_FourArraysOfStringsWithDifferentLenghts_When_ZipArray_Then_CorrectValueReturnedWithSmallestArraySize()
+        {
+            //Arrange
+            string[] first = new string[] { "H", "O" };
+            string[] second = new string[] { "E", "!","B","c" };
+            string[] third = new string[] { "L", "H","d","fg" };
+            string[] fourth = new string[] { "L", "I","asdf" };
+            string[] expected = new string[] { "HELL", "O!HI" };
+
+            //Act
+            string[] actual = ArrayExtension.ZipArray(first, (s1, s2, s3, s4) => s1 + s2 + s3 + s4, second, third, fourth);
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
         private static IEnumerable<object[]> ProviderForFoldingArrayToSingleValue()
         {
             return new List<object[]> {
@@ -437,14 +470,14 @@ namespace CustomExtensions
             };
         }
 
-        private static IEnumerable<object[]> ProviderForFindFirstOccurrenceOfSet()
+        private static IEnumerable<object[]> ProviderForFindFirstOccurrenceOfSet_WithArrayAndSet()
         {
             return new List<object[]> {
                 new object[] {new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 2,3,4}) ,1,2},
                 new object[] { new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 5,6,7}) ,-1,0},
             };
         }
-        private static IEnumerable<object[]> ProviderForTo2DArray()
+        private static IEnumerable<object[]> ProviderForTo2DArray_With_1DArray_Expected2DArray_Orientation()
         {
             return new List<object[]>
             {
@@ -452,7 +485,7 @@ namespace CustomExtensions
                 new object[] { new int[] {1,2,3 }, new int[3,1] { { 1},{ 2},{ 3} } ,ArrayOrientationClass.ArrayOrientation.ROW}
             };
         }
-        private static IEnumerable<object[]> ProviderForDeepCopy()
+        private static IEnumerable<object[]> ProviderForDeepCopy_With_Array()
         {
             return new List<object[]>
             {
@@ -461,7 +494,7 @@ namespace CustomExtensions
             };
         }
 
-        private static IEnumerable<object[]> ProviderForInverse()
+        private static IEnumerable<object[]> ProviderForInverse_With_Array_ResultingDictionary()
         {
             return new List<object[]>
             {
