@@ -353,12 +353,126 @@ namespace CustomExtensions
             Assert.AreEqual(expectedResult, result, "Folded value should equal expected value");
         }
 
+        [Test]
+        [TestCaseSource("ProviderForFindFirstOccurrenceOfSet")]
+        public void Given_Array_When_FindFirstOccurrenceOfSet_Then_CorrectValueReturned(int[] arr,ISet<int> set,int expectedIndex, int expectedElement)
+        {
+            //Act
+            var actualResult = ArrayExtension.FindFirstOccurrenceOfSet(arr, set, 0, arr.Length-1);
+
+            //Assert
+            Assert.AreEqual(expectedIndex, actualResult.index);
+            Assert.AreEqual(expectedElement, actualResult.element);
+        }
+
+        [Test]
+        [TestCaseSource("ProviderForTo2DArray")]
+        public void Given_Array_When_To2DArray_Then_CorrectValueReturned(int[] array1D, int[,] expectedArray, ArrayOrientationClass.ArrayOrientation arrayOrientation)
+        {
+            //Act
+            int[,] actualArray = ArrayExtension.To2DArray(array1D, arrayOrientation);
+
+            //Assert
+            Assert.AreEqual(expectedArray, actualArray);
+        }
+
+        [Test]
+        [TestCaseSource("ProviderForDeepCopy")]
+        public void Given_Array_When_DeepCopy_Then_CorrectValueReturned(int[] expectedArray)
+        {
+            //Act
+            int[] actualArray = ArrayExtension.DeepCopy(expectedArray);
+
+            //Assert
+            Assert.AreEqual(expectedArray, actualArray);
+        }
+
+        [Test]
+        [TestCaseSource("ProviderForInverse")]
+        public void Given_Array_When_Inverse_Then_CorrectValueReturned(int[] array, IDictionary<int, IList<int>> expected)
+        {
+            //Act
+            IDictionary<int, IList<int>> actual = ArrayExtension.Inverse(array);
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Given_ThreeArraysOfStrings_When_ZipArray_Then_CorrectValueReturned()
+        {
+            //Arrange
+            string[] first = new string[] { "H", "L" };
+            string[] second = new string[] { "E", "O" };
+            string[] third = new string[] { "L", "!" };
+            string[] expected = new string[] { "HEL","LO!" };
+            //Act
+            string[] actual = ArrayExtension.ZipArray(first,(s1, s2,s3) => s1 + s2+ s3, second,third);
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void Given_FourArraysOfStrings_When_ZipArray_Then_CorrectValueReturned()
+        {
+            //Arrange
+            string[] first = new string[] { "H", "O" };
+            string[] second = new string[] { "E", "!" };
+            string[] third = new string[] { "L", "H" };
+            string[] fourth = new string[] { "L", "I" };
+            string[] expected = new string[] { "HELL", "O!HI" };
+
+            //Act
+            string[] actual = ArrayExtension.ZipArray(first, (s1, s2, s3, s4) => s1 + s2 + s3+s4, second, third,fourth);
+
+            //Assert
+            Assert.AreEqual(expected, actual);
+        }
         private static IEnumerable<object[]> ProviderForFoldingArrayToSingleValue()
         {
             return new List<object[]> {
                 new object[] { new string[] { "a", "b" }, (Func<string, string, string>)((a, b) => a + b), "ab" },
                 new object[] { new string[] { "a", "b", "c" }, (Func<string, string, string>)((a, b) => a + b), "abc" },
                 new object[] { new string[] { "a" }, (Func<string, string, string>)((a, b) => a + b), "a" },
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForFindFirstOccurrenceOfSet()
+        {
+            return new List<object[]> {
+                new object[] {new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 2,3,4}) ,1,2},
+                new object[] { new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 5,6,7}) ,-1,0},
+            };
+        }
+        private static IEnumerable<object[]> ProviderForTo2DArray()
+        {
+            return new List<object[]>
+            {
+                new object[] {new int[] {1,2,3,4,5}, new int[1,5] { { 1,2,3,4,5} },ArrayOrientationClass.ArrayOrientation.COLUMN },
+                new object[] { new int[] {1,2,3 }, new int[3,1] { { 1},{ 2},{ 3} } ,ArrayOrientationClass.ArrayOrientation.ROW}
+            };
+        }
+        private static IEnumerable<object[]> ProviderForDeepCopy()
+        {
+            return new List<object[]>
+            {
+                new object[] {new int[] {1,2,3}},
+                new object[] { new int[] { }}
+            };
+        }
+
+        private static IEnumerable<object[]> ProviderForInverse()
+        {
+            return new List<object[]>
+            {
+                new object[] { new int[] { 1, 2, 3, 4 }, new Dictionary<int, IList<int>>
+            {
+                { 1, new List<int> { 0 } },
+                { 2, new List<int> { 1 } },
+                { 3, new List<int> { 2 } },
+                { 4, new List<int> { 3 } }
+            } },
+                new object[] {new int[] {  }, new Dictionary<int, IList<int>>() }
             };
         }
 
