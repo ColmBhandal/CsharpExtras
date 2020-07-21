@@ -26,10 +26,14 @@ namespace CsharpExtrasTest.Map
             int expectedCount = 4;
             int actualCount = variantDict.Count;
             bool actualResult = variantDict.ContainsKey(4);
+            string value = variantDict[1];
+            variantDict[2] = "Five";
 
             //Assert
             Assert.AreEqual(expectedCount, actualCount);
             Assert.IsTrue(actualResult);
+            Assert.IsTrue(value?.Equals("One"));
+            Assert.IsTrue("Five".Equals(variantDict[2]));
         }
 
         [Test]
