@@ -186,6 +186,22 @@ namespace CsharpExtrasTest.Map
 
         }
 
+        [Test]
+        [Category("Unit")]
+        public void Given_VariantDictionary_When_VariantDictionaryIndexed_Then_CorrectValueReturned()
+        {
+            //Arrange
+            IVariantDictionary<int, string> variantDict = new VariantDictionaryImpl<int, string>(MockDictionary());
+
+            //Act
+            string value = variantDict[1];
+            variantDict[2] = "five";
+
+            //Assert
+            Assert.IsTrue(value?.Equals("One"));
+            Assert.IsTrue("five".Equals(variantDict[2]));
+        }
+
         private static IDictionary<int,string> MockDictionary()
         {
             IDictionary<int, string> dict = new Dictionary<int, string>();

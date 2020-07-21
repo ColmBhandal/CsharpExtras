@@ -8,6 +8,7 @@ namespace CsharpExtras.Map.Dictionary.Variant
         IOutKeySemiDictionaryBase<K>, IFixedKeyOutValueSemiDictionary<K, V>, IDictionary<K, V>
     {
         new int Count { get; }
+        new V this[K key] { get;set; }
         new bool IsReadOnly { get; }
         new IEnumerable<K> Keys { get; }
         new ICollection<V> Values { get; }
