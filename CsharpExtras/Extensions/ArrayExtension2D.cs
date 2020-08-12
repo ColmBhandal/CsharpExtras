@@ -1,11 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CsharpExtras.Extensions
 {
     public static class ArrayExtension2D
     {
+        public static int LastUsedRow(this string[,] array)
+        {
+            return array.LastUsedRow(s => !string.IsNullOrWhiteSpace(s));
+        }
+        public static int LastUsedColumn(this string[,] array)
+        {
+            return array.LastUsedColumn(s => !string.IsNullOrWhiteSpace(s));
+        }
+        public static int LastUsedColumn<TVal>(this TVal[,] array, Func<TVal, bool> isUsed)
+        {
+            return -10;
+        }
+
+        public static int LastUsedRow<TVal>(this TVal[,] array, Func<TVal, bool> isUsed)
+        {
+            return -10;
+        }
+
         public static TVal[] FoldToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
         {
             if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
