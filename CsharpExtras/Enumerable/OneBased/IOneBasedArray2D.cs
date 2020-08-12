@@ -59,7 +59,7 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray2D<TVal> SubArray(int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn);
         IOneBasedArray<TVal> FlattenRowMajor();
         IOneBasedArray<TVal> FlattenColumnMajor();
-        int LastUsedRow(Func<TVal, bool> isUsed);
-        int LastUsedColumn(Func<TVal, bool> isUsed);
+        int LastUsedRow(Predicate<TVal> isUsed);
+        int LastUsedColumn(Predicate<TVal> isUsed);
     }
 }

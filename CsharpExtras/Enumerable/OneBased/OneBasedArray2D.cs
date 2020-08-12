@@ -7,13 +7,13 @@ namespace CsharpExtras.Enumerable.OneBased
 {
     class OneBasedArray2DImpl<TVal> : IOneBasedArray2D<TVal>
     {
-        public int LastUsedRow(Func<TVal, bool> isUsed)
+        public int LastUsedRow(Predicate<TVal> isUsed)
         {
             int zeroBasedRow = ZeroBasedEquivalent.LastUsedRow(isUsed);
             if (zeroBasedRow < 0) return zeroBasedRow;
             return zeroBasedRow + 1;
         }
-        public int LastUsedColumn(Func<TVal, bool> isUsed)
+        public int LastUsedColumn(Predicate<TVal> isUsed)
         {
             int zeroBasedColumn = ZeroBasedEquivalent.LastUsedColumn(isUsed);
             if (zeroBasedColumn < 0) return zeroBasedColumn;

@@ -16,14 +16,16 @@ namespace CsharpExtras.Extensions
         {
             return array.LastUsedColumn(s => !string.IsNullOrWhiteSpace(s));
         }
-        public static int LastUsedColumn<TVal>(this TVal[,] array, Func<TVal, bool> isUsed)
+        public static int LastUsedColumn<TVal>(this TVal[,] array, Predicate<TVal> isUsed)
         {
-            return -10;
+            TVal[] folded = array.FoldToSingleRow((v1, v2) => isUsed(v1) ? v1 : v2);
+            return Array.FindLastIndex(folded, isUsed);
         }
 
-        public static int LastUsedRow<TVal>(this TVal[,] array, Func<TVal, bool> isUsed)
+        public static int LastUsedRow<TVal>(this TVal[,] array, Predicate<TVal> isUsed)
         {
-            return -10;
+            TVal[] folded = array.FoldToSingleColumn((v1, v2) => isUsed(v1) ? v1 : v2);
+            return Array.FindLastIndex(folded, isUsed);
         }
 
         public static TVal[] FoldToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
