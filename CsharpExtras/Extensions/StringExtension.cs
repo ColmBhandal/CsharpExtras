@@ -138,6 +138,25 @@ namespace CsharpExtras.Extensions
             }
             return match.Groups[groupIndex].Value;
         }
+
+        public static bool StringValueConvertedToIntGreaterThanOrEqualTo(this string str, int value)
+        {
+            if (int.TryParse(str, out int strInt))
+            {
+                return strInt >= value;
+            }
+            return false;
+        }
+
+        public static bool StringValueConvertedToIntGreaterThanOrEqualToOne(this string str)
+        {
+            return StringValueConvertedToIntGreaterThanOrEqualTo(str, 1);
+        }
+
+        public static bool StringValueConvertedToIntGreaterThanOrEqualToZero(this string str)
+        {
+            return StringValueConvertedToIntGreaterThanOrEqualTo(str, 0);
+        }
     }
 }
 

@@ -209,5 +209,42 @@ namespace CustomExtensions
             //Assert
             Assert.IsTrue(result);
         }
+
+        [Test]
+        [Category("Unit")]
+        public void GivenStringWhenStringValueConvertedToIntGreaterThanOrEqualToCalledThenCorrectValueReturned()
+        {
+            //Arrange
+            string value = "2";
+            //Act
+            bool result = value.StringValueConvertedToIntGreaterThanOrEqualTo(1);
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void GivenStringWhenStringValueConvertedToIntGreaterThanOrEqualToOneCalledThenCorrectValueReturned()
+        {
+            //Arrange
+            string value = "1";
+            //Act
+            bool result = value.StringValueConvertedToIntGreaterThanOrEqualToOne();
+            //Assert
+            Assert.IsTrue(result);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void GivenStringWhenStringValueConvertedToIntGreaterThanOrEqualToZeroCalledThenCorrectValueReturned()
+        {
+            //Arrange
+            string value = "0";
+            //Act
+            bool result = value.StringValueConvertedToIntGreaterThanOrEqualToZero();
+            //Assert
+            Assert.IsTrue(result);
+        }
     }
 }
+
