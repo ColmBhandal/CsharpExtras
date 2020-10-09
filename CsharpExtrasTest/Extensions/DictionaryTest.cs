@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Extensions;
+using System;
 
 namespace CustomExtensions
 {
@@ -80,6 +81,27 @@ namespace CustomExtensions
 
             Assert.IsTrue(mockDict.ContainsKey("5"));
             Assert.IsTrue(mockDict.Values.Contains(5));
+            Assert.IsTrue(mockDict.Contains(new KeyValuePair<string, int>("5", 5)));
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void GivenDictionaryWhenAddWithValueDerivedFromKeyCalledThenCorrectItemAddedToDictionary()
+        {
+            //Arrange
+            IDictionary<string, int> mockDict = MockStrIntDictionary();
+            int ValueFromKey(string key)
+            {
+                return Int32.Parse(key);
+            }
+
+            //Act
+            mockDict.AddWithValueDerivedFromKey("5", ValueFromKey);
+            //Assert
+
+            Assert.IsTrue(mockDict.ContainsKey("5"));
+            Assert.IsTrue(mockDict.Values.Contains(5));
+            Assert.IsTrue(mockDict.Contains(new KeyValuePair<string, int>("5", 5)));
         }
 
         private IDictionary<string, int> MockStrIntDictionary()
