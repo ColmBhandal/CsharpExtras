@@ -63,6 +63,25 @@ namespace CustomExtensions
             Assert.AreEqual(mockDict.Keys, mappedDictionary.Keys);
         }
 
+        [Test]
+        [Category("Unit")]
+        public void GivenDictionaryWhenAddWithKeyDerivedFromValueCalledThenCorrectItemAddedToDictionary()
+        {
+            //Arrange
+            IDictionary<string, int> mockDict = MockStrIntDictionary();
+            string KeyFromValue(int value)
+            {
+                return value + "";
+            }
+
+            //Act
+            mockDict.AddWithKeyDerivedFromValue(5, KeyFromValue);
+            //Assert
+
+            Assert.IsTrue(mockDict.ContainsKey("5"));
+            Assert.IsTrue(mockDict.Values.Contains(5));
+        }
+
         private IDictionary<string, int> MockStrIntDictionary()
         {
             Dictionary<string, int> mockDict = new Dictionary<string, int>();

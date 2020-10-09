@@ -81,5 +81,11 @@ namespace CsharpExtras.Extensions
                 dictionary[key] = incrementAmount;
             }
         }
+
+        public static void AddWithKeyDerivedFromValue<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TValue value, Func<TValue, TKey> func)
+        {
+            TKey key = func(value);
+            dictionary.Add(key, value);
+        }
     }
 }
