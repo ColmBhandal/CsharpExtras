@@ -69,19 +69,20 @@ namespace CustomExtensions
         public void GivenDictionaryWhenAddWithKeyDerivedFromValueCalledThenCorrectItemAddedToDictionary()
         {
             //Arrange
-            IDictionary<string, int> mockDict = MockStrIntDictionary();
+            IDictionary<string, int> dictionary = new Dictionary<string,int>();
             string KeyFromValue(int value)
             {
                 return value + "";
             }
 
             //Act
-            mockDict.AddWithKeyDerivedFromValue(5, KeyFromValue);
+            dictionary.AddWithKeyDerivedFromValue(5, KeyFromValue);
             //Assert
 
-            Assert.IsTrue(mockDict.ContainsKey("5"));
-            Assert.IsTrue(mockDict.Values.Contains(5));
-            Assert.AreEqual(mockDict["5"], 5);
+            Assert.IsTrue(dictionary.ContainsKey("5"));
+            Assert.IsTrue(dictionary.Values.Contains(5));
+            Assert.AreEqual(dictionary["5"], 5);
+            Assert.AreEqual(dictionary.Count,1);
         }
 
         [Test]
@@ -89,19 +90,20 @@ namespace CustomExtensions
         public void GivenDictionaryWhenAddWithValueDerivedFromKeyCalledThenCorrectItemAddedToDictionary()
         {
             //Arrange
-            IDictionary<string, int> mockDict = MockStrIntDictionary();
+            IDictionary<string, int> dictionary = new Dictionary<string, int>();
             int ValueFromKey(string key)
             {
                 return Int32.Parse(key);
             }
 
             //Act
-            mockDict.AddWithValueDerivedFromKey("5", ValueFromKey);
+            dictionary.AddWithValueDerivedFromKey("5", ValueFromKey);
             //Assert
 
-            Assert.IsTrue(mockDict.ContainsKey("5"));
-            Assert.IsTrue(mockDict.Values.Contains(5));
-            Assert.AreEqual(mockDict["5"],5);
+            Assert.IsTrue(dictionary.ContainsKey("5"));
+            Assert.IsTrue(dictionary.Values.Contains(5));
+            Assert.AreEqual(dictionary["5"],5);
+            Assert.AreEqual(dictionary.Count, 1);
         }
 
         private IDictionary<string, int> MockStrIntDictionary()
