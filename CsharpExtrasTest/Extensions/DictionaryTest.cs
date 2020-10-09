@@ -81,7 +81,7 @@ namespace CustomExtensions
 
             Assert.IsTrue(mockDict.ContainsKey("5"));
             Assert.IsTrue(mockDict.Values.Contains(5));
-            Assert.IsTrue(mockDict.Contains(new KeyValuePair<string, int>("5", 5)));
+            Assert.AreEqual(mockDict["5"], 5);
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace CustomExtensions
 
             Assert.IsTrue(mockDict.ContainsKey("5"));
             Assert.IsTrue(mockDict.Values.Contains(5));
-            Assert.IsTrue(mockDict.Contains(new KeyValuePair<string, int>("5", 5)));
+            Assert.AreEqual(mockDict["5"],5);
         }
 
         private IDictionary<string, int> MockStrIntDictionary()
