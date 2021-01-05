@@ -33,5 +33,10 @@ namespace CsharpExtras.IO
         {
             File.WriteAllText(path, contents);
         }
+
+        public bool Exists(string path)
+        {
+            return File.Exists(path);
+        }
     }
 }
