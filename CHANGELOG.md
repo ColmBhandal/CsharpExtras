@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for writing a 2D array to another array (#12)
 - Unit tests for boolean extension (#27)
 - New generic validated type class and some concrete implementations (#42)
+- New `Exists` method on `IFileFacade`
 
 ## [1.1.0] - 2020-06-08
 
