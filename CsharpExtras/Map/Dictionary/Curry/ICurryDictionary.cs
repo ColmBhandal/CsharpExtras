@@ -7,17 +7,18 @@ namespace CsharpExtras.Map.Dictionary.Curry
     {
         NonnegativeInteger Arity { get; }
         TVal this[params TKey[] keys] { get; set; }
-        
-        /// <summary>
-        /// Checks if the key tuple is contained in the dictionary.
-        /// Throws exception if tuple is of incorrect length.
-        /// </summary>
-        bool ContainsKeyTuple(IEnumerable<TKey> keys);
+
         /// <summary>
         /// Checks if the key tuple is contained in the dictionary.
         /// Throws exception if tuple is of incorrect length.
         /// </summary>
         bool ContainsKeyTuple(params TKey[] keys);
+        /// <summary>
+        /// Checks if the key tuple is contained in the dictionary.
+        /// Throws exception if tuple is of incorrect length.
+        /// </summary>
+        bool ContainsKeyTuple(IEnumerable<TKey> keys);
+        TVal GetValueFromTuple(params TKey[] keys);
         TVal GetValueFromTuple(IEnumerable<TKey> keys);
 
         /// <summary>

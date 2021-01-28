@@ -19,6 +19,18 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public abstract bool ContainsKeyTuple(IEnumerable<TKey> keys);
 
+        public TVal GetValueFromTuple(params TKey[] keys)
+        {
+            return GetValueFromTuple(keys as IEnumerable<TKey>);
+        }
+
+        public abstract TVal GetValueFromTuple(IEnumerable<TKey> keys);
+        public bool Add(TVal value, params TKey[] keys)
+        {
+            return Add(value, keys as IEnumerable<TKey>);
+        }
+        public abstract bool Add(TVal value, IEnumerable<TKey> keys);
+
         protected void AssertArityIsCorrect(IEnumerable<TKey> keys)
         {
             int keyLength = keys.Count();
@@ -33,12 +45,5 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 }
             }
         }
-
-        public abstract TVal GetValueFromTuple(IEnumerable<TKey> keys);
-        public bool Add(TVal value, params TKey[] keys)
-        {
-            return Add(value, keys as IEnumerable<TKey>);
-        }
-        public abstract bool Add(TVal value, IEnumerable<TKey> keys);
     }
 }
