@@ -11,7 +11,7 @@ namespace CsharpExtras.Extensions
     {
         //Non-mvp: Test this
         /// <returns>A pair indicating the first element found and its index, or (-1, default) if nothing found.</returns>
-        public static (int index, T element) FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set)
+        public static (int index, T? element) FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set)
         {
             return FindFirstOccurrenceOfSet(arr, set, 0, arr.Length);
         }
@@ -20,7 +20,7 @@ namespace CsharpExtras.Extensions
         /// <param name="startIndex">Start searching the array from this index inclusive i.e. don't look at lower indices</param>
         /// <param name="endIndex">Stop searching the array beyond this index, but include this index in the search. If this is >= length, then length is used.</param>
         /// <returns>A pair indicating the first element found and its index, or (-1, default) if nothing found.</returns>
-        public static (int index, T element) FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set, int startIndex, int endIndex)
+        public static (int index, T? element) FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set, int startIndex, int endIndex)
         {
             for (int i = startIndex; i <= arr.Length && i <= endIndex; i++)
             {
@@ -37,7 +37,7 @@ namespace CsharpExtras.Extensions
         /// <summary>
         /// Sub-array starting at a given index and stopping before another index.
         /// </summary>        
-        /// <param name="startAt">Index to start at. Negative indices will be truncated to zero.</param>
+        /// <param name="startAt">Index to start at (inclusive). Negative indices will be truncated to zero.</param>
         /// <param name="stopBefore">Index before which to stop. Indices greater than array length will be truncated to the array length.</param>
         /// <returns></returns>
         public static T[] SubArray<T>(this T[] data, int startAt, int stopBefore)

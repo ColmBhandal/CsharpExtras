@@ -43,16 +43,16 @@ namespace CsharpExtras.Enumerable.OneBased
             }
         }
 
-        public (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex)
+        public (int index, TVal? element) FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex)
         {
             (int zeroBasedIndex, TVal element) = ZeroBasedEquivalent.FindFirstOccurrenceOfSet<TVal>(set, startIndex, endIndex);
             int oneBasedIndex = zeroBasedIndex + 1;
             return (oneBasedIndex, element);
         }
 
-        public (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set)
+        public (int index, TVal? element) FindFirstOccurrenceOfSet(ISet<TVal> set)
         {
-            (int zeroBasedIndex, TVal element) = ZeroBasedEquivalent.FindFirstOccurrenceOfSet<TVal>(set);
+            (int zeroBasedIndex, TVal? element) = ZeroBasedEquivalent.FindFirstOccurrenceOfSet<TVal>(set);
             int oneBasedIndex = zeroBasedIndex + 1;
             return (oneBasedIndex, element);
         }
