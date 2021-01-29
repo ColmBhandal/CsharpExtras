@@ -60,7 +60,7 @@ namespace CsharpExtras.Enumerable.OneBased
 
         public (int index, TVal element)? FindFirstOccurrenceOfSet(ISet<TVal> set)
         {
-            return FindFirstOccurrenceOfSet(set, 1, Length);
+            return FindFirstOccurrenceOfSet(set, 1, Length+1);
         }
 
         public int FirstIndexOf(Func<TVal, bool> matchFunction)
