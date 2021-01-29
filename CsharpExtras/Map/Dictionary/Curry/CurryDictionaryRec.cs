@@ -7,17 +7,13 @@ using System.Text;
 
 namespace CsharpExtras.Map.Dictionary.Curry
 {
-    class CurryDictionaryRec<TKey, TVal> : CurryDictionaryBase<TKey, TVal>, ICurryDictionaryRec<TKey, TVal>
+    class CurryDictionaryRec<TKey, TVal> : CurryDictionaryBase<TKey, TVal>
     {
         public override TVal this[params TKey[] keys]
         {
             get => GetValueFromTuple(keys);
             set => throw new NotImplementedException();
         }        
-
-        public ICurryDictionary<TKey, TVal> CurriedChild(TKey key) =>
-            _currier[key];
-
         public override NonnegativeInteger Arity { get; }
 
         private readonly IDictionary<TKey, ICurryDictionary<TKey, TVal>> _currier;
@@ -44,45 +40,84 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
         }
 
-        public override bool ContainsKeyTuple(IEnumerable<TKey> keys)
+        public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
             Func<ICurryDictionary<TKey, TVal>, IEnumerable<TKey>, bool> recursor =
                 (dict, keys) => dict.ContainsKeyTuple(keys);
-            return TailRecurse(recursor, keys);
+            return TailRecurse(recursor, keyTuple);
         }
 
         public override bool ContainsKeyTuplePrefix(IEnumerable<TKey> prefix)
         {
-            //STUB: TODO TEST AND IMPLEMENT
-            return false;
+            if (!prefix.Any())
+            {
+                return true;
+            }
+            TKey firstKey = prefix.First();
+            if (!_currier.ContainsKey(firstKey))
+            {
+                return false;
+            }
+            ICurryDictionary<TKey, TVal> curriedChild = _currier[firstKey];
+            IEnumerable<TKey> tailPrefix = prefix.Skip(1);
+            return curriedChild.ContainsKeyTuplePrefix(tailPrefix);
         }
-        public override TVal GetValueFromTuple(IEnumerable<TKey> keys)
+        public override TVal GetValueFromTuple(IEnumerable<TKey> keyTuple)
         {
             Func<ICurryDictionary<TKey, TVal>, IEnumerable<TKey>, TVal> recursor =
                 (dict, keys) => dict.GetValueFromTuple(keys);
-            return TailRecurse(recursor, keys);
+            return TailRecurse(recursor, keyTuple);
         }
 
         public override ICurryDictionary<TKey, TVal> GetCurriedDictionary(IEnumerable<TKey> prefix)
         {
-            //STUB: TODO TEST AND IMPLEMENT
-            return this;
+            if (!prefix.Any())
+            {
+                return this;
+            }
+            TKey firstKey = prefix.First();
+            if (!_currier.ContainsKey(firstKey))
+            {
+                throw new ArgumentException($"Cannot curry dictionary with given prefix as key {firstKey} is not found");
+            }
+            ICurryDictionary<TKey, TVal> curriedChild = _currier[firstKey];
+            IEnumerable<TKey> tailPrefix = prefix.Skip(1);
+            return curriedChild.GetCurriedDictionary(tailPrefix);
         }
 
-        public override bool Add(TVal value, IEnumerable<TKey> keys)
+        public override bool Add(TVal value, IEnumerable<TKey> keyTuple)
         {
-            Func<ICurryDictionary<TKey, TVal>, IEnumerable<TKey>, bool> recursor =
-                (dict, keys) => dict.Add(value, keys);
-            return TailRecurse(recursor, keys);
+            AssertArityIsCorrect(keyTuple);
+            TKey firstKey = keyTuple.First();
+            IEnumerable<TKey> tail = keyTuple.Skip(1);
+            if (_currier.ContainsKey(firstKey))
+            {
+                ICurryDictionary<TKey, TVal> curryChild = _currier[firstKey];
+                return curryChild.Add(value, tail);
+            }
+            else if(Arity > 1)
+            {
+                ICurryDictionary<TKey, TVal> curryChild = new CurryDictionaryRec<TKey, TVal>(Arity - 1);
+                bool isAddSuccessful = curryChild.Add(value, tail);
+                _currier.Add(firstKey, curryChild);
+                return isAddSuccessful;
+            }
+            else
+            {
+                ICurryDictionary<TKey, TVal> curryChild = new NullaryCurryDictionary<TKey, TVal>(value);
+                _currier.Add(firstKey, curryChild);
+                return true;
+            }
         }
 
+        //Assumes keyTuple is in this dictionary
         private TReturn TailRecurse<TReturn>(Func<ICurryDictionary<TKey, TVal>, IEnumerable<TKey>, TReturn> recursor,
-            IEnumerable<TKey> keys)
+            IEnumerable<TKey> keyTuple)
         {
-            AssertArityIsCorrect(keys);
-            TKey firstKey = keys.First();
-            ICurryDictionary<TKey, TVal> curriedChild = CurriedChild(firstKey);
-            IEnumerable<TKey> tail = keys.Skip(1);
+            AssertArityIsCorrect(keyTuple);
+            TKey firstKey = keyTuple.First();
+            ICurryDictionary<TKey, TVal> curriedChild = _currier[firstKey];
+            IEnumerable<TKey> tail = keyTuple.Skip(1);
             return recursor(curriedChild, tail);
         }
     }

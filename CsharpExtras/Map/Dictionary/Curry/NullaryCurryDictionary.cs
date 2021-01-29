@@ -24,24 +24,25 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public override IEnumerable<IList<TKey>> Keyset()
         {
-            return new List<IList<TKey>>();
+            //A nullary dictionary actually does have exactly 1 key tuple: the empty tuple
+            return new List<IList<TKey>> { new List<TKey>() };
         }
 
-        public override bool ContainsKeyTuple(IEnumerable<TKey> keys)
+        public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
-            AssertArityIsCorrect(keys);
+            AssertArityIsCorrect(keyTuple);
             return true;
         }
 
-        public override TVal GetValueFromTuple(IEnumerable<TKey> keys)
+        public override TVal GetValueFromTuple(IEnumerable<TKey> keyTuple)
         {
-            AssertArityIsCorrect(keys);
+            AssertArityIsCorrect(keyTuple);
             return _singletonImmutableValue;
         }
 
-        public override bool Add(TVal value, IEnumerable<TKey> keys)
+        public override bool Add(TVal value, IEnumerable<TKey> keyTUple)
         {
-            AssertArityIsCorrect(keys);
+            AssertArityIsCorrect(keyTUple);
             return false;
         }
 
@@ -57,9 +58,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return this;
         }
 
-        private TVal GetSingletonValue(TKey[] keys)
+        private TVal GetSingletonValue(TKey[] keyTuple)
         {
-            int keyLength = keys.Length;
+            int keyLength = keyTuple.Length;
             if (keyLength != 0)
             {
                 throw new ArgumentException($"Nullary dictionary can only accept 0 keys. " +

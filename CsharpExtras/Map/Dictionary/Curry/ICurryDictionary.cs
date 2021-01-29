@@ -6,19 +6,19 @@ namespace CsharpExtras.Map.Dictionary.Curry
     public interface ICurryDictionary<TKey, TVal>
     {
         NonnegativeInteger Arity { get; }
-        TVal this[params TKey[] keys] { get; set; }
+        TVal this[params TKey[] keyTuple] { get; set; }
         IEnumerable<IList<TKey>> Keyset();
 
         /// <summary>
         /// Checks if the key tuple is contained in the dictionary.
         /// Throws exception if tuple is of incorrect length.
         /// </summary>
-        bool ContainsKeyTuple(params TKey[] keys);
+        bool ContainsKeyTuple(params TKey[] keyTuple);
         /// <summary>
         /// Checks if the key tuple is contained in the dictionary.
         /// Throws exception if tuple is of incorrect length.
         /// </summary>
-        bool ContainsKeyTuple(IEnumerable<TKey> keys);
+        bool ContainsKeyTuple(IEnumerable<TKey> keyTuple);
         /// <summary>
         /// Checks if there is some key tuple in the keyset of this dictionary 
         /// starting with the given prefix
@@ -30,8 +30,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         bool ContainsKeyTuplePrefix(IEnumerable<TKey> prefix);
 
-        TVal GetValueFromTuple(params TKey[] keys);
-        TVal GetValueFromTuple(IEnumerable<TKey> keys);
+        TVal GetValueFromTuple(params TKey[] keyTuple);
+        TVal GetValueFromTuple(IEnumerable<TKey> keyTuple);
 
 
         /// <summary>
@@ -56,11 +56,11 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// Adds the element at the given key if it's not already there.
         /// </summary>
         /// <returns>True iff the value was added</returns>
-        bool Add(TVal value, params TKey[] keys);
+        bool Add(TVal value, params TKey[] keyTuple);
         /// <summary>
         /// Adds the element at the given key if it's not already there.
         /// </summary>
         /// <returns>True iff the value was added</returns>
-        bool Add(TVal value, IEnumerable<TKey> keys);
+        bool Add(TVal value, IEnumerable<TKey> keyTuple);
     }
 }
