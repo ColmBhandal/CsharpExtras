@@ -37,6 +37,10 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray<TResult> ZipArray<TOther1, TOther2, TOther3, TResult>(Func<TVal, TOther1, TOther2, TOther3, TResult> zipper, IOneBasedArray<TOther1> other1, IOneBasedArray<TOther2> other2, IOneBasedArray<TOther3> other3);
         IOneBasedArray<TVal> ZipMulti<TOther>(Func<TVal, TOther, TVal> zipper, IOneBasedArray<TOther> other, params IOneBasedArray<TOther>[] extras);
         (int index, TVal element)? FindFirstOccurrenceOfSet(ISet<TVal> set);
+
+        /// <param name="startIndex">Start searching the array from this index inclusive i.e. don't look at lower indices</param>
+        /// <param name="endIndex">Stop searching the array beyond this index, and exclude this index in the search</param>
+        /// <returns>A pair indicating the first element found and its index, or null if nothing found.</returns>
         (int index, TVal element)? FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex);
 
         /// <summary>
