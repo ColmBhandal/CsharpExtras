@@ -1,11 +1,68 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace CsharpExtras.Extensions
 {
     public static class ArrayExtension2D
     {
+        /// <param name="p">A predicate on an entire column</param>
+        /// <returns>The last column where the predicate is true, or -1 if none found</returns>
+        public static int LastColumnWhere<TVal>(this TVal[,] array, Predicate<TVal[]> p)
+        {
+            int lastColumnIndex = array.GetLength(1) - 1;
+            for (int columnIndex = lastColumnIndex; columnIndex >= 0; columnIndex--)
+            {
+                TVal[] columnSlice = array.SliceColumn(columnIndex);
+                if (p(columnSlice))
+                {
+                    return columnIndex;
+                }
+            }
+            return -1;
+        }
+
+        /// <param name="p">A predicate on an entire row</param>
+        /// <returns>The last row where the predicate is true, or -1 if none found</returns>        
+        public static int LastRowWhere<TVal>(this TVal[,] array, Predicate<TVal[]> p)
+        {
+            int lastRowIndex = array.GetLength(0) - 1;
+            for(int rowIndex = lastRowIndex; rowIndex >=0; rowIndex--)
+            {
+                TVal[] rowSlice = array.SliceRow(rowIndex);
+                if (p(rowSlice))
+                {
+                    return rowIndex;
+                }
+            }
+            return -1;
+        }
+
+        public static int LastUsedRow(this string[,] array)
+        {
+            return array.LastUsedRow(s => !string.IsNullOrWhiteSpace(s));
+        }
+        public static int LastUsedColumn(this string[,] array)
+        {
+            return array.LastUsedColumn(s => !string.IsNullOrWhiteSpace(s));
+        }
+        
+        /// <param name="isUsed">A usage predicate- true false for any given element in the array</param>
+         /// <returns>The last column at which there exists an element matching the usage predicate, or -1 if none found</returns>
+        public static int LastUsedColumn<TVal>(this TVal[,] array, Predicate<TVal> isUsed)
+        {
+            return array.LastColumnWhere(slice => Array.Exists(slice, isUsed));
+        }
+        
+        /// <param name="isUsed">A usage predicate- true false for any given element in the array</param>
+        /// <returns>The last row at which there exists an element matching the usage predicate, or -1 if none found</returns>
+        public static int LastUsedRow<TVal>(this TVal[,] array, Predicate<TVal> isUsed)
+        {
+            return array.LastRowWhere(slice => Array.Exists(slice, isUsed));
+        }
+
         public static TVal[] FoldToSingleColumn<TVal>(this TVal[,] array, Func<TVal, TVal, TVal> foldFunction)
         {
             if (array.GetLength(0) == 0 || array.GetLength(1) == 0)
