@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Extensions;
+using System;
 
 namespace CustomExtensions
 {
@@ -61,6 +62,48 @@ namespace CustomExtensions
             
             //Assert
             Assert.AreEqual(mockDict.Keys, mappedDictionary.Keys);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void GivenDictionaryWhenAddWithKeyDerivedFromValueCalledThenCorrectItemAddedToDictionary()
+        {
+            //Arrange
+            IDictionary<string, int> dictionary = new Dictionary<string,int>();
+            string KeyFromValue(int value)
+            {
+                return value + "";
+            }
+
+            //Act
+            dictionary.AddWithKeyDerivedFromValue(5, KeyFromValue);
+            //Assert
+
+            Assert.IsTrue(dictionary.ContainsKey("5"));
+            Assert.IsTrue(dictionary.Values.Contains(5));
+            Assert.AreEqual(dictionary["5"], 5);
+            Assert.AreEqual(dictionary.Count,1);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void GivenDictionaryWhenAddWithValueDerivedFromKeyCalledThenCorrectItemAddedToDictionary()
+        {
+            //Arrange
+            IDictionary<string, int> dictionary = new Dictionary<string, int>();
+            int ValueFromKey(string key)
+            {
+                return Int32.Parse(key);
+            }
+
+            //Act
+            dictionary.AddWithValueDerivedFromKey("5", ValueFromKey);
+            //Assert
+
+            Assert.IsTrue(dictionary.ContainsKey("5"));
+            Assert.IsTrue(dictionary.Values.Contains(5));
+            Assert.AreEqual(dictionary["5"],5);
+            Assert.AreEqual(dictionary.Count, 1);
         }
 
         private IDictionary<string, int> MockStrIntDictionary()

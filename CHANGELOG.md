@@ -23,12 +23,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added variant dictionary wrapper type, allowing for subsets of dictionary functions to be treated with co/contra-variance (#60)
 - Added functions for flattening 2D arrays to 1D arrays (#60)
 - Added functions to convert arrays to dictionaries (#60)
+- Added functions to find the last used row/column in 2D arrays (#75)
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)
 - Support for writing a 2D array to another array (#12)
 - Unit tests for boolean extension (#27)
 - New generic validated type class and some concrete implementations (#42)
+- New `Exists` method on `IFileFacade`
 
 ## [1.1.0] - 2020-06-08
 

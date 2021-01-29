@@ -20,6 +20,72 @@ namespace OneBased
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
         [Test]
+        public void Given_2DStringArrayWithBlanksOnly_When_LastUsedColumnCalled_Then_ResultIsMinusOne()
+        {
+            //assemble
+            string[,] zeroBased = new string[,] {
+                { "", "  "},
+                { "\n\r\t", null}};
+            IOneBasedArray2D<string> oneBased = _api.NewOneBasedArray2D(zeroBased);
+
+            //act
+            int actualLastUsedColumn = oneBased.LastUsedColumn();
+
+            //assert
+            Assert.AreEqual(-1, actualLastUsedColumn);
+        }
+
+        [Test]
+        public void Given_2DStringArrayWithNonBlanks_When_LastUsedColumnCalled_Then_ResultIsCorrect()
+        {
+            //assemble
+            string[,] zeroBased = new string[,] {
+                { "a1", "", "a3", "a4", ""},
+                { "b1", "b2", "b3", "b4", "  "},
+                { "", "  ", "c3", "\n\r\t", null} };
+            IOneBasedArray2D<string> oneBased = _api.NewOneBasedArray2D(zeroBased);
+
+            //act
+            int actualLastUsedColumn = oneBased.LastUsedColumn();
+
+            //assert
+            Assert.AreEqual(4, actualLastUsedColumn);
+        }
+
+        [Test]
+        public void Given_2DStringArrayWithBlanksOnly_When_LastUsedRowCalled_Then_ResultIsMinusOne()
+        {
+            //assemble
+            string[,] zeroBased = new string[,] {
+                { "", "  "},
+                { "\n\r\t", null}};
+            IOneBasedArray2D<string> oneBased = _api.NewOneBasedArray2D(zeroBased);
+
+            //act
+            int actualLastUsedRow = oneBased.LastUsedRow();
+
+            //assert
+            Assert.AreEqual(-1, actualLastUsedRow);
+        }
+
+        [Test]
+        public void Given_2DStringArrayWithNonBlanks_When_LastUsedRowCalled_Then_ResultIsCorrect()
+        {
+            //assemble
+            string[,] zeroBased = new string[,] {
+                { "a1", "a2", "a3", "a4", "a5"},
+                { "b1", "b2", "b3", "b4", "b5"},
+                { "", "  ", "\n ", "\n\r\t", null} };
+            IOneBasedArray2D<string> oneBased = _api.NewOneBasedArray2D(zeroBased);
+
+            //act
+            int actualLastUsedRow = oneBased.LastUsedRow();
+
+            //assert
+            Assert.AreEqual(2, actualLastUsedRow);
+        }
+
+        [Test]
         public void Given_2DArray_When_IterateAsEnumerable_Then_RowMajorOrderSequenceReturned()
         {
             //assemble
