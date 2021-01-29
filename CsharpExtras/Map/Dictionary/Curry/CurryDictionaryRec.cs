@@ -24,11 +24,24 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public CurryDictionaryRec(int arity) : this((PositiveInteger)arity) { }
 
-
         public CurryDictionaryRec(PositiveInteger arity)
         {
             Arity = (NonnegativeInteger)arity;
             _currier = new Dictionary<TKey, ICurryDictionary<TKey, TVal>>();
+        }
+        public override IEnumerable<IList<TKey>> Keyset()
+        {
+            foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in _currier)
+            {
+                TKey key = pair.Key;
+                ICurryDictionary<TKey, TVal> dict = pair.Value;
+                IEnumerable<IList<TKey>> childKeyset = dict.Keyset();
+                foreach (IList<TKey> tuple in childKeyset)
+                {
+                    tuple.Insert(0, key);
+                    yield return tuple;
+                }
+            }
         }
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keys)
@@ -37,11 +50,23 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 (dict, keys) => dict.ContainsKeyTuple(keys);
             return TailRecurse(recursor, keys);
         }
+
+        public override bool ContainsKeyTuplePrefix(IEnumerable<TKey> prefix)
+        {
+            //STUB: TODO TEST AND IMPLEMENT
+            return false;
+        }
         public override TVal GetValueFromTuple(IEnumerable<TKey> keys)
         {
             Func<ICurryDictionary<TKey, TVal>, IEnumerable<TKey>, TVal> recursor =
                 (dict, keys) => dict.GetValueFromTuple(keys);
             return TailRecurse(recursor, keys);
+        }
+
+        public override ICurryDictionary<TKey, TVal> GetCurriedDictionary(IEnumerable<TKey> prefix)
+        {
+            //STUB: TODO TEST AND IMPLEMENT
+            return this;
         }
 
         public override bool Add(TVal value, IEnumerable<TKey> keys)

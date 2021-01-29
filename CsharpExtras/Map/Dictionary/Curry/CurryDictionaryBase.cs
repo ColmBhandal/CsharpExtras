@@ -9,6 +9,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
     abstract class CurryDictionaryBase<TKey, TVal> : ICurryDictionary<TKey, TVal>
     {
         public abstract NonnegativeInteger Arity { get; }
+        public abstract IEnumerable<IList<TKey>> Keyset();
 
         public abstract TVal this[params TKey[] keys] { get; set; }
 
@@ -18,6 +19,11 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }
 
         public abstract bool ContainsKeyTuple(IEnumerable<TKey> keys);
+        public bool ContainsKeyTuplePrefix(params TKey[] prefix)
+        {
+            return ContainsKeyTuplePrefix(prefix as IEnumerable<TKey>);
+        }
+        public abstract bool ContainsKeyTuplePrefix(IEnumerable<TKey> prefix);
 
         public TVal GetValueFromTuple(params TKey[] keys)
         {
@@ -25,6 +31,11 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }
 
         public abstract TVal GetValueFromTuple(IEnumerable<TKey> keys);
+        public ICurryDictionary<TKey, TVal> GetCurriedDictionary(params TKey[] prefix)
+        {
+            return GetCurriedDictionary(prefix as IEnumerable<TKey>);
+        }
+        public abstract ICurryDictionary<TKey, TVal> GetCurriedDictionary(IEnumerable<TKey> prefix);
         public bool Add(TVal value, params TKey[] keys)
         {
             return Add(value, keys as IEnumerable<TKey>);
@@ -45,5 +56,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 }
             }
         }
+
     }
 }
