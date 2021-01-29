@@ -8,7 +8,7 @@ using System.Text;
 namespace CsharpExtrasTest.Map.Dictionary.Curry
 {
     [TestFixture]
-    public class LazyFunctionMapTest
+    public class CurryDictionaryTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 

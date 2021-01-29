@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- Added Curry Dictionary type (#82)
 
 ### Changed
 - [BREAKING] Move the ArrayOrientation enum to a new namespace (#9)
@@ -30,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unit tests for boolean extension (#27)
 - New generic validated type class and some concrete implementations (#42)
 - New `Exists` method on `IFileFacade`
+- Added Curry Dictionary type (#82)
 
 ## [1.1.0] - 2020-06-08
 

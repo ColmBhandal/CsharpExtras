@@ -6,7 +6,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
     public interface ICurryDictionary<TKey, TVal>
     {
         NonnegativeInteger Arity { get; }
-        TVal this[params TKey[] keyTuple] { get; set; }
+        TVal this[params TKey[] keyTuple] { get; }
         IEnumerable<IList<TKey>> Keyset();
 
         /// <summary>

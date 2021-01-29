@@ -26,7 +26,7 @@ namespace CsharpExtras.Api
         }
         public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity)
         {
-            return new CurryDictionaryRec<TKey, TVal>(arity);         
+            return new CurryDictionaryRecursive<TKey, TVal>(arity);         
         }
         public void SetLogger(ILogger logger)
         {

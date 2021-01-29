@@ -7,20 +7,19 @@ using System.Text;
 
 namespace CsharpExtras.Map.Dictionary.Curry
 {
-    class CurryDictionaryRec<TKey, TVal> : CurryDictionaryBase<TKey, TVal>
+    class CurryDictionaryRecursive<TKey, TVal> : CurryDictionaryBase<TKey, TVal>
     {
         public override TVal this[params TKey[] keys]
         {
             get => GetValueFromTuple(keys);
-            set => throw new NotImplementedException();
         }        
         public override NonnegativeInteger Arity { get; }
 
         private readonly IDictionary<TKey, ICurryDictionary<TKey, TVal>> _currier;
 
-        public CurryDictionaryRec(int arity) : this((PositiveInteger)arity) { }
+        public CurryDictionaryRecursive(int arity) : this((PositiveInteger)arity) { }
 
-        public CurryDictionaryRec(PositiveInteger arity)
+        public CurryDictionaryRecursive(PositiveInteger arity)
         {
             Arity = (NonnegativeInteger)arity;
             _currier = new Dictionary<TKey, ICurryDictionary<TKey, TVal>>();
@@ -97,7 +96,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             else if(Arity > 1)
             {
-                ICurryDictionary<TKey, TVal> curryChild = new CurryDictionaryRec<TKey, TVal>(Arity - 1);
+                ICurryDictionary<TKey, TVal> curryChild = new CurryDictionaryRecursive<TKey, TVal>(Arity - 1);
                 bool isAddSuccessful = curryChild.Add(value, tail);
                 _currier.Add(firstKey, curryChild);
                 return isAddSuccessful;

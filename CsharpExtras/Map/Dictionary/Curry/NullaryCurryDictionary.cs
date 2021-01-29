@@ -12,7 +12,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
         public override TVal this[params TKey[] keys]
         {
             get => GetSingletonValue(keys);
-            set => throw new NotImplementedException();
         }
 
         public override NonnegativeInteger Arity => (NonnegativeInteger)0;
