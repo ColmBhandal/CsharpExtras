@@ -11,18 +11,18 @@ namespace CsharpExtras.Extensions
     {
         //Non-mvp: Test this
         /// <returns>A pair indicating the first element found and its index, or (-1, default) if nothing found.</returns>
-        public static (int index, T? element) FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set)
+        public static (int index, T element)? FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set)
         {
             return FindFirstOccurrenceOfSet(arr, set, 0, arr.Length);
         }
 
         //Non-mvp: Test this
         /// <param name="startIndex">Start searching the array from this index inclusive i.e. don't look at lower indices</param>
-        /// <param name="endIndex">Stop searching the array beyond this index, but include this index in the search. If this is >= length, then length is used.</param>
-        /// <returns>A pair indicating the first element found and its index, or (-1, default) if nothing found.</returns>
-        public static (int index, T? element) FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set, int startIndex, int endIndex)
+        /// <param name="endIndex">Stop searching the array beyond this index, and don't include this index in the search</param>
+        /// <returns>A pair indicating the first element found and its index, or null if nothing found.</returns>
+        public static (int index, T element)? FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set, int startIndex, int endIndex)
         {
-            for (int i = startIndex; i <= arr.Length && i <= endIndex; i++)
+            for (int i = startIndex; i < arr.Length && i < endIndex; i++)
             {
                 T element = arr[i];
                 if (set.Contains(element))
@@ -30,7 +30,7 @@ namespace CsharpExtras.Extensions
                     return (i, element);
                 }
             }
-            return (-1, default);
+            return null;
         }
 
 

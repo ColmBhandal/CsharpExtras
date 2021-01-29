@@ -361,8 +361,30 @@ namespace CustomExtensions
             var actualResult = ArrayExtension.FindFirstOccurrenceOfSet(arr, set, 0, arr.Length-1);
 
             //Assert
-            Assert.AreEqual(expectedIndex, actualResult.index);
-            Assert.AreEqual(expectedElement, actualResult.element);
+            if(actualResult is (int index, int element))
+            {
+                Assert.AreEqual(expectedIndex, index);
+                Assert.AreEqual(expectedElement, element);
+            }
+            else if(actualResult is null)
+            {
+                Assert.Fail("Null tuple returned");
+            }
+            else
+            {
+                Assert.Fail("There's no way this can get reached so the universe has probably imploded.");
+            }
+        }
+
+        [Test]
+        [TestCaseSource("ProviderForFindFirstOccurrenceOfSetNoMatches_WithArrayAndSet")]
+        public void Given_Array_When_FindFirstOccurrenceOfSetWithNoMatches_Then_NullReturned(int[] arr, ISet<int> set)
+        {
+            //Act
+            var actualResult = ArrayExtension.FindFirstOccurrenceOfSet(arr, set, 0, arr.Length - 1);
+
+            //Assert
+            Assert.IsNull(actualResult, "Expected null tuple returned when there are no matches for set in array");
         }
 
         [Test]
@@ -481,10 +503,16 @@ namespace CustomExtensions
         private static IEnumerable<object[]> ProviderForFindFirstOccurrenceOfSet_WithArrayAndSet()
         {
             return new List<object[]> {
-                new object[] {new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 2,3,4}) ,1,2},
-                new object[] { new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 5,6,7}) ,-1,0},
+                new object[] {new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 2,3,4}) ,1,2}
             };
         }
+        private static IEnumerable<object[]> ProviderForFindFirstOccurrenceOfSetNoMatches_WithArrayAndSet()
+        {
+            return new List<object[]> {
+                new object[] {new int[] { 1,2,3,4}, new HashSet<int>(new int[] { 7, 42, 128})}
+            };
+        }
+
         private static IEnumerable<object[]> ProviderForTo2DArray_With_1DArray_Expected2DArray_Orientation()
         {
             return new List<object[]>

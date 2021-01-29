@@ -36,8 +36,8 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray<TResult> ZipArray<TOther1, TOther2, TResult>(Func<TVal, TOther1, TOther2, TResult> zipper, IOneBasedArray<TOther1> other1, IOneBasedArray<TOther2> other2);
         IOneBasedArray<TResult> ZipArray<TOther1, TOther2, TOther3, TResult>(Func<TVal, TOther1, TOther2, TOther3, TResult> zipper, IOneBasedArray<TOther1> other1, IOneBasedArray<TOther2> other2, IOneBasedArray<TOther3> other3);
         IOneBasedArray<TVal> ZipMulti<TOther>(Func<TVal, TOther, TVal> zipper, IOneBasedArray<TOther> other, params IOneBasedArray<TOther>[] extras);
-        (int index, TVal? element) FindFirstOccurrenceOfSet(ISet<TVal> set);
-        (int index, TVal? element) FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex);
+        (int index, TVal element)? FindFirstOccurrenceOfSet(ISet<TVal> set);
+        (int index, TVal element)? FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex);
 
         /// <summary>
         /// Use the provided function to fold an array of values into a single value.
