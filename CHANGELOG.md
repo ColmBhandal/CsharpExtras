@@ -7,7 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-- [BREAKING] Updated language version to 9.0 (#82)
 - Added Curry Dictionary type (#82)
 
 ### Changed
