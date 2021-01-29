@@ -13,12 +13,21 @@ using CsharpExtras.Validation;
 using System;
 using System.Collections.Generic;
 using CsharpExtras.Map.Dictionary.Variant;
+using CsharpExtras.Map.Dictionary.Curry;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 
 namespace CsharpExtras.Api
 {
     public class CsharpExtrasApi : ICsharpExtrasApi
     {
-
+        public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(int arity)
+        {
+            return NewCurryDictionary<TKey, TVal>((PositiveInteger) arity);
+        }
+        public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity)
+        {
+            return new CurryDictionaryRecursive<TKey, TVal>(arity);         
+        }
         public void SetLogger(ILogger logger)
         {
             StaticLogManager.Logger = logger;

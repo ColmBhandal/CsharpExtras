@@ -43,18 +43,24 @@ namespace CsharpExtras.Enumerable.OneBased
             }
         }
 
-        public (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex)
+        //Non-mvp: Test this
+        public (int index, TVal element)? FindFirstOccurrenceOfSet(ISet<TVal> set, int startIndex, int endIndex)
         {
-            (int zeroBasedIndex, TVal element) = ZeroBasedEquivalent.FindFirstOccurrenceOfSet<TVal>(set, startIndex, endIndex);
-            int oneBasedIndex = zeroBasedIndex + 1;
-            return (oneBasedIndex, element);
+            int zeroBasedStartIndex = startIndex - 1;
+            int zeroBasedEndIndex = endIndex - 1;
+            (int zeroBasedIndex, TVal element)? zeroBasedVal
+                = ZeroBasedEquivalent.FindFirstOccurrenceOfSet(set, zeroBasedStartIndex, zeroBasedEndIndex);
+            if(zeroBasedVal is (int zeroBasedIndex, TVal element))
+            {
+                int oneBasedIndex = zeroBasedIndex + 1;
+                return (oneBasedIndex, element);
+            }
+            return null;
         }
 
-        public (int index, TVal element) FindFirstOccurrenceOfSet(ISet<TVal> set)
+        public (int index, TVal element)? FindFirstOccurrenceOfSet(ISet<TVal> set)
         {
-            (int zeroBasedIndex, TVal element) = ZeroBasedEquivalent.FindFirstOccurrenceOfSet<TVal>(set);
-            int oneBasedIndex = zeroBasedIndex + 1;
-            return (oneBasedIndex, element);
+            return FindFirstOccurrenceOfSet(set, 1, Length+1);
         }
 
         public int FirstIndexOf(Func<TVal, bool> matchFunction)

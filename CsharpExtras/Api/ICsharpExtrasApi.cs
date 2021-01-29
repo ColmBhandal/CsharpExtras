@@ -13,6 +13,8 @@ using CsharpExtras.RandomDataGen;
 using CsharpExtras.Validation;
 using CsharpExtras.Map.Dictionary.Collection;
 using CsharpExtras.Map.Dictionary.Variant;
+using CsharpExtras.Map.Dictionary.Curry;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 
 namespace CsharpExtras.Api
 {
@@ -44,5 +46,7 @@ namespace CsharpExtras.Api
         IListValuedDictionary<TKey, TVal> NewListValuedDictionary<TKey, TVal>();
         IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>();
         IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary);
+        ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(int arity);
+        ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity);
     }
 }

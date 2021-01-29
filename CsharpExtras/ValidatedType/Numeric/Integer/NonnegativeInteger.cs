@@ -15,5 +15,6 @@ namespace CsharpExtras.ValidatedType.Numeric.Integer
         protected override bool IsValid(int t) => t >= 0;
 
         public static explicit operator NonnegativeInteger(int value) => new NonnegativeInteger(value);
+        public static explicit operator NonnegativeInteger(PositiveInteger posint) => new NonnegativeInteger(posint);
     }
 }
