@@ -41,9 +41,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
-            Func<ICurryDictionary<TKey, TVal>, IEnumerable<TKey>, bool> recursor =
-                (dict, keys) => dict.ContainsKeyTuple(keys);
-            return TailRecurse(recursor, keyTuple);
+            AssertArityIsCorrect(keyTuple);
+            return ContainsKeyTuplePrefix(keyTuple);
         }
 
         public override bool ContainsKeyTuplePrefix(IEnumerable<TKey> prefix)
