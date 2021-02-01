@@ -11,6 +11,11 @@ namespace CsharpExtras.Map.Dictionary.Curry
         public abstract NonnegativeInteger Arity { get; }
         public abstract IEnumerable<IList<TKey>> Keyset();
 
+        public IEnumerable<(IList<TKey>, TVal)> KeyValuePairs() =>
+            Keyset().Select(k => (k, GetValueFromTuple(k)));
+
+        public IEnumerable<TVal> Values() => Keyset().Select(GetValueFromTuple);
+
         public abstract TVal this[params TKey[] keys] { get;}
 
         public bool ContainsKeyTuple(params TKey[] keys)
@@ -56,6 +61,5 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 }
             }
         }
-
     }
 }
