@@ -37,7 +37,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add("Hello World 21", 2, 1);
 
             //Assert
-            IEnumerable<IList<int>> keyset = dict.Keyset();
+            IEnumerable<IList<int>> keyset = dict.Keys;
             IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>
                 {new List<int>{1,1}, new List<int>{1,2}, new List<int>{2,1} };
             Assert.AreEqual(expectedKeyset, keyset);
@@ -146,7 +146,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> curried = dict.GetCurriedDictionary(1);
 
             //Assert
-            IEnumerable<IList<int>> keyset = curried.Keyset();
+            IEnumerable<IList<int>> keyset = curried.Keys;
             IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>
                 {new List<int>{1,3}, new List<int>{2,3} };
             Assert.AreEqual(expectedKeyset, keyset);

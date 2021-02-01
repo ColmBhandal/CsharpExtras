@@ -9,12 +9,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
     abstract class CurryDictionaryBase<TKey, TVal> : ICurryDictionary<TKey, TVal>
     {
         public abstract NonnegativeInteger Arity { get; }
-        public abstract IEnumerable<IList<TKey>> Keyset();
+        public abstract IEnumerable<IList<TKey>> Keys { get; }
 
-        public IEnumerable<(IList<TKey>, TVal)> KeyValuePairs() =>
-            Keyset().Select(k => (k, GetValueFromTuple(k)));
+        public IEnumerable<(IList<TKey>, TVal)> KeyValuePairs =>
+            Keys.Select(k => (k, GetValueFromTuple(k)));
 
-        public IEnumerable<TVal> Values() => Keyset().Select(GetValueFromTuple);
+        public IEnumerable<TVal> Values => Keys.Select(GetValueFromTuple);
 
         public abstract TVal this[params TKey[] keys] { get;}
 

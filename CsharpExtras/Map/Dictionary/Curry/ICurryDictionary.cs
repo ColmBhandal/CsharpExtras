@@ -7,9 +7,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
     {
         NonnegativeInteger Arity { get; }
         TVal this[params TKey[] keyTuple] { get; }
-        IEnumerable<IList<TKey>> Keyset();
-        IEnumerable<(IList<TKey>, TVal)> KeyValuePairs();
-        IEnumerable<TVal> Values();
+        IEnumerable<IList<TKey>> Keys { get; }
+        IEnumerable<(IList<TKey>, TVal)> KeyValuePairs { get; }
+        IEnumerable<TVal> Values { get; }
 
         /// <summary>
         /// Checks if the key tuple is contained in the dictionary.
