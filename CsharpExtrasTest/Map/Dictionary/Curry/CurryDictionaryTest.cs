@@ -26,7 +26,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
 
         [Test]
         [Category("Unit")]
-        public void Given_NewCurryDictionary_When_Add_Then_KeysetMatchesExpectation()
+        public void Given_NewCurryDictionary_When_Add_Then_KeysMatchExpectation()
         {
             //Assemble
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
@@ -37,10 +37,51 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add("Hello World 21", 2, 1);
 
             //Assert
-            IEnumerable<IList<int>> keyset = dict.Keyset();
+            IEnumerable<IList<int>> keyset = dict.Keys;
             IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>
                 {new List<int>{1,1}, new List<int>{1,2}, new List<int>{2,1} };
             Assert.AreEqual(expectedKeyset, keyset);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_NewCurryDictionary_When_Add_Then_KeyValuePairsMatchExpectation()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
+
+            //Act
+            dict.Add("Hello World 11", 1, 1);
+            dict.Add("Hello World 12", 1, 2);
+            dict.Add("Hello World 21", 2, 1);
+
+            //Assert
+            IEnumerable<(IList<int>, string)> pairs = dict.KeyValuePairs;
+            IEnumerable<(IList<int>, string)> expectedPairs = new List<(IList<int>, string)>
+                {(new List<int>{1,1}, "Hello World 11"),
+                (new List<int>{1,2}, "Hello World 12"),
+                (new List<int>{2,1}, "Hello World 21")
+            };
+            Assert.AreEqual(expectedPairs, pairs);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_NewCurryDictionary_When_Add_Then_ValuesMatchExpectation()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
+
+            //Act
+            dict.Add("Hello World 11", 1, 1);
+            dict.Add("Hello World 12", 1, 2);
+            dict.Add("Hello World 21", 2, 1);
+
+            //Assert
+            IEnumerable<string> values = dict.Values;
+            IEnumerable<string> expectedPairs = new List<string>
+            {"Hello World 11", "Hello World 12", "Hello World 21"};
+            Assert.AreEqual(expectedPairs, values);
         }
 
         [Test]
@@ -69,6 +110,50 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
 
             //Assert
             Assert.IsTrue(dict.ContainsKeyTuplePrefix(1, 2));
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_CurryDictionary_When_PrefixNotThere_Then_ContainsKeyTuplePrefixReturnsFalse()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World", 1, 2, 3);
+            dict.Add("Hello World again", 2, 17, 34);
+
+            //Act
+            bool containsPrefix = dict.ContainsKeyTuplePrefix(1, 145);
+
+            //Assert
+            Assert.IsFalse(containsPrefix, "Expected non-existent prefix contains to return false");
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_EmptyCurryDictionary_When_ContainsKeyTuplePrefix_Then_FalseReturned()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+
+            //Act
+            bool containsPrefix = dict.ContainsKeyTuplePrefix(1, 145);
+
+            //Assert
+            Assert.IsFalse(containsPrefix, "Expected non-existent prefix contains to return false");
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_EmptyCurryDictionary_When_ContainsKeyTuple_Then_FalseReturned()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+
+            //Act
+            bool containsPrefix = dict.ContainsKeyTuple(1, 145, 27);
+
+            //Assert
+            Assert.IsFalse(containsPrefix, "Expected non-existent prefix contains to return false");
         }
 
         [Test]
@@ -102,10 +187,58 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> curried = dict.GetCurriedDictionary(1);
 
             //Assert
-            IEnumerable<IList<int>> keyset = curried.Keyset();
+            IEnumerable<IList<int>> keyset = curried.Keys;
             IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>
                 {new List<int>{1,3}, new List<int>{2,3} };
             Assert.AreEqual(expectedKeyset, keyset);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_EmptyCurryDictionary_When_GetKeys_Then_ResultIsEmptyEnumerable()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+
+            //Act
+
+            IEnumerable<IList<int>> keys = dict.Keys;
+
+            //Assert
+            IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>();
+            Assert.AreEqual(expectedKeyset, keys);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_EmptyCurryDictionary_When_GetValues_Then_ResultIsEmptyEnumerable()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+
+            //Act
+
+            IEnumerable<string> values = dict.Values;
+
+            //Assert
+            IEnumerable<string> expectedKeyset = new List<string>();
+            Assert.AreEqual(expectedKeyset, values);
+        }
+
+        [Test]
+        [Category("Unit")]
+        public void Given_EmptyCurryDictionary_When_GetKeyValuePairs_Then_ResultIsEmptyEnumerable()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+
+            //Act
+
+            IEnumerable<(IList<int>, string)> pairs = dict.KeyValuePairs;
+
+            //Assert
+            IEnumerable<(IList<int>, string)> expectedKeyset = new List<(IList<int>, string)>();
+            Assert.AreEqual(expectedKeyset, pairs);
         }
     }
 }

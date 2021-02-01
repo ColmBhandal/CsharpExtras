@@ -21,11 +21,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
             _singletonImmutableValue = singletonValue;
         }
 
-        public override IEnumerable<IList<TKey>> Keyset()
-        {
+        public override IEnumerable<IList<TKey>> Keys =>
             //A nullary dictionary actually does have exactly 1 key tuple: the empty tuple
-            return new List<IList<TKey>> { new List<TKey>() };
-        }
+            new List<IList<TKey>> { new List<TKey>() };
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {

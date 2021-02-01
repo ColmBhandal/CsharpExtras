@@ -24,26 +24,28 @@ namespace CsharpExtras.Map.Dictionary.Curry
             Arity = (NonnegativeInteger)arity;
             _currier = new Dictionary<TKey, ICurryDictionary<TKey, TVal>>();
         }
-        public override IEnumerable<IList<TKey>> Keyset()
+        public override IEnumerable<IList<TKey>> Keys
         {
-            foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in _currier)
+            get
             {
-                TKey key = pair.Key;
-                ICurryDictionary<TKey, TVal> dict = pair.Value;
-                IEnumerable<IList<TKey>> childKeyset = dict.Keyset();
-                foreach (IList<TKey> tuple in childKeyset)
+                foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in _currier)
                 {
-                    tuple.Insert(0, key);
-                    yield return tuple;
+                    TKey key = pair.Key;
+                    ICurryDictionary<TKey, TVal> dict = pair.Value;
+                    IEnumerable<IList<TKey>> childKeyset = dict.Keys;
+                    foreach (IList<TKey> tuple in childKeyset)
+                    {
+                        tuple.Insert(0, key);
+                        yield return tuple;
+                    }
                 }
             }
         }
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
-            Func<ICurryDictionary<TKey, TVal>, IEnumerable<TKey>, bool> recursor =
-                (dict, keys) => dict.ContainsKeyTuple(keys);
-            return TailRecurse(recursor, keyTuple);
+            AssertArityIsCorrect(keyTuple);
+            return ContainsKeyTuplePrefix(keyTuple);
         }
 
         public override bool ContainsKeyTuplePrefix(IEnumerable<TKey> prefix)

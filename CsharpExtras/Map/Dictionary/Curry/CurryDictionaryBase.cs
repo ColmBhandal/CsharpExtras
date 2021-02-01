@@ -9,7 +9,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
     abstract class CurryDictionaryBase<TKey, TVal> : ICurryDictionary<TKey, TVal>
     {
         public abstract NonnegativeInteger Arity { get; }
-        public abstract IEnumerable<IList<TKey>> Keyset();
+        public abstract IEnumerable<IList<TKey>> Keys { get; }
+
+        public IEnumerable<(IList<TKey>, TVal)> KeyValuePairs =>
+            Keys.Select(k => (k, GetValueFromTuple(k)));
+
+        public IEnumerable<TVal> Values => Keys.Select(GetValueFromTuple);
 
         public abstract TVal this[params TKey[] keys] { get;}
 
@@ -42,12 +47,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }
         public abstract bool Add(TVal value, IEnumerable<TKey> keys);
 
-        protected void AssertArityIsCorrect(IEnumerable<TKey> keys)
+        protected void AssertArityIsCorrect(IEnumerable<TKey> keyTuple)
         {
-            int keyLength = keys.Count();
+            int keyLength = keyTuple.Count();
             if (keyLength != Arity)
             {
-                int keyCount = keys.Count();
+                int keyCount = keyTuple.Count();
                 if (keyCount != Arity)
                 {
                     throw new ArgumentException(
@@ -56,6 +61,5 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 }
             }
         }
-
     }
 }
