@@ -89,6 +89,20 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
 
         [Test]
         [Category("Unit")]
+        public void Given_EmptyCurryDictionary_When_ContainsKeyTuplePrefix_Then_FalseReturned()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+
+            //Act
+            bool containsPrefix = dict.ContainsKeyTuplePrefix(1, 145);
+
+            //Assert
+            Assert.IsFalse(containsPrefix, "Expected non-existent prefix contains to return false");
+        }
+
+        [Test]
+        [Category("Unit")]
         public void Given_NewCurryDictionary_When_Add_Then_GetReturnsValue()
         {
             //Assemble
