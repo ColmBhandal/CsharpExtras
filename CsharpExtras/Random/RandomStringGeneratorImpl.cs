@@ -8,7 +8,7 @@ namespace CsharpExtras.RandomDataGen
 {
     class RandomStringGeneratorImpl : IRandomStringGenerator
     {
-        private readonly Random _random = new Random();
+        private static readonly Random _random = new Random();
         private const string NumberSet = "0123456789";
         private const string AlphaUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
