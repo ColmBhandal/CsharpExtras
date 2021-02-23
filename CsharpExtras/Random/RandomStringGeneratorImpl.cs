@@ -8,7 +8,16 @@ namespace CsharpExtras.RandomDataGen
 {
     class RandomStringGeneratorImpl : IRandomStringGenerator
     {
-        private readonly Random _random = new Random();
+        // Global Random instance that is shared across all threads - note that Random is NOT thread-safe
+        // Design inspired by this discussion: https://stackoverflow.com/questions/3049467/is-c-sharp-random-number-generator-thread-safe
+        private static readonly Random _globalRandom = new Random();
+
+        // Thread-specific instance of Random
+        // This Lazy property gets initialized the first time a given thread accesses this class
+        // The _globalRandom is used to generate a unique seed for each thread-specific instance
+        [ThreadStatic] private static Random? _threadRandom;
+        private static Random ThreadRandom => _threadRandom ??= BuildRandomInstanceForThread();
+
         private const string NumberSet = "0123456789";
         private const string AlphaUpperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -42,9 +51,19 @@ namespace CsharpExtras.RandomDataGen
             char[] stringChars = new char[length];
             for (int i = 0; i < length; i++)
             {
-                stringChars[i] = alphabet[_random.Next(alphabet.Length)];
+                stringChars[i] = alphabet[ThreadRandom.Next(alphabet.Length)];
             }
             return new string(stringChars);
         }
+
+        private static Random BuildRandomInstanceForThread()
+        {
+            lock (_globalRandom)
+            {
+                int seed = _globalRandom.Next();
+                return new Random(seed);
+            }
+        }
+
     }
 }
