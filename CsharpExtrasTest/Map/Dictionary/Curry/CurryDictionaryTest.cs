@@ -12,6 +12,27 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
+        /// <summary>
+        /// In loving memory of Mikhail Volkov, a brilliant coder who first introduced me to C# and delegates.
+        /// </summary>
+        delegate string MikhailsDelegate(string input);
+
+        [Test]
+        [Category("Unit")]
+        public void Given_DelegateDictionary_When_AddDelegate_Then_DelegateFoundAtGivenKeyAndReturnsExpectedValue()
+        {
+            //Assemble
+            ICurryDictionary<int, MikhailsDelegate> dict = Api.NewCurryDictionary<int, MikhailsDelegate>(2);
+
+            //Act
+            dict.Add(s => $"Delegates are awesome! {s}", 13, 22);
+
+            //Assert
+            MikhailsDelegate del = dict[13, 22];
+            string result = del("RIP Mikhail");
+            Assert.AreEqual(result, "Delegates are awesome! RIP Mikhail");
+        }
+
         [Test]
         [Category("Unit")]
         public void Given_PositiveInteger_When_ConstructCurryDictionary_Then_ArityMatchesCtorParameter()
