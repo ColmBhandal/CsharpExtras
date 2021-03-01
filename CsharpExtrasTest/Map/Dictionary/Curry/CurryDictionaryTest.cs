@@ -28,8 +28,8 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add(s => $"Delegates are awesome! {s}", 13, 22);
 
             //Assert
-            MikhailsDelegate del = dict[13, 22];
-            string result = del("RIP Mikhail");
+            MikhailsDelegate f = dict[13, 22];
+            string result = f("RIP Mikhail");
             Assert.AreEqual(result, "Delegates are awesome! RIP Mikhail");
         }
 
