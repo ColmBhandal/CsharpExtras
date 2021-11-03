@@ -337,7 +337,7 @@ namespace OneBased
             Func<byte, bool> oddNumberMatcher = b => b % 2 == 1;
             Func<byte, bool> evenNumberMatcher = b => b % 2 == 0;
             Func<byte, bool> matchNine = b => b == 9;            
-            Func<byte, bool> tryMatchNmberOutsideArray = b => b == 999;
+            Func<byte, bool> tryMatchNmberOutsideArray = b => b == 99;
             Func<byte, bool> neverMatch = b => false;
             Func<byte, bool> alwaysMatch = b => true;
             return new List<object[]>
