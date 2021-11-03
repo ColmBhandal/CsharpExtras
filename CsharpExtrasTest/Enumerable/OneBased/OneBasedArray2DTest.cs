@@ -313,7 +313,7 @@ namespace OneBased
 
         [Test, TestCaseSource("ProviderForFirstIndexTupleOfTest")]
         public void Given_2DArrayOfBytes_When_GetIndexTupleOfMatcher_Then_ExpectedTupleReturned(
-            Func<byte, bool> matcher, (int majorIndex, int minorIndex) expectedTuple)
+            Func<byte, bool> matcher, (int majorIndex, int minorIndex)? expectedTuple)
         {
             //Assemble
             IOneBasedArray2D<byte> sourceArray = new OneBasedArray2DImpl<byte>(new byte[,]
