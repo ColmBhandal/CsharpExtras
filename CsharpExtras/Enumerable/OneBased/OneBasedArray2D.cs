@@ -77,6 +77,16 @@ namespace CsharpExtras.Enumerable.OneBased
             return ZeroBasedEquivalent.Any(checkerFunction);
         }
 
+        public (int majorIndex, int minorIndex)? FirstIndexTupleOf(Func<TVal, bool> matcherFunction)
+        {
+            (int majorIndex, int minorIndex)? zeroBasedResult = ZeroBasedEquivalent.FirstIndexTupleOf(matcherFunction);            
+            if (zeroBasedResult is (int majorIndex, int minorIndex))
+            {
+                return (majorIndex+1, minorIndex+1);
+            }
+            return null;
+        }
+
         public bool All(Func<TVal, bool> checkerFunction)
         {
             return ZeroBasedEquivalent.All(checkerFunction);

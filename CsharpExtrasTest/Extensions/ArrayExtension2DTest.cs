@@ -271,7 +271,45 @@ namespace CsharpExtrasTest.Extensions
                 startAtRow, startAtColumn, stopBeforeRow, stopBeforeColumn));
         }
 
+        [Test, TestCaseSource("ProviderForFirstIndexTupleOfTest")]
+        public void Given_2DArrayOfBytes_When_GetIndexTupleOfMatcher_Then_ExpectedTupleReturned(
+            Func<byte, bool> matcher, (int majorIndex, int minorIndex) expectedTuple)
+        {
+            //Assemble
+            OneBasedArray2DImpl<byte> sourceArray = new OneBasedArray2DImpl<byte>(new byte[,]
+            {
+                {1, 2, 3 },
+                {4, 5, 6},
+                {7, 8, 9},
+            });
+
+            //Act
+            (int majorIndex, int minorIndex)? actualTuple = sourceArray.FirstIndexTupleOf(matcher);
+
+            //Assert
+            Assert.AreEqual(expectedTuple, actualTuple);
+        }
+
         #region Providers
+        private static IEnumerable<object[]> ProviderForFirstIndexTupleOfTest()
+        {
+            //The test has a square array of number 1 - 9. The following test data assumes that.
+            Func<byte, bool> oddNumberMatcher = b => b % 2 == 1;
+            Func<byte, bool> evenNumberMatcher = b => b % 2 == 0;
+            Func<byte, bool> matchNine = b => b == 9;
+            Func<byte, bool> tryMatchNmberOutsideArray = b => b == 999;
+            Func<byte, bool> neverMatch = b => false;
+            Func<byte, bool> alwaysMatch = b => true;
+            return new List<object[]>
+            {
+                new object[]{oddNumberMatcher, (0, 0)},
+                new object[]{evenNumberMatcher, (0, 1)},
+                new object[]{ matchNine, (2, 2)},
+                new object[]{ tryMatchNmberOutsideArray, null},
+                new object[]{ neverMatch, null},
+                new object[]{ alwaysMatch, (0, 0)},
+            };
+        }
 
         private static IEnumerable<object[]> ProviderForWriteToAreaTest()
         {

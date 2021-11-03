@@ -8,6 +8,7 @@ namespace CsharpExtras.Extensions
 {
     public static class ArrayExtension2D
     {
+
         /// <param name="p">A predicate on an entire column</param>
         /// <returns>The last column where the predicate is true, or -1 if none found</returns>
         public static int LastColumnWhere<TVal>(this TVal[,] array, Predicate<TVal[]> p)
@@ -97,17 +98,29 @@ namespace CsharpExtras.Extensions
 
         public static bool Any<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
         {
-            for (int row = 0; row < array.GetLength(0); row++)
+            (int, int)? firstIndexTuple = array.FirstIndexTupleOf(checkerFunction);
+            return (firstIndexTuple != null);
+        }
+
+        /// <summary>
+        /// Searches the array in row major order until a matching value is found
+        /// </summary>
+        /// <returns>A tuple containing the row/column index of the match, or null if none is found</returns>
+        public static (int majorIndex, int minorIndex)? FirstIndexTupleOf<TVal>
+            (this TVal[,] array, Func<TVal, bool> matcherFunction)
+        {
+
+            /*for (int row = 0; row < array.GetLength(0); row++)
             {
                 for (int column = 0; column < array.GetLength(1); column++)
                 {
-                    if (checkerFunction(array[row, column]))
+                    if (matcherFunction(array[row, column]))
                     {
-                        return true;
+                        return (row, column);
                     }
                 }
-            }
-            return false;
+            }*/
+            return null;
         }
 
         public static bool All<TVal>(this TVal[,] array, Func<TVal, bool> checkerFunction)
