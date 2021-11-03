@@ -1,5 +1,4 @@
-﻿using CsharpExtras.Enumerable.OneBased;
-using CsharpExtras.Extensions;
+﻿using CsharpExtras.Extensions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -276,12 +275,12 @@ namespace CsharpExtrasTest.Extensions
             Func<byte, bool> matcher, (int majorIndex, int minorIndex)? expectedTuple)
         {
             //Assemble
-            OneBasedArray2DImpl<byte> sourceArray = new OneBasedArray2DImpl<byte>(new byte[,]
+            byte[,] sourceArray = new byte[,]
             {
                 {1, 2, 3 },
                 {4, 5, 6},
                 {7, 8, 9},
-            });
+            };
 
             //Act
             (int majorIndex, int minorIndex)? actualTuple = sourceArray.FirstIndexTupleOf(matcher);
