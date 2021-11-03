@@ -61,5 +61,6 @@ namespace CsharpExtras.Enumerable.OneBased
         IOneBasedArray<TVal> FlattenColumnMajor();
         int LastUsedRow(Predicate<TVal> isUsed);
         int LastUsedColumn(Predicate<TVal> isUsed);
+        (int majorIndex, int minorIndex)? FirstIndexTupleOf(Func<TVal, bool> matcher);
     }
 }
