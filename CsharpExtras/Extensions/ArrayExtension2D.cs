@@ -110,7 +110,7 @@ namespace CsharpExtras.Extensions
             (this TVal[,] array, Func<TVal, bool> matcherFunction)
         {
 
-            /*for (int row = 0; row < array.GetLength(0); row++)
+            for (int row = 0; row < array.GetLength(0); row++)
             {
                 for (int column = 0; column < array.GetLength(1); column++)
                 {
@@ -119,7 +119,7 @@ namespace CsharpExtras.Extensions
                         return (row, column);
                     }
                 }
-            }*/
+            }
             return null;
         }
 
