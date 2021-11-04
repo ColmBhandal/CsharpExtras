@@ -33,15 +33,8 @@ namespace CsharpExtras.Extensions
         /// <returns>A new dictionary whose keys are the same as the source dictionary and whose values are the 
         /// result of applying the mapper function over the values in the source dictionary.</returns>
         public static IDictionary<TKey, TMapped> MapValues<TKey, TValue, TMapped>
-            (this IDictionary<TKey, TValue> dictionary, Func<TValue, TMapped> mapper)
-        {
-            Dictionary<TKey, TMapped> dictToReturn = new Dictionary<TKey, TMapped>();
-            foreach (TKey k in dictionary.Keys)
-            {
-                dictToReturn.Add(k, mapper(dictionary[k]));
-            }
-            return dictToReturn;
-        }
+            (this IDictionary<TKey, TValue> dictionary, Func<TValue, TMapped> mapper) =>
+            dictionary.MapValues((k, v) => mapper(v));
 
         /// <summary>
         /// Maps the values in the given dictionary using the given mapper function
@@ -57,6 +50,11 @@ namespace CsharpExtras.Extensions
             (this IDictionary<TKey, TValue> dictionary, Func<TKey, TValue, TMapped> mapper)
         {
             Dictionary<TKey, TMapped> dictToReturn = new Dictionary<TKey, TMapped>();
+            foreach (KeyValuePair<TKey, TValue> pair in dictionary)
+            {
+                TKey key = pair.Key;
+                dictToReturn.Add(key, mapper(key, dictionary[key]));
+            }
             return dictToReturn;
         }
 
