@@ -12,10 +12,14 @@ namespace CsharpExtras.Extensions
         public static IDictionary<int, U> IndexZeroBased<U>(this IEnumerable<U> values) => Index(values, 0);
 
         public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int startIndex)
-        {
-            return new Dictionary<int, U>();
-            //return Index(values, startIndex, 1);
-        }
+            => Index(values, startIndex, 1);
+
+        /// <summary>
+        /// Indexes this enumerable into a dictionary whose keys are the indices of elements in the enumerable.
+        /// </summary>
+        /// <param name="startIndex">The index to assign to the first index of the enumerable</param>
+        /// <param name="step">The difference between successive indices in the enumerable</param>
+        /// <returns></returns>
         public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int startIndex, int step)
         {
             IDictionary<int, U> dict = new Dictionary<int, U>();
@@ -49,17 +53,19 @@ namespace CsharpExtras.Extensions
         /// <summary>
         /// Find the first row that matches the provided function. If none found, return -1
         /// </summary>
+        /// <param name="equalityProvider">The function will stop at the first match of this</param>
+        /// <param name="startIndex">The index to assign to the first element in the enumerable</param>
+        /// <returns></returns>
         public static int FirstIndexOf<T>(this IEnumerable<T> values, Func<T, bool> equalityProvider, int startIndex)
         {
-            return -1; //STUBBED FOR NOW TO RED/GREEEN TEST
-            /*for (int i = 0; i < values.Count(); i++)
+            for (int i = 0; i < values.Count(); i++)
             {
                 if (equalityProvider.Invoke(values.ElementAt(i)))
                 {
-                    return i;
+                    return startIndex + i;
                 }
             }
-            return -1;*/
+            return -1;
         }
 
         //non-mvp: sliceRow should be consistent with Slice column (can we write a common function to reduce repetition?)

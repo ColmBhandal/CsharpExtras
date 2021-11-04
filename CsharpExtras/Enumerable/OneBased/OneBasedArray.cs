@@ -65,11 +65,7 @@ namespace CsharpExtras.Enumerable.OneBased
 
         public int FirstIndexOf(TVal val) => this.FirstIndexOfOneBased(val);
 
-        public int FirstIndexOf(Func<TVal, bool> matchFunction)
-        {
-            return -1;
-            //STUBBED OUT FOR RED-GREEN TESTING: return this.FirstIndexOf(matchFunction, 1);
-        }
+        public int FirstIndexOf(Func<TVal, bool> matchFunction) => this.FirstIndexOf(matchFunction, 1);
 
         public void Resize(int newSize)
         {
