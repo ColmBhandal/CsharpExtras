@@ -33,14 +33,28 @@ namespace OneBased
         }
 
         [Test]
-        public void Given_OneBasedArray_WhenGetFirstIndexOfNonLambda_Then_OneBasedIndexReturned()
+        public void Given_OneBasedArray_WhenGetOneBasedFirstIndexOfFalseMatcher_Then_MinusOne()
         {
             //Arrange
             byte[] zeroBased = new byte[] { 0, 2, 4, 3, 6, 10 };
             IOneBasedArray<byte> arr = new OneBasedArrayImpl<byte>(zeroBased);
 
             //Act
-            int firstIndex = arr.FirstIndexOf<byte>(3);
+            int firstIndex = arr.FirstIndexOf(b => false);
+
+            //Assert
+            Assert.AreEqual(-1, firstIndex);
+        }
+
+        [Test]
+        public void Given_OneBasedArray_WhenGetFirstIndexOfNonLambdaMatchingElement_Then_OneBasedIndexReturned()
+        {
+            //Arrange
+            byte[] zeroBased = new byte[] { 0, 2, 4, 3, 6, 10 };
+            IOneBasedArray<byte> arr = new OneBasedArrayImpl<byte>(zeroBased);
+
+            //Act
+            int firstIndex = arr.FirstIndexOf(3);
 
             //Assert
             Assert.AreEqual(4, firstIndex);

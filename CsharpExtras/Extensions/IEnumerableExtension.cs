@@ -8,13 +8,13 @@ namespace CsharpExtras.Extensions
 {
     public static class IEnumerableExtension
     {
-        public static IDictionary<int, U> Index<U>(this IEnumerable<U> values)
-        {
-            return Index(values, 1);
-        }
+        public static IDictionary<int, U> IndexOneBased<U>(this IEnumerable<U> values) => Index(values, 1);
+        public static IDictionary<int, U> IndexZeroBased<U>(this IEnumerable<U> values) => Index(values, 0);
+
         public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int startIndex)
         {
-            return Index(values, startIndex, 1);
+            return new Dictionary<int, U>();
+            //return Index(values, startIndex, 1);
         }
         public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int startIndex, int step)
         {
@@ -36,24 +36,30 @@ namespace CsharpExtras.Extensions
             }
         }
 
-        public static int FirstIndexOf<T>(this IEnumerable<T> values, T value)
+        public static int FirstIndexOfOneBased<T>(this IEnumerable<T> values, T value) =>
+            values.FirstIndexOf(value, 1);
+        public static int FirstIndexOfZeroBased<T>(this IEnumerable<T> values, T value) =>
+            values.FirstIndexOf(value, 0);
+
+        public static int FirstIndexOf<T>(this IEnumerable<T> values, T value, int startIndex)
         {            
-            return values.FirstIndexOf(v => v != null && v.Equals(value));
+            return values.FirstIndexOf(v => v != null && v.Equals(value), startIndex);
         }
 
         /// <summary>
         /// Find the first row that matches the provided function. If none found, return -1
         /// </summary>
-        public static int FirstIndexOf<T>(this IEnumerable<T> values, Func<T, bool> equalityProvider)
+        public static int FirstIndexOf<T>(this IEnumerable<T> values, Func<T, bool> equalityProvider, int startIndex)
         {
-            for (int i = 0; i < values.Count(); i++)
+            return -1; //STUBBED FOR NOW TO RED/GREEEN TEST
+            /*for (int i = 0; i < values.Count(); i++)
             {
                 if (equalityProvider.Invoke(values.ElementAt(i)))
                 {
                     return i;
                 }
             }
-            return -1;
+            return -1;*/
         }
 
         //non-mvp: sliceRow should be consistent with Slice column (can we write a common function to reduce repetition?)
