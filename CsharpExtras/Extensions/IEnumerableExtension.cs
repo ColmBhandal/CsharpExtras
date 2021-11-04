@@ -8,18 +8,22 @@ namespace CsharpExtras.Extensions
 {
     public static class IEnumerableExtension
     {
-        public static IDictionary<int, U> Index<U>(this IEnumerable<U> values)
-        {
-            return Index(values, 1);
-        }
-        public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int startIndex)
-        {
-            return Index(values, startIndex, 1);
-        }
-        public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int startIndex, int step)
+        public static IDictionary<int, U> IndexOneBased<U>(this IEnumerable<U> values) => Index(values, 1);
+        public static IDictionary<int, U> IndexZeroBased<U>(this IEnumerable<U> values) => Index(values, 0);
+
+        public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int baseIndex)
+            => Index(values, baseIndex, 1);
+
+        /// <summary>
+        /// Indexes this enumerable into a dictionary whose keys are the indices of elements in the enumerable.
+        /// </summary>
+        /// <param name="baseIndex">The index to assign to the first index of the enumerable</param>
+        /// <param name="step">The difference between successive indices in the enumerable</param>
+        /// <returns></returns>
+        public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int baseIndex, int step)
         {
             IDictionary<int, U> dict = new Dictionary<int, U>();
-            int currIndex = startIndex;
+            int currIndex = baseIndex;
             foreach (U u in values)
             {
                 dict.Add(currIndex, u);
@@ -36,21 +40,29 @@ namespace CsharpExtras.Extensions
             }
         }
 
-        public static int FirstIndexOf<T>(this IEnumerable<T> values, T value)
+        public static int FirstIndexOfOneBased<T>(this IEnumerable<T> values, T value) =>
+            values.FirstIndexOf(value, 1);
+        public static int FirstIndexOfZeroBased<T>(this IEnumerable<T> values, T value) =>
+            values.FirstIndexOf(value, 0);
+
+        public static int FirstIndexOf<T>(this IEnumerable<T> values, T value, int baseIndex)
         {            
-            return values.FirstIndexOf(v => v != null && v.Equals(value));
+            return values.FirstIndexOf(v => v != null && v.Equals(value), baseIndex);
         }
 
         /// <summary>
         /// Find the first row that matches the provided function. If none found, return -1
         /// </summary>
-        public static int FirstIndexOf<T>(this IEnumerable<T> values, Func<T, bool> equalityProvider)
+        /// <param name="equalityProvider">The function will stop at the first match of this</param>
+        /// <param name="baseIndex">The index to assign to the first element in the enumerable</param>
+        /// <returns></returns>
+        public static int FirstIndexOf<T>(this IEnumerable<T> values, Func<T, bool> equalityProvider, int baseIndex)
         {
             for (int i = 0; i < values.Count(); i++)
             {
                 if (equalityProvider.Invoke(values.ElementAt(i)))
                 {
-                    return i;
+                    return baseIndex + i;
                 }
             }
             return -1;

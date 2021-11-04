@@ -63,10 +63,9 @@ namespace CsharpExtras.Enumerable.OneBased
             return FindFirstOccurrenceOfSet(set, 1, Length+1);
         }
 
-        public int FirstIndexOf(Func<TVal, bool> matchFunction)
-        {
-            return ZeroBasedEquivalent.FirstIndexOf(matchFunction) + 1;
-        }
+        public int FirstIndexOf(TVal val) => this.FirstIndexOfOneBased(val);
+
+        public int FirstIndexOf(Func<TVal, bool> matchFunction) => this.FirstIndexOf(matchFunction, 1);
 
         public void Resize(int newSize)
         {

@@ -14,6 +14,7 @@ namespace CsharpExtras.Enumerable.OneBased
         int Length { get; }
 
         int FirstIndexOf(Func<TVal, bool> matchFunction);
+        int FirstIndexOf(TVal val);
         void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor);
         void Resize(int newSize);
 
@@ -30,7 +31,6 @@ namespace CsharpExtras.Enumerable.OneBased
         /// If there are any duplicate values in this array, then an exception is thrown.
         /// </summary>
         IDictionary<TVal, TOther> ZipToDictionary<TOther>(IOneBasedArray<TOther> other);
-        
         ISetValuedDictionary<TVal, TOther> ZipToSetDictionary<TOther>(IOneBasedArray<TOther> other);
 
         IOneBasedArray<TResult> ZipArray<TOther1, TOther2, TResult>(Func<TVal, TOther1, TOther2, TResult> zipper, IOneBasedArray<TOther1> other1, IOneBasedArray<TOther2> other2);
