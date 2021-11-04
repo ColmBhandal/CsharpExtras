@@ -87,6 +87,24 @@ namespace CustomExtensions
 
         [Test]
         [Category("Unit")]
+        public void GIVEN_Dictionary_WHEN_MapValuesWithKeyValueMapper_THEN_ExpectedDictionaryReturned()
+        {
+            //Assemble
+            IDictionary<int, string> mockDict = new Dictionary<int, string>()
+                { [1] = "1", [2] = "2", [3] = "3" };
+            Func<int, string, (int, string)> mapper = (i, s) => (i, s);
+
+            //Act
+            IDictionary<int, (int, string)> actualDict = mockDict.MapValues(mapper);
+
+            //Assert
+            IDictionary<int, (int, string)> expectedDict = new Dictionary<int, (int, string)>()
+            { [1] = (1, "1"), [2] = (2, "2"), [3] = (3, "3") };
+            Assert.AreEqual(expectedDict, actualDict);
+        }
+
+        [Test]
+        [Category("Unit")]
         public void GivenDictionaryWhenAddWithValueDerivedFromKeyCalledThenCorrectItemAddedToDictionary()
         {
             //Arrange
