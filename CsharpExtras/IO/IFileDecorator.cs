@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.IO.FileNameCheck;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace CsharpExtras.IO
 {
@@ -11,13 +12,15 @@ namespace CsharpExtras.IO
     public interface IFileDecorator
     {
         IFileNameChecker FileNameChecker { get; set; }
+        IDirectoryDecorator DirectoryDecorator { get; set; }
+        IFileApiWrapper FileApiWrapper { get; set; }
 
         void TrimEmptyLinesFromEndOfFile(string filePath);
 
         void TrimEmptyLinesFromEndOfFile(string filePath, Func<string, bool> isLineEmpty);
 
         bool IsValidFileName(string fileName);
-        void Create(string path);
+        FileStream Create(string path);
 
         string[] ReadAllLines(string path);
 

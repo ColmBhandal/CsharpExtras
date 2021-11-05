@@ -8,35 +8,37 @@ namespace CsharpExtras.IO
 {
     class FileDecoratorImpl : IFileDecorator
     {
+        public IFileApiWrapper FileApiWrapper { get; set; } = new FileApiWrapperImpl();
+        public IDirectoryDecorator DirectoryDecorator { get; set; } = new DirectoryDecoratorImpl();
         public IFileNameChecker FileNameChecker { get; set; } = new SystemFileNameChecker();
-        public void Create(string path)
+        public FileStream Create(string path)
         {
-            File.Create(path);
+            return FileApiWrapper.Create(path);
         }
 
         public string[] ReadAllLines(string path)
         {
-            return File.ReadAllLines(path);
+            return FileApiWrapper.ReadAllLines(path);
         }
 
         public string ReadAllText(string path)
         {
-            return File.ReadAllText(path);
+            return FileApiWrapper.ReadAllText(path);
         }
 
         public void WriteAllLines(string path, IEnumerable<string> contents)
         {
-            File.WriteAllLines(path, contents);
+            FileApiWrapper.WriteAllLines(path, contents);
         }
 
         public void WriteAllText(string path, string contents)
         {
-            File.WriteAllText(path, contents);
+            FileApiWrapper.WriteAllText(path, contents);
         }
 
         public bool Exists(string path)
         {
-            return File.Exists(path);
+            return FileApiWrapper.Exists(path);
         }
 
         public void TrimEmptyLinesFromEndOfFile(string filePath)
@@ -69,5 +71,52 @@ namespace CsharpExtras.IO
             }
             return !FileNameChecker.DoesFileNameContainInvalidCharacters(fileName);
         }
+    }
+
+    /// <summary>
+    /// The purpose of this is to wrap static methods from System.IO.File allowing our decorator to be decoupled from them
+    /// This allows, for example, mocking out File system behaviour for testing without having to use a real file system
+    /// </summary>
+    internal class FileApiWrapperImpl : IFileApiWrapper
+    {
+        public FileStream Create(string path)
+        {
+            return File.Create(path);
+        }
+
+        public bool Exists(string path)
+        {
+            return File.Exists(path);
+        }
+
+        public string[] ReadAllLines(string path)
+        {
+            return File.ReadAllLines(path);
+        }
+
+        public string ReadAllText(string path)
+        {
+            return File.ReadAllText(path);
+        }
+
+        public void WriteAllLines(string path, IEnumerable<string> contents)
+        {
+            File.WriteAllLines(path, contents);
+        }
+
+        public void WriteAllText(string path, string contents)
+        {
+            File.WriteAllText(path, contents);
+        }
+    }
+
+    public interface IFileApiWrapper
+    {
+        FileStream Create(string path);
+        bool Exists(string path);
+        string[] ReadAllLines(string path);
+        string ReadAllText(string path);
+        void WriteAllLines(string path, IEnumerable<string> contents);
+        void WriteAllText(string path, string contents);
     }
 }
