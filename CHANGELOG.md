@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added functions to find index tuple of a value inside a 2D array (#88)
 - Refactored various indexing functions on the IEnumerable extension and the OneBasedArray class to disambiguate between zero-based and one-based indexing (#90)
 - Added dictionary extension method for mapping values including the key as input data to the mapper function (#92)
+- [BREAKING] Refactored File and Directory Facades & decorators. Updated File creation to throw exception if directory already exists. (#92)
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)

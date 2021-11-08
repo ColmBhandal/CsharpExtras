@@ -22,10 +22,9 @@ namespace CsharpExtras.Api
     {
         IBijectionDictionary<TKey, TVal> NewBijectionDictionary<TKey, TVal>();
         IComparer<T> NewDescendingComparer<T>();
-        IDirectoryFacade NewDirectoryFacade();
+        IDirectoryDecorator NewDirectoryDecorator();
         IValidator<T> NewEmptyValidator<T>();
         IFileDecorator NewFileDecorator();
-        IFileFacade NewFileFacade();
         IIntegerLeaf NewIntegerLeaf(int payload);
         IIntegerTree NewIntegerTree(int payload);
         ILazyFunctionMap<TKey, TVal> NewLazyFunctionMap<TKey, TVal>(Func<TKey, TVal> backingFunction);
@@ -36,7 +35,7 @@ namespace CsharpExtras.Api
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size);
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(TVal[,] zeroBasedBackingArray);
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns);
-        IPathFacade NewPathFacade();
+        IPathDecorator NewPathDecorator();
         IRandomStringGenerator NewRandomStringGenerator();
         IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>();
         IValidationError NewValidationError(bool isBlocker, string message);
