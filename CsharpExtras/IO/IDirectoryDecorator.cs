@@ -12,6 +12,13 @@ namespace CsharpExtras.IO
     /// </summary>
     public interface IDirectoryDecorator
     {
+        /// <summary>
+        /// Determines whether the given path refers to an existing directory on disk.
+        /// </summary>
+        /// <param name="path">The path to test.</param>
+        /// <returns>true if path refers to an existing directory;
+        /// false if the directory does not exist or an error occurs
+        /// when trying to determine if the specified directory exists.</returns>
         bool Exists(string path);
 
         System.IO.DirectoryInfo CreateDirectory(string path);

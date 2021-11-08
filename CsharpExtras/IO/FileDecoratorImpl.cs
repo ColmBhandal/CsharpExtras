@@ -1,4 +1,5 @@
-﻿using CsharpExtras.IO.FileNameCheck;
+﻿using CsharpExtras.IO.Exception;
+using CsharpExtras.IO.FileNameCheck;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +14,11 @@ namespace CsharpExtras.IO
         public IFileNameChecker FileNameChecker { get; set; } = new SystemFileNameChecker();
         public FileStream Create(string path)
         {
+            bool doesPathPointToExistingDirectory = DirectoryDecorator.Exists(path);
+            if (doesPathPointToExistingDirectory)
+            {
+                throw new DirectoryAlreadyExistsException($"Cannot create file. Path points to an existing directory: {path}");
+            }
             return FileApiWrapper.Create(path);
         }
 

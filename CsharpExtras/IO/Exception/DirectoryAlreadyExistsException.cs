@@ -7,5 +7,8 @@ namespace CsharpExtras.IO.Exception
 {
     public class DirectoryAlreadyExistsException : IOException
     {
+        public DirectoryAlreadyExistsException(string message) : base(message)
+        {
+        }
     }
 }
