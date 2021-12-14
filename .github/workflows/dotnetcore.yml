@@ -30,7 +30,7 @@ jobs:
     - name: Test
       run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
     - name: Package
-      run: dotnet pack CsharpExtras.csproj --configuration Release --no-restore --no-build
+      run: cd CsharpExtras && dotnet pack CsharpExtras.csproj --configuration Release --no-restore --no-build
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
