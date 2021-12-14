@@ -21,14 +21,16 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
+    - name: Update version
+      run: cd BuildTools && chmod +x *.sh && ./UpdateVersion.sh
     - name: Install dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release --no-restore --verbosity normal
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --configuration Release --no-restore --no-build --verbosity normal
     - name: Package
-      run: cd BuildTools && chmod +x *.sh && ./Build.sh
+      run: dotnet pack CsharpExtras.csproj --configuration Release --no-restore --no-build
     - name: Upload package
       uses: actions/upload-artifact@v2
       with:
