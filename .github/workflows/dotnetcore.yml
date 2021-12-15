@@ -1,10 +1,11 @@
 name: .NET Core
 
 on:
+  workflow_dispatch:
   push:
     branches: [ develop ]
     tags:
-      - '*'
+      - '*'    
   pull_request:
     branches: [ develop ]
 
