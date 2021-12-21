@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added dictionary extension method for mapping values including the key as input data to the mapper function (#92)
 - [BREAKING] Refactored File and Directory Facades & decorators. Updated File creation to throw exception if directory already exists. (#94)
 - [BREAKING] Refactored how the GitHub build works to support a release strategy with pre-releases and semantic versioning. No code changes. (#34)
+- Added class to enumerate over arithmetic sequences of ints (#99)
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)
