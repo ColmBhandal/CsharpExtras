@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
+using CsharpExtras.Enumerable.Provider.Int;
 
 namespace CsharpExtras.Api
 {
@@ -67,6 +68,12 @@ namespace CsharpExtras.Api
         {
             return new OneBasedArrayImpl<TVal>(zeroBasedBackingArray);
         }
+
+        public ISequentialIntProvider NewSequentialIntProvider(int start, int step)
+        {
+            return new SequentialIntProviderImpl(start, step);
+        }
+
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size)
         {
             TVal[] zeroBased = new TVal[size];

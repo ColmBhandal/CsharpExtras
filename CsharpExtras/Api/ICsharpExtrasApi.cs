@@ -15,6 +15,7 @@ using CsharpExtras.Map.Dictionary.Collection;
 using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
+using CsharpExtras.Enumerable.Provider.Int;
 
 namespace CsharpExtras.Api
 {
@@ -47,5 +48,6 @@ namespace CsharpExtras.Api
         IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary);
         ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(int arity);
         ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity);
+        ISequentialIntProvider NewSequentialIntProvider(int start, int step);
     }
 }
