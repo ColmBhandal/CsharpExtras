@@ -219,10 +219,10 @@ namespace CsharpExtras.Extensions
         {
             int length = array.Length;
             TResult[] resultArray = new TResult[length];
-            /*TODO: for (int i = 0; i < length; i++)
+            for (int i = 0; i < length; i++)
             {
-                resultArray[i] = mapper(array[i]);
-            }*/
+                resultArray[i] = mapper(i, array[i]);
+            }
             return resultArray;
         }
 

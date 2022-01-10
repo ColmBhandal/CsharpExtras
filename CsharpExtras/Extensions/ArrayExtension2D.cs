@@ -195,13 +195,13 @@ namespace CsharpExtras.Extensions
             int length0 = array.GetLength(0);
             int length1 = array.GetLength(1);
             TResult[,] resultArray = new TResult[length0, length1];
-            /*TODO: for (int i = 0; i < length0; i++)
+            for (int i = 0; i < length0; i++)
             {
                 for (int j = 0; j < length1; j++)
                 {
-                    resultArray[i, j] = mapper(array[i, j]);
+                    resultArray[i, j] = mapper(i, j, array[i, j]);
                 }
-            }*/
+            }
             return resultArray;
         }
 

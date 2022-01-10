@@ -144,8 +144,9 @@ namespace CsharpExtras.Enumerable.OneBased
 
         public IOneBasedArray<TResult> Map<TResult>(Func<int, TVal, TResult> mapper)
         {
-            //TODO
-            return new OneBasedArrayImpl<TResult>(1);
+            Func<int, TVal, TResult> zeroBasedFunc = (i, x) => mapper(i + 1, x);
+            TResult[] zeroBasedMapped = ZeroBasedEquivalent.Map(zeroBasedFunc);
+            return new OneBasedArrayImpl<TResult>(zeroBasedMapped);
         }
 
         public IDictionary<TVal, IList<int>> FindDuplicateIndices()

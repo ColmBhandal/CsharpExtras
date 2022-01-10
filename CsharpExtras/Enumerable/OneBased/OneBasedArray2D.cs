@@ -72,8 +72,9 @@ namespace CsharpExtras.Enumerable.OneBased
 
         public IOneBasedArray2D<TResult> Map<TResult>(Func<int, int, TVal, TResult> mapper)
         {
-            //TODO
-            return new OneBasedArray2DImpl<TResult>(1,1);
+            Func<int, int, TVal, TResult> zeroBasedFunc = (i, j, x) => mapper(i + 1, j + 1, x);
+            TResult[,] zeroBasedMapped = ZeroBasedEquivalent.Map(zeroBasedFunc);
+            return new OneBasedArray2DImpl<TResult>(zeroBasedMapped);
         }
 
         public IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other)
