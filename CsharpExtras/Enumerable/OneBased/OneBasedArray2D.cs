@@ -72,7 +72,7 @@ namespace CsharpExtras.Enumerable.OneBased
 
         public IOneBasedArray2D<TResult> Map<TResult>(Func<int, int, TVal, TResult> mapper)
         {
-            Func<int, int, TVal, TResult> zeroBasedFunc = (i, j, x) => mapper(i + 1, j + 1, x);
+            TResult zeroBasedFunc(int i, int j, TVal x) => mapper(i + 1, j + 1, x);
             TResult[,] zeroBasedMapped = ZeroBasedEquivalent.Map(zeroBasedFunc);
             return new OneBasedArray2DImpl<TResult>(zeroBasedMapped);
         }

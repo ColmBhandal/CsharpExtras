@@ -172,17 +172,8 @@ namespace CsharpExtras.Extensions
 
         public static TResult[,] Map<TVal, TResult>(this TVal[,] array, Func<TVal, TResult> mapper)
         {
-            int length0 = array.GetLength(0);
-            int length1 = array.GetLength(1);
-            TResult[,] resultArray = new TResult[length0, length1];
-            for (int i = 0; i < length0; i++)
-            {
-                for (int j = 0; j < length1; j++)
-                {
-                    resultArray[i, j] = mapper(array[i, j]);
-                }
-            }
-            return resultArray;
+            TResult func(int i, int j, TVal x) => mapper(x);
+            return array.Map(func);
         }
 
         /// <summary>
