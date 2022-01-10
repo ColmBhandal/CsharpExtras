@@ -12,8 +12,22 @@ namespace CustomExtensions
     [TestFixture, Category("Unit")]
     public class ArrayExtensionTest
     {
+
+        public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
+        {
+            //Assemble
+            string[] array = new string[] { "Zero", "One" };
+            Func<int, string, string> func = (s, i) => s + i;
+
+            //Act
+            string[] result = array.Map(func);
+
+            //Assert
+            Assert.AreEqual(new string[] { "Zero0", "One1" }, result);
+        }
+
         [Test, TestCase(0), TestCase(1), TestCase(7)]
-        public void Given_BijectiveArrayOfBytes_When_ConvertToReverseListDictionary_ThenDictionaryPairsAreAsExpected(int offset)
+        public void Given_NonBijectiveArrayOfBytes_When_ConvertToReverseListDictionary_ThenDictionaryPairsAreAsExpected(int offset)
         {
             //Assemble
             byte[] array = new byte[] { 1, 2, 1, 2, 1};
