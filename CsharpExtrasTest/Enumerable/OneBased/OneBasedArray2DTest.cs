@@ -8,8 +8,7 @@ using System.Collections.Generic;
 
 namespace OneBased
 {
-    [TestFixture]
-    [Category("Unit")]
+    [TestFixture, Category("Unit")]
     public class OneBasedArray2DTest
     {
         private const string One = "One";
