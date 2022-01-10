@@ -20,6 +20,20 @@ namespace OneBased
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
         [Test]
+        public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
+        {
+            //Assemble
+            IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "OneOne", "OneTwo" }, { "TwoOne", "TwoTwo" } });
+            Func<int, int, string, string> func = (i, j, s) => (s + i) + "," + j;
+
+            //Act
+            IOneBasedArray2D<string> result = array.Map(func);
+
+            //Assert
+            Assert.AreEqual(new string[,] { { "OneOne1,1", "OneTwo1,2" }, { "TwoOne2,1", "TwoTwo2,2" } }, result);
+        }
+
+        [Test]
         public void Given_2DStringArrayWithBlanksOnly_When_LastUsedColumnCalled_Then_ResultIsMinusOne()
         {
             //assemble

@@ -12,12 +12,12 @@ namespace CustomExtensions
     [TestFixture, Category("Unit")]
     public class ArrayExtensionTest
     {
-
+        [Test]
         public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
         {
             //Assemble
             string[] array = new string[] { "Zero", "One" };
-            Func<int, string, string> func = (s, i) => s + i;
+            Func<int, string, string> func = (i, s) => s + i;
 
             //Act
             string[] result = array.Map(func);
