@@ -185,6 +185,26 @@ namespace CsharpExtras.Extensions
             return resultArray;
         }
 
+        /// <summary>
+        /// Creates a new array, populated by mapping the values/indices of the old array using a mapper function.
+        /// </summary>
+        /// <param name="mapper">A function which maps an element and its row/column indices in the original array to an element in the new array</param>
+        /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array & its row/column indices.</returns>
+        public static TResult[,] Map<TVal, TResult>(this TVal[,] array, Func<int, int, TVal, TResult> mapper)
+        {
+            int length0 = array.GetLength(0);
+            int length1 = array.GetLength(1);
+            TResult[,] resultArray = new TResult[length0, length1];
+            /*TODO: for (int i = 0; i < length0; i++)
+            {
+                for (int j = 0; j < length1; j++)
+                {
+                    resultArray[i, j] = mapper(array[i, j]);
+                }
+            }*/
+            return resultArray;
+        }
+
         public static T[,] Transpose<T>(this T[,] array)
         {
             T[,] transposed = new T[array.GetLength(1), array.GetLength(0)];

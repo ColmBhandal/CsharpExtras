@@ -26,6 +26,11 @@ namespace CsharpExtras.Enumerable.OneBased
             ZeroBasedEquivalent = backingArray;
         }
 
+        public OneBasedArray2DImpl(int rows, int columns)
+        {
+            ZeroBasedEquivalent = new TVal[rows, columns];
+        }
+
         public TVal this[int oneBasedIndex0, int oneBasedIndex1]
         {
             get
@@ -64,6 +69,12 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             TResult[,] mapped = ZeroBasedEquivalent.Map(mapper);
             return new OneBasedArray2DImpl<TResult>(mapped);
+        }
+
+        public IOneBasedArray2D<TResult> Map<TResult>(Func<int, int, TVal, TResult> mapper)
+        {
+            //TODO
+            return new OneBasedArray2DImpl<TResult>(1,1);
         }
 
         public IOneBasedArray2D<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray2D<TOther> other)

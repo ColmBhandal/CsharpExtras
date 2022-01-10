@@ -60,8 +60,7 @@ namespace CsharpExtras.Api
         }
         public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns)
         {
-            TVal[,] zeroBased = new TVal[rows, columns];
-            return NewOneBasedArray2D(zeroBased);
+            return new OneBasedArray2DImpl<TVal>(rows, columns);
         }
 
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(TVal[] zeroBasedBackingArray)
@@ -69,15 +68,14 @@ namespace CsharpExtras.Api
             return new OneBasedArrayImpl<TVal>(zeroBasedBackingArray);
         }
 
+        public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size)
+        {
+            return new OneBasedArrayImpl<TVal>(size);
+        }
+
         public ISequentialIntProvider NewSequentialIntProvider(int start, int step)
         {
             return new SequentialIntProviderImpl(start, step);
-        }
-
-        public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size)
-        {
-            TVal[] zeroBased = new TVal[size];
-            return NewOneBasedArray(zeroBased);
         }
 
         public IFileDecorator NewFileDecorator() => new FileDecoratorImpl();

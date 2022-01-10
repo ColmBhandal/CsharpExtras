@@ -12,6 +12,11 @@ namespace CsharpExtras.Enumerable.OneBased
     {
         private TVal[] _backingArray;
 
+        public OneBasedArrayImpl(int size)
+        {
+            _backingArray = new TVal[size];
+        }
+
         public OneBasedArrayImpl(TVal[] zeroBasedBackingArray)
         {
             _backingArray = zeroBasedBackingArray;
@@ -136,6 +141,12 @@ namespace CsharpExtras.Enumerable.OneBased
         {
             TResult[] zeroBasedMapped = ZeroBasedEquivalent.Map(mapper);
             return new OneBasedArrayImpl<TResult>(zeroBasedMapped);
+        }
+
+        public IOneBasedArray<TResult> Map<TResult>(Func<int, TVal, TResult> mapper)
+        {
+            //TODO
+            return new OneBasedArrayImpl<TResult>(1);
         }
 
         public IDictionary<TVal, IList<int>> FindDuplicateIndices()
