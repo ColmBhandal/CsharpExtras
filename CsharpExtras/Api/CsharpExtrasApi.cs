@@ -62,6 +62,13 @@ namespace CsharpExtras.Api
         {
             return new OneBasedArray2DImpl<TVal>(rows, columns);
         }
+        public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, Func<int, int, TVal> initialiser)
+        {
+            IOneBasedArray2D<TVal> array = new OneBasedArray2DImpl<TVal>(rows, columns);
+            return array.Map((i, j, _) => initialiser(i, j));
+        }
+        public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue) =>
+            NewOneBasedArray2D(rows, columns, (i, j) => initialValue);
 
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(TVal[] zeroBasedBackingArray)
         {
@@ -72,6 +79,14 @@ namespace CsharpExtras.Api
         {
             return new OneBasedArrayImpl<TVal>(size);
         }
+        public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, Func<int, TVal> initialiser)
+        {
+            IOneBasedArray<TVal> array = new OneBasedArrayImpl<TVal>(size);
+            return array.Map((i, x) => initialiser(i));
+        }
+
+        public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue) =>
+            NewOneBasedArray(size, i => initialValue);
 
         public ISequentialIntProvider NewSequentialIntProvider(int start, int step)
         {

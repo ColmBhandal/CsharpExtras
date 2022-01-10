@@ -26,9 +26,8 @@ namespace CsharpExtras.Enumerable.OneBased
             ZeroBasedEquivalent = backingArray;
         }
 
-        public OneBasedArray2DImpl(int rows, int columns)
+        public OneBasedArray2DImpl(int rows, int columns) : this(new TVal[rows, columns])
         {
-            ZeroBasedEquivalent = new TVal[rows, columns];
         }
 
         public TVal this[int oneBasedIndex0, int oneBasedIndex1]

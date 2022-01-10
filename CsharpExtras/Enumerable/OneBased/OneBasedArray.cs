@@ -12,14 +12,13 @@ namespace CsharpExtras.Enumerable.OneBased
     {
         private TVal[] _backingArray;
 
-        public OneBasedArrayImpl(int size)
-        {
-            _backingArray = new TVal[size];
-        }
-
         public OneBasedArrayImpl(TVal[] zeroBasedBackingArray)
         {
             _backingArray = zeroBasedBackingArray;
+        }
+
+        public OneBasedArrayImpl(int size) : this(new TVal[size])
+        {
         }
 
         public TVal this[int oneBasedIndex]

@@ -49,5 +49,9 @@ namespace CsharpExtras.Api
         ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(int arity);
         ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity);
         ISequentialIntProvider NewSequentialIntProvider(int start, int step);
+        IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, Func<int, int, TVal> initialiser);
+        IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, Func<int, TVal> initialiser);
+        IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue);
+        IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue);
     }
 }
