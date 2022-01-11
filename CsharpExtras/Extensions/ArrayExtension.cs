@@ -61,10 +61,16 @@ namespace CsharpExtras.Extensions
             return data.Where(s => !string.IsNullOrWhiteSpace(s)).ToArray();
         }
 
+        /// <summary>
+        /// Creates a 2D array from this 1D array, with the given array orientation.
+        /// </summary>
+        /// <param name="orientation">If ROW, then the 2D array created will have a single row, 
+        /// whose values will match that of the source array. Else the 2D array will have a single column, matching the source array.</param>
+        /// <returns></returns>
         public static T[,] To2DArray<T>(this T[] array, ArrayOrientation orientation)
         {
             T[,] outputArray;
-            if (orientation == ArrayOrientation.ROW)
+            if (orientation == ArrayOrientation.COLUMN)
             {
                 outputArray = new T[array.Length, 1];
             }
@@ -75,7 +81,7 @@ namespace CsharpExtras.Extensions
 
             for (int i = 0; i < array.Length; i++)
             {
-                if (orientation == ArrayOrientation.ROW)
+                if (orientation == ArrayOrientation.COLUMN)
                 {
                     outputArray[i, 0] = array[i];
                 }

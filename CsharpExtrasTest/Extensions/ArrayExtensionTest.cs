@@ -531,8 +531,8 @@ namespace CustomExtensions
         {
             return new List<object[]>
             {
-                new object[] {new int[] {1,2,3,4,5}, new int[1,5] { { 1,2,3,4,5} },ArrayOrientationClass.ArrayOrientation.COLUMN },
-                new object[] { new int[] {1,2,3 }, new int[3,1] { { 1},{ 2},{ 3} } ,ArrayOrientationClass.ArrayOrientation.ROW}
+                new object[] {new int[] {1,2,3,4,5}, new int[1,5] { { 1,2,3,4,5} },ArrayOrientationClass.ArrayOrientation.ROW },
+                new object[] { new int[] {1,2,3 }, new int[3,1] { { 1},{ 2},{ 3} } ,ArrayOrientationClass.ArrayOrientation.COLUMN }
             };
         }
         private static IEnumerable<object[]> ProviderForDeepCopy_With_Array()

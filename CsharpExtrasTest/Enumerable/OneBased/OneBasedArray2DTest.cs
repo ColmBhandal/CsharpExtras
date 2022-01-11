@@ -203,7 +203,7 @@ namespace OneBased
         {
             //Act
             IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
-            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.COLUMN);
+            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.ROW);
 
             //Assert
             Assert.AreEqual(1, twoDimArray.GetLength(0), "New 2D array should have 1 row");
@@ -215,7 +215,7 @@ namespace OneBased
         {
             //Act
             IOneBasedArray<string> oneDimArray = new OneBasedArrayImpl<string>(new string[] { "a", "b", "c", "d" });
-            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.ROW);
+            IOneBasedArray2D<string> twoDimArray = oneDimArray.To2DArray(ArrayOrientation.COLUMN);
 
             //Assert
             Assert.AreEqual(4, twoDimArray.GetLength(0), "New 2D array should have 4 rows");
