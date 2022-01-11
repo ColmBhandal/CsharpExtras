@@ -23,6 +23,12 @@ namespace CsharpExtras.Enumerable.OneBased
         IDictionary<TVal, IList<int>> FindDuplicateIndices();
         IOneBasedArray<TResult> ZipArray<TOther, TResult>(Func<TVal, TOther, TResult> zipper, IOneBasedArray<TOther> other);
         IOneBasedArray<TResult> Map<TResult>(Func<TVal, TResult> mapper);
+        /// <summary>
+        /// Maps elements of this array by applying a function on the existing elements plus their one-based indices.
+        /// </summary>
+        /// <param name="mapper">A function which takes a value & a one-based index and returns a result</param>
+        /// <returns>A new array, the same size as this one, filled with the result of applying the mapper function to the original values & one-based indices.</returns>
+        IOneBasedArray<TResult> Map<TResult>(Func<int, TVal, TResult> mapper);
 
         IDictionary<TVal, IList<int>> InverseMap();
 

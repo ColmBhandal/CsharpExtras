@@ -15,6 +15,12 @@ namespace CsharpExtras.Enumerable.OneBased
 
         int GetLength(int dimZeroBased);
         IOneBasedArray2D<TResult> Map<TResult>(Func<TVal, TResult> mapper);
+        /// <summary>
+        /// Maps elements in this array to a new array, using a mapper function that takes one-based row/column indices as arguments
+        /// </summary>
+        /// <param name="mapper">Takes as arguments a row index, column index and value in the source array and returns the values for the corresponding row/column in the new array</param>
+        /// <returns>A new array containing mapped values</returns>
+        IOneBasedArray2D<TResult> Map<TResult>(Func<int, int, TVal, TResult> mapper);
 
         /// <summary>
         /// Zip two 2D arrays into a single 2D array using a custom zipper function.

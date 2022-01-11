@@ -5,11 +5,24 @@ using System.Collections.Generic;
 
 namespace CsharpExtrasTest.Extensions
 {
-    [TestFixture]
+    [TestFixture, Category("Unit")]
     public class ArrayExtension2DTest
     {
         [Test]
-        [Category("Unit")]
+        public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
+        {
+            //Assemble
+            string[,] array = new string[,] { { "ZeroZero", "ZeroOne" }, { "OneZero", "OneOne" } };
+            Func<int, int, string, string> func = (i, j, s) => $"{s}{i},{j}";
+
+            //Act
+            string[,] result = array.Map(func);
+
+            //Assert
+            Assert.AreEqual(new string[,] { { "ZeroZero0,0", "ZeroOne0,1" }, { "OneZero1,0", "OneOne1,1" } }, result);
+        }
+
+        [Test]
         [TestCaseSource("ProviderForFoldingArrayToSingleRow")]
         public void Given_MultiDimensionalArray_When_FoldingToSingleRow_Then_CorrectValueReturned(
             string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
@@ -22,7 +35,6 @@ namespace CsharpExtrasTest.Extensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ProviderForFoldingArrayToSingleColumn")]
         public void Given_MultiDimensionalArray_When_FoldingToSingleColumn_Then_CorrectValueReturned(
             string[,] data, Func<string, string, string> foldFunction, string[] expectedResult)
@@ -35,7 +47,6 @@ namespace CsharpExtrasTest.Extensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ProviderForCheckAnyMatch")]
         public void Given_MultidimensionalArray_When_CheckingThatAnyMatch_Then_CorrectValueReturned(
             string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
@@ -48,7 +59,6 @@ namespace CsharpExtrasTest.Extensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ProviderForCheckAllMatch")]
         public void Given_MultidimensionalArray_When_CheckingThatAllMatch_Then_CorrectValueReturned(
             string[,] data, Func<string, bool> checkerFunction, bool expectedResult)
@@ -61,7 +71,6 @@ namespace CsharpExtrasTest.Extensions
         }
 
         [Test]
-        [Category("Unit")]
         [TestCaseSource("ProviderForCountMatches")]
         public void Given_MultidimensionalArray_When_CountingMatches_Then_CorrectValueReturned(
             string[,] data, Func<string, bool> checkerFunction, int expectedResult)
@@ -76,7 +85,6 @@ namespace CsharpExtrasTest.Extensions
 
 
         [Test]
-        [Category("Unit")]
         public void Given2dArrayWhenMappedThenResultantArrayIsAsExpected()
         {
             //Arrange
@@ -95,7 +103,6 @@ namespace CsharpExtrasTest.Extensions
         }
 
         [Test]
-        [Category("Unit")]
         public void TestGiven2DArrayInputWhenTransposedThenArrayDimensionsAreFlipped()
         {
             //Act
@@ -130,7 +137,6 @@ namespace CsharpExtrasTest.Extensions
         }
 
         [Test]
-        [Category("Unit")]
         public void TestGiven2DArrayInputWhenTransposedThenArrayDataIsTransposed()
         {
             //Act
@@ -156,7 +162,7 @@ namespace CsharpExtrasTest.Extensions
             }
         }
 
-        [Test, Category("Unit")]
+        [Test]
         public void Given2DArraysOfStringsWhenZipArrayWithConcatThen2DArrayReturned()
         {
             //Arrange
@@ -170,7 +176,7 @@ namespace CsharpExtrasTest.Extensions
             Assert.AreEqual(zipped, new string[,] { { "Hello", "world" }, { "13", "24" } });
         }
 
-        [Test, Category("Unit")]
+        [Test]
         public void Given2DArraysOfStringsOfDifferentSizesWhenZipArrayWithConcatThen2DArrayReturnedWithArrayIntersection()
         {
             //Arrange
@@ -184,7 +190,7 @@ namespace CsharpExtrasTest.Extensions
             Assert.AreEqual(zipped, new string[,] { { "Hello", "world" }, { "13", "24" } });
         }
 
-        [Test, Category("Unit")]
+        [Test]
         [TestCaseSource("ProviderForWrite1DArrayTo2DRow")]
         public void Given_2DArrayOfBytes_When_Write1DArrayToRow_Then_ResultIsAsExpected
             (byte[,] data, byte[] dataToWrite, int row, int offset, byte[,] expected)
@@ -196,7 +202,7 @@ namespace CsharpExtrasTest.Extensions
             Assert.AreEqual(expected, data);
         }
 
-        [Test, Category("Unit")]
+        [Test]
         [TestCaseSource("ProviderForWrite1DArrayTo2DColumn")]
         public void Given_2DArrayOfBytes_When_Write1DArrayToColumn_Then_ResultIsAsExpected
            (byte[,] data, byte[] dataToWrite, int column, int offset, byte[,] expected)
@@ -208,7 +214,7 @@ namespace CsharpExtrasTest.Extensions
             Assert.AreEqual(expected, data);
         }
 
-        [Test, Category("Unit")]
+        [Test]
         [TestCaseSource("ProviderForWriteToAreaTest")]
         public void Given_2DArrayOfBytes_When_WriteToArea_Then_ResultIsAsExpected
            (byte[,] data, byte[,] dataToWrite, int rowOffset, int columnOffset, byte[,] expected)
@@ -221,7 +227,7 @@ namespace CsharpExtrasTest.Extensions
                 string.Format("Failure for (rowOffset, columnOffset) = ({0}, {1})", rowOffset, columnOffset));
         }
 
-        [Test, Category("Unit")]
+        [Test]
         [TestCase(-1), TestCase(2), TestCase(462)]
         public void Given_2DArrayOfInts_When_InvalidRowPassedToWrite_Then_ExceptionThrown(int row)
         {
@@ -233,7 +239,7 @@ namespace CsharpExtrasTest.Extensions
                 string.Format("Expected exception for row {0}", row));
         }
 
-        [Test, Category("Unit")]
+        [Test]
         [TestCaseSource("ProviderForArrayToJaggedArray")]
         public void Given_MultiDimensionalArray_When_ConvertedToJaggedArray_Then_CorrectValueReturned(int[,] array, int[][] expectedArray)
         {
@@ -244,7 +250,7 @@ namespace CsharpExtrasTest.Extensions
             Assert.AreEqual(expectedArray, actualArray);
         }
 
-        [Test, Category("Unit")]
+        [Test]
         [TestCase(-1), TestCase(4), TestCase(34)]
         public void Given_2DArrayOfInts_When_InvalidColumnPassedToWrite_Then_ExceptionThcolumnn(int column)
         {
@@ -256,7 +262,7 @@ namespace CsharpExtrasTest.Extensions
                 string.Format("Expected exception for column {0}", column));
         }
 
-        [Test, Category("Unit")]
+        [Test]
         [TestCaseSource("ProviderFor2DSubArrayTest")]
         public void Given_2DArrayOfBytes_When_SubArray_Then_ExpectedSubArrayReturned
             (byte[,] data, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn, byte[,] expected)

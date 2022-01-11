@@ -194,13 +194,29 @@ namespace CsharpExtras.Extensions
             return currentZip;
         }
 
+        /// <summary>
+        /// Creates a new array, populated by mapping the values of the old array using a mapper function.
+        /// </summary>
+        /// <param name="mapper">A function which maps an element in the original array to an element in the new array</param>
+        /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array.</returns>
         public static TResult[] Map<TVal, TResult>(this TVal[] array, Func<TVal, TResult> mapper)
+        {
+            TResult func(int i, TVal x) => mapper(x);
+            return array.Map(func);
+        }
+
+        /// <summary>
+        /// Creates a new array, populated by mapping the values/indices of the old array using a mapper function.
+        /// </summary>
+        /// <param name="mapper">A function which maps an element and its index in the original array to an element in the new array.</param>
+        /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array & its index.</returns>
+        public static TResult[] Map<TVal, TResult>(this TVal[] array, Func<int, TVal, TResult> mapper)
         {
             int length = array.Length;
             TResult[] resultArray = new TResult[length];
             for (int i = 0; i < length; i++)
             {
-                resultArray[i] = mapper(array[i]);
+                resultArray[i] = mapper(i, array[i]);
             }
             return resultArray;
         }

@@ -17,6 +17,10 @@ namespace CsharpExtras.Enumerable.OneBased
             _backingArray = zeroBasedBackingArray;
         }
 
+        public OneBasedArrayImpl(int size) : this(new TVal[size])
+        {
+        }
+
         public TVal this[int oneBasedIndex]
         {
             get
@@ -135,6 +139,13 @@ namespace CsharpExtras.Enumerable.OneBased
         public IOneBasedArray<TResult> Map<TResult>(Func<TVal, TResult> mapper)
         {
             TResult[] zeroBasedMapped = ZeroBasedEquivalent.Map(mapper);
+            return new OneBasedArrayImpl<TResult>(zeroBasedMapped);
+        }
+
+        public IOneBasedArray<TResult> Map<TResult>(Func<int, TVal, TResult> mapper)
+        {
+            TResult zeroBasedFunc(int i, TVal x) => mapper(i + 1, x);
+            TResult[] zeroBasedMapped = ZeroBasedEquivalent.Map(zeroBasedFunc);
             return new OneBasedArrayImpl<TResult>(zeroBasedMapped);
         }
 

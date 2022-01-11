@@ -19,6 +19,20 @@ namespace OneBased
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
         [Test]
+        public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
+        {
+            //Assemble
+            IOneBasedArray<string> array = new OneBasedArrayImpl<string>(new string[]{ "One", "Two" });
+            Func<int, string, string> func = (i, s) => s + i;
+
+            //Act
+            IOneBasedArray<string> result = array.Map(func);
+
+            //Assert
+            Assert.AreEqual(new string[] { "One1", "Two2" }, result);
+        }
+
+        [Test]
         public void Given_OneBasedArray_WhenGetOneBasedFirstIndexOfMatchingElement_Then_OneBasedIndexReturned()
         {
             //Arrange
