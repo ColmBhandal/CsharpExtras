@@ -66,7 +66,7 @@ namespace CsharpExtras.Extensions
         /// </summary>
         /// <param name="orientation">If ROW, then the 2D array created will have a single row, 
         /// whose values will match that of the source array. Else the 2D array will have a single column, matching the source array.</param>
-        /// <returns></returns>
+        /// <returns>A new 2D array whose values match that of the original 1D array and which is oriented according to the given orientation.</returns>
         public static T[,] To2DArray<T>(this T[] array, ArrayOrientation orientation)
         {
             T[,] outputArray;
