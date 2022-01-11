@@ -18,6 +18,12 @@ namespace CsharpExtras.Enumerable.OneBased
         void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor);
         void Resize(int newSize);
 
+        /// <summary>
+        /// Creates a 2D array from this 1D array, with the given array orientation.
+        /// </summary>
+        /// <param name="orientation">If ROW, then the 2D array created will have a single row, 
+        /// whose values will match that of the source array. Else the 2D array will have a single column, matching the source array.</param>
+        /// <returns>A new 2D array whose values match that of the original 1D array and which is oriented according to the given orientation.</returns>
         IOneBasedArray2D<TVal> To2DArray(ArrayOrientation orientation);
 
         IDictionary<TVal, IList<int>> FindDuplicateIndices();
