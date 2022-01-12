@@ -21,10 +21,20 @@ namespace CsharpExtras.Api
 {
     public class CsharpExtrasApi : ICsharpExtrasApi
     {
+
+        /// <summary>
+        /// Creates a new curry dictionary with the given arity
+        /// </summary>
+        /// <param name="arity">The arity of the key-tuples to index this dictionary. Must be positive.</param>
         public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(int arity)
         {
             return NewCurryDictionary<TKey, TVal>((PositiveInteger) arity);
         }
+
+        /// <summary>
+        /// Creates a new curry dictionary with the given arity
+        /// </summary>
+        /// <param name="arity">The arity of the key-tuples to index this dictionary. Must be positive.</param>
         public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity)
         {
             return new CurryDictionaryRecursive<TKey, TVal>(arity);         
