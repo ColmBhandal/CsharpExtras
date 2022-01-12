@@ -25,8 +25,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             //A nullary dictionary actually does have exactly 1 key tuple: the empty tuple
             new List<IList<TKey>> { new List<TKey>() };
 
-        //TODO: Fix this
-        public override int Count => 21;
+        public override NonnegativeInteger Count => (NonnegativeInteger)1;
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {

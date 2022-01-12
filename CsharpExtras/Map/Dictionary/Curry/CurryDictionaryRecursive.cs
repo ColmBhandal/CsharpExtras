@@ -9,6 +9,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
 {
     class CurryDictionaryRecursive<TKey, TVal> : CurryDictionaryBase<TKey, TVal>
     {
+        public event Action<int>? CountUpdated;
+
         public override TVal this[params TKey[] keys]
         {
             get => GetValueFromTuple(keys);
@@ -20,8 +22,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public CurryDictionaryRecursive(int arity) : this((PositiveInteger)arity) { }
 
-        //TODO: Implement this properly
-        public override int Count => 104;
+        //NB: Do not update this explicitly - only UpdateCount function should be used for that
+        private NonnegativeInteger _count = (NonnegativeInteger)0;
+        public override NonnegativeInteger Count => _count;
 
         public CurryDictionaryRecursive(PositiveInteger arity)
         {
@@ -102,7 +105,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             else if(Arity > 1)
             {
-                ICurryDictionary<TKey, TVal> curryChild = new CurryDictionaryRecursive<TKey, TVal>(Arity - 1);
+                CurryDictionaryRecursive<TKey, TVal> curryChild = new CurryDictionaryRecursive<TKey, TVal>(Arity - 1);
+                curryChild.CountUpdated += UpdateCount;
                 bool isAddSuccessful = curryChild.Add(value, tail);
                 _currier.Add(firstKey, curryChild);
                 return isAddSuccessful;
@@ -111,8 +115,25 @@ namespace CsharpExtras.Map.Dictionary.Curry
             {
                 ICurryDictionary<TKey, TVal> curryChild = new NullaryCurryDictionary<TKey, TVal>(value);
                 _currier.Add(firstKey, curryChild);
+                UpdateCount(1);
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Updates the count by the given amount
+        /// </summary>
+        /// <param name="delta">The amount, which can be negative, by which to update the count.</param>
+        /// <exception cref="ArgumentException">Thrown if the updated count goes negative</exception>
+        private void UpdateCount(int delta)
+        {
+            int newCount = Count + delta;
+            if(newCount < 0)
+            {
+                throw new ArgumentException($"Cannot update count of {Count} by delta {delta} as it would result in a negative count");
+            }
+            _count = (NonnegativeInteger) (Count+delta);
+            CountUpdated?.Invoke(delta);
         }
 
         //Assumes keyTuple is in this dictionary

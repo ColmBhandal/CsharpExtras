@@ -68,6 +68,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <summary>
         /// The total number of values in this dictionary
         /// </summary>
-        int Count { get; }
+        NonnegativeInteger Count { get; }
     }
 }

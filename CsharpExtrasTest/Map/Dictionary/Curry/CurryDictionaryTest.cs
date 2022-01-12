@@ -18,14 +18,16 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             //Assemble
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
-            Assert.AreEqual(1, dict.Count, "GIVEN: Initial count not as expected");
+            int dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "GIVEN: Initial count not as expected");
 
             //Act
 
             dict.Add("Attempted second add - expect it to fail", 1, 2, 3);
 
             //Assert
-            Assert.AreEqual(1, dict.Count, "Count should not change after trying to add to an existing element");
+            dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "Count should not change after trying to add to an existing element");
         }
 
         [Test]
@@ -39,15 +41,17 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> doublyCurried = dict.GetCurriedDictionary(1, 2);
             ICurryDictionary<int, string> singlyCurried = dict.GetCurriedDictionary(1);
 
-            Assert.AreEqual(2, doublyCurried.Count, "GIVEN: Doubly Curried dictionary count is not as expected to begin with");
-            Assert.AreEqual(3, singlyCurried.Count, "GIVEN: Singly Curried dictionary count is not as expected to begin with");
+            int doubleCurriedCount = doublyCurried.Count;
+            int singleCurriedCount = singlyCurried.Count;
+            Assert.AreEqual(2, doubleCurriedCount, "GIVEN: Doubly Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(3, singleCurriedCount, "GIVEN: Singly Curried dictionary count is not as expected to begin with");
 
             //Act
             doublyCurried.Add("More data", 9);
 
             //Assert
-            Assert.AreEqual(3, doublyCurried.Count);
-            Assert.AreEqual(4, singlyCurried.Count);
+            Assert.AreEqual(3, (int)doublyCurried.Count);
+            Assert.AreEqual(4, (int)singlyCurried.Count);
         }
 
         [Test]
@@ -58,16 +62,20 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add("Hello", 3, 4);
             dict.Add("Goodbye", 3, 5);
             ICurryDictionary<int, string> curried = dict.GetCurriedDictionary(3);
+            int curriedCount = curried.Count;
+            int count = dict.Count;
 
-            Assert.AreEqual(2, curried.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
-            Assert.AreEqual(2, dict.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(2, curriedCount, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(2, count, "GIVEN: Curried dictionary count is not as expected to begin with");
 
             //Act
-            curried.Add("More data", 2, 2);
+            curried.Add("More data", 2);
 
             //Assert
-            Assert.AreEqual(3, curried.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
-            Assert.AreEqual(3, dict.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
+            curriedCount = curried.Count;
+            count = dict.Count;
+            Assert.AreEqual(3, curriedCount, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(3, count, "GIVEN: Curried dictionary count is not as expected to begin with");
         }
 
         [Test]
@@ -81,7 +89,8 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add("Goodbye", 3, 5);
 
             //Assert
-            Assert.AreEqual(2, dict.Count);
+            int count = dict.Count;
+            Assert.AreEqual(2, count);
         }
 
         [Test]
@@ -91,7 +100,8 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
 
             //Act / Assert
-            Assert.AreEqual(0, dict.Count);
+            int count = dict.Count;
+            Assert.AreEqual(0, count);
         }
         
         [Test]
@@ -103,7 +113,8 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullary = dict.GetCurriedDictionary(3, 4);
 
             //Act / Assert
-            Assert.AreEqual(1, nullary.Count);
+            int count = nullary.Count;
+            Assert.AreEqual(1, count);
         }
 
         /// <summary>
