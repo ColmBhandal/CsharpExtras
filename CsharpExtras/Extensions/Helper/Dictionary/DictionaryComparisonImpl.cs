@@ -31,12 +31,12 @@ namespace CsharpExtras.Extensions.Helper.Dictionary
         {
             if (ThisCount != OtherCount)
             {
-                return ($"Count mismatch. This dictionary has ${ThisCount} elements. Other dictionary has ${OtherCount} elements",
+                return ($"Count mismatch. This dictionary has {ThisCount} elements. Other dictionary has {OtherCount} elements",
                     false);
             }
             if (FirstMismatch is (TKey k, TVal v))
             {
-                return ($"Mismatch found at key ${k} and value ${v}", false);
+                return ($"Mismatch found at key {k} and value {v}", false);
             }
             return ("Dictionaries are equal", true);
         }
