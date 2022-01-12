@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CsharpExtras.Extensions.Helper.Dictionary;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -118,6 +119,13 @@ namespace CsharpExtras.Extensions
         {
             TValue value = func(key);
             dictionary.Add(key, value);
+        }
+
+        public static IDictionaryComparison DictEquals<TKey, TValue>(this IDictionary<TKey, TValue> dictionary
+            , IDictionary<TKey, TValue> other)
+        {
+            //TODO: Implement
+            return new DictionaryComparisonImpl<TKey, TValue>(0, 0, null);
         }
     }
 }
