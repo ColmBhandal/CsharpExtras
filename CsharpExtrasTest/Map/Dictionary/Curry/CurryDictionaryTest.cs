@@ -7,10 +7,104 @@ using System.Text;
 
 namespace CsharpExtrasTest.Map.Dictionary.Curry
 {
-    [TestFixture]
+    [TestFixture, Category("Unit")]
     public class CurryDictionaryTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
+        
+        [Test]
+        public void GIVEN_CurryDictionary_WHEN_AddToSameKeyTwice_Then_CountDoesNotChange()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Blah", 1, 2, 3);
+            Assert.AreEqual(1, dict.Count, "GIVEN: Initial count not as expected");
+
+            //Act
+
+            dict.Add("Attempted second add - expect it to fail", 1, 2, 3);
+
+            //Assert
+            Assert.AreEqual(1, dict.Count, "Count should not change after trying to add to an existing element");
+        }
+
+        [Test]
+        public void GIVEN_DoublyCurried_WHEN_AddToDoublyCurried_THEN_SinglyCurriedCountIsUpdated()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello", 1, 2, 3);
+            dict.Add("Goodbye", 1, 2, 4);
+            dict.Add("Goodbye", 1, 5, 6);
+            ICurryDictionary<int, string> doublyCurried = dict.GetCurriedDictionary(1, 2);
+            ICurryDictionary<int, string> singlyCurried = dict.GetCurriedDictionary(1);
+
+            Assert.AreEqual(2, doublyCurried.Count, "GIVEN: Doubly Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(3, singlyCurried.Count, "GIVEN: Singly Curried dictionary count is not as expected to begin with");
+
+            //Act
+            doublyCurried.Add("More data", 9);
+
+            //Assert
+            Assert.AreEqual(3, doublyCurried.Count);
+            Assert.AreEqual(4, singlyCurried.Count);
+        }
+
+        [Test]
+        public void GIVEN_CurriedDict_WHEN_AddToCurried_THEN_OriginalAndCurriedCountsUpdate()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
+            dict.Add("Hello", 3, 4);
+            dict.Add("Goodbye", 3, 5);
+            ICurryDictionary<int, string> curried = dict.GetCurriedDictionary(3);
+
+            Assert.AreEqual(2, curried.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(2, dict.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
+
+            //Act
+            curried.Add("More data", 2, 2);
+
+            //Assert
+            Assert.AreEqual(3, curried.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(3, dict.Count, "GIVEN: Curried dictionary count is not as expected to begin with");
+        }
+
+        [Test]
+        public void GIVEN_EmptyDict_WHEN_AddMultipleElements_THEN_CountIsAsExpected()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
+
+            //Act
+            dict.Add("Hello", 3, 4);
+            dict.Add("Goodbye", 3, 5);
+
+            //Assert
+            Assert.AreEqual(2, dict.Count);
+        }
+
+        [Test]
+        public void GIVEN_EmptyDict_WHEN_GetCount_THEN_CountEquals0()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
+
+            //Act / Assert
+            Assert.AreEqual(0, dict.Count);
+        }
+        
+        [Test]
+        public void GIVEN_NullaryDict_WHEN_GetCount_THEN_CountEquals1()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
+            dict.Add("Hello", 3, 4);
+            ICurryDictionary<int, string> nullary = dict.GetCurriedDictionary(3, 4);
+
+            //Act / Assert
+            Assert.AreEqual(1, nullary.Count);
+        }
 
         /// <summary>
         /// In loving memory of Mikhail Volkov, a brilliant coder who first introduced me to C# and delegates.
@@ -18,7 +112,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         delegate string MikhailsDelegate(string input);
 
         [Test]
-        [Category("Unit")]
         public void Given_DelegateDictionary_When_AddDelegate_Then_DelegateFoundAtGivenKeyAndReturnsExpectedValue()
         {
             //Assemble
@@ -34,7 +127,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_PositiveInteger_When_ConstructCurryDictionary_Then_ArityMatchesCtorParameter()
         {
             //Assemble / Act
@@ -46,7 +138,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_NewCurryDictionary_When_Add_Then_KeysMatchExpectation()
         {
             //Assemble
@@ -65,7 +156,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_NewCurryDictionary_When_Add_Then_KeyValuePairsMatchExpectation()
         {
             //Assemble
@@ -87,7 +177,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_NewCurryDictionary_When_Add_Then_ValuesMatchExpectation()
         {
             //Assemble
@@ -106,7 +195,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_NewCurryDictionary_When_Add_Then_DictContainsKeyTuple()
         {
             //Assemble
@@ -120,7 +208,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_NewCurryDictionary_When_Add_Then_DictContainsKeyTuplePrefix()
         {
             //Assemble
@@ -134,7 +221,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_CurryDictionary_When_PrefixNotThere_Then_ContainsKeyTuplePrefixReturnsFalse()
         {
             //Assemble
@@ -150,7 +236,24 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
+        public void GIVEN_CurryDictionary_WHEN_AddToSameKeyTwice_Then_FirstAddSucceedsAndSecondFails()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+
+            //Act
+            const string OriginalValue = "Orignal value";
+            bool isInitialSuccessful = dict.Add(OriginalValue, 1, 2, 3);
+            bool isSecondSuccessful = dict.Add("Hello World again", 1, 2, 3);
+
+            //Assert
+            Assert.IsTrue(isInitialSuccessful, "Expected initial add to succeed");
+            Assert.IsFalse(isSecondSuccessful, "Expected add to existing key to return false");
+            string value = dict[1, 2, 3];
+            Assert.AreEqual(OriginalValue, value);
+        }
+
+        [Test]
         public void Given_EmptyCurryDictionary_When_ContainsKeyTuplePrefix_Then_FalseReturned()
         {
             //Assemble
@@ -164,7 +267,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_EmptyCurryDictionary_When_ContainsKeyTuple_Then_FalseReturned()
         {
             //Assemble
@@ -178,7 +280,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_NewCurryDictionary_When_Add_Then_GetReturnsValue()
         {
             //Assemble
@@ -194,7 +295,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_CurryDictionary_When_Curry_Then_KeysetMatchesExpectation()
         {
             //Assemble
@@ -215,7 +315,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_EmptyCurryDictionary_When_GetKeys_Then_ResultIsEmptyEnumerable()
         {
             //Assemble
@@ -231,7 +330,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_EmptyCurryDictionary_When_GetValues_Then_ResultIsEmptyEnumerable()
         {
             //Assemble
@@ -247,7 +345,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        [Category("Unit")]
         public void Given_EmptyCurryDictionary_When_GetKeyValuePairs_Then_ResultIsEmptyEnumerable()
         {
             //Assemble
