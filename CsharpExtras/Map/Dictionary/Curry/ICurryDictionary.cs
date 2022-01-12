@@ -64,5 +64,10 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         /// <returns>True iff the value was added</returns>
         bool Add(TVal value, IEnumerable<TKey> keyTuple);
+
+        /// <summary>
+        /// The total number of values in this dictionary
+        /// </summary>
+        int Count { get; }
     }
 }

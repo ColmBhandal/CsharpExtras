@@ -19,6 +19,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public CurryDictionaryRecursive(int arity) : this((PositiveInteger)arity) { }
 
+        //TODO: Implement this properly
+        public override int Count => 104;
+
         public CurryDictionaryRecursive(PositiveInteger arity)
         {
             Arity = (NonnegativeInteger)arity;

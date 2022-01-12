@@ -16,6 +16,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public IEnumerable<TVal> Values => Keys.Select(GetValueFromTuple);
 
+        public abstract int Count { get; }
+
         public abstract TVal this[params TKey[] keys] { get;}
 
         public bool ContainsKeyTuple(params TKey[] keys)
