@@ -15,6 +15,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }        
         public override NonnegativeInteger Arity { get; }
 
+        //NB: We must not expose this to the outside world - otherwise we risk an inconsistent Count 
         private readonly IDictionary<TKey, ICurryDictionary<TKey, TVal>> _currier;
 
         public CurryDictionaryRecursive(int arity) : this((PositiveInteger)arity) { }
