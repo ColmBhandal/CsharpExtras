@@ -122,10 +122,32 @@ namespace CsharpExtras.Extensions
         }
 
         public static IDictionaryComparison DictEquals<TKey, TValue>(this IDictionary<TKey, TValue> dictionary
-            , IDictionary<TKey, TValue> other)
+            , IDictionary<TKey, TValue> other, Func<TValue, TValue, bool> valueComparer)
         {
-            //TODO: Implement
-            return new DictionaryComparisonImpl<TKey, TValue>(0, 0, null);
+            int count = dictionary.Count;
+            int otherCount = other.Count;
+            if(count != otherCount)
+            {
+                return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, null);
+            }
+            foreach(KeyValuePair<TKey, TValue> kvp in dictionary)
+            {
+                TKey key = kvp.Key;
+                if (other.ContainsKey(key))
+                {
+                    TValue value = kvp.Value;
+                    TValue otherValue = other[key];
+                    if(!valueComparer(value, otherValue))
+                    {
+                        return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, (kvp.Key, kvp.Value));
+                    }
+                }
+                else
+                {
+                    return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, (kvp.Key, kvp.Value));
+                }
+            }
+            return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, null);
         }
     }
 }
