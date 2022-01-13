@@ -16,6 +16,7 @@ using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using CsharpExtras.Enumerable.Provider.Int;
+using CsharpExtras.Event.Notify;
 
 namespace CsharpExtras.Api
 {
@@ -53,5 +54,6 @@ namespace CsharpExtras.Api
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, Func<int, TVal> initialiser);
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue);
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue);
+        IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val, Func<TVal, TUpdate, TVal> updater);
     }
 }

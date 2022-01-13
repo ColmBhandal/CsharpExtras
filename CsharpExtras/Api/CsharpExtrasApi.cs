@@ -16,6 +16,7 @@ using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using CsharpExtras.Enumerable.Provider.Int;
+using CsharpExtras.Event.Notify;
 
 namespace CsharpExtras.Api
 {
@@ -128,6 +129,12 @@ namespace CsharpExtras.Api
         public IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary)
         {
             return new VariantDictionaryImpl<TKey, TVal>(backingDictionary);
+        }
+
+        public IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val,
+            Func<TVal, TUpdate, TVal> updater)
+        {
+            return new UpdateNotifierImpl<TVal, TUpdate>(val, updater);
         }
     }
 }
