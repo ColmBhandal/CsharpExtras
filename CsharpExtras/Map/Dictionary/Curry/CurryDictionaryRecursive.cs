@@ -122,12 +122,11 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public override bool Update(TVal value, IEnumerable<TKey> keyTuple)
         {
-            /*if (!ContainsKeyTuple(keyTuple))
+            if (!ContainsKeyTuple(keyTuple))
             {
                 return false;
             }
-            return TailRecurse((d, k) => d.Update(value, k), keyTuple);*/
-            return true;
+            return TailRecurse((d, k) => d.Update(value, k), keyTuple);
         }            
 
         /// <summary>

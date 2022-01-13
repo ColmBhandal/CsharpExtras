@@ -59,8 +59,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public override bool Update(TVal value, IEnumerable<TKey> keyTuple)
         {
-            /*AssertArityIsCorrect(keyTuple);
-            _singletonValue = value;*/
+            AssertArityIsCorrect(keyTuple);
+            _singletonValue = value;
             return true;
         }
     }
