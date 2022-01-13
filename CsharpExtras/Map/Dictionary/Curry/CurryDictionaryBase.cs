@@ -49,12 +49,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }
         public abstract bool Add(TVal value, IEnumerable<TKey> keys);
 
-        public int Remove(params TKey[] prefix)
+        public NonnegativeInteger Remove(params TKey[] prefix)
         {
             return Remove(prefix as IEnumerable<TKey>);
         }
 
-        public abstract int Remove(IEnumerable<TKey> prefix);
+        public abstract NonnegativeInteger Remove(IEnumerable<TKey> prefix);
 
         public bool Update(TVal value, params TKey[] keys)
         {

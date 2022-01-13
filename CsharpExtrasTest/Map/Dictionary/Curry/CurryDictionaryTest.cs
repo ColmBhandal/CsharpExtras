@@ -30,7 +30,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test, TestCase(3), TestCase(3, 2), TestCase(4, 2, 1, 1)]
-        public void GIVEN_NullaryDict_WHEN_RemoveWrongArity_THEN_ArgumentException(params int[] prefix)
+        public void GIVEN_NullaryDict_WHEN_RemoveWrongArity_THEN_ZeroElementsRemoved(params int[] prefix)
         {
             //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
@@ -38,8 +38,13 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add(Value, 3, 4, 5, 6);
             ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(3, 4, 5, 6);
 
-            //Act / Assert
-            Assert.Throws<ArgumentException>(() => nullaryDict.Remove(prefix));
+            //Act
+            int removeCount = nullaryDict.Remove(prefix);
+
+            //Assert            
+            Assert.AreEqual(0, removeCount, "No elements should be removed from a nullary dictionary");
+            string element = nullaryDict.GetValueFromTuple();
+            Assert.AreEqual(Value, element, "Value in the nullary dictionary should be unchanged by remove");
         }
 
         [Test]
@@ -200,16 +205,22 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             Assert.AreEqual(1, count);
         }
 
-        [Test, TestCase(1), TestCase(1, 2), TestCase(9, 4, 6, 7)]
-        public void GIVEN_CurryDictionary_WHEN_RemoveWithWrongArity_Then_ArgumentException(params int[] prefix)
+        [Test, 
+            //Prefix mismatch before arity runs out
+            TestCase(1, 2, 6, 7), TestCase(9, 4, 6, 7, 10, 11),
+            //Prefix matches all the way to nulllary dictionary, then some extra arguments
+            TestCase(1, 2, 3, 9), TestCase(1, 2, 3, 4, 6, 7, 10, 11)]
+        public void GIVEN_CurryDictionary_WHEN_RemoveKeyWithTooLargeArity_Then_RemovedCountEqualsZero(params int[] prefix)
         {
             //Assemble
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
 
-            //Act / Assert
+            //Act
+            int removedCount = dict.Remove(prefix);
 
-            Assert.Throws<ArgumentException>(() => dict.Remove(prefix));
+            //Assert
+            Assert.AreEqual(0, removedCount);
         }
 
         [Test, TestCase(1), TestCase(1, 2), TestCase(9, 4, 6, 7)]
@@ -220,7 +231,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add("Blah", 1, 2, 3);
 
             //Act / Assert
-
             Assert.Throws<ArgumentException>(() => dict.Update("Blah", keyTuple));
         }
 

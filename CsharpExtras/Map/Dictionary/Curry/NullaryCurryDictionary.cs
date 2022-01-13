@@ -64,9 +64,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return true;
         }
 
-        public override int Remove(IEnumerable<TKey> prefix)
-        {
-            return 561;
-        }
+        public override NonnegativeInteger Remove(IEnumerable<TKey> prefix) =>
+            (NonnegativeInteger)0;     
     }
 }

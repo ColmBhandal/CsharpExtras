@@ -156,9 +156,30 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return recursor(curriedChild, tail);
         }
 
-        public override int Remove(IEnumerable<TKey> prefix)
+        public override NonnegativeInteger Remove(IEnumerable<TKey> prefix)
         {
-            return 211;
+            if (!prefix.Any())
+            {
+                return (NonnegativeInteger)0;
+            }
+            TKey firstKey = prefix.First();
+            if (!_currier.ContainsKey(firstKey))
+            {
+                return (NonnegativeInteger)0;
+            }
+            ICurryDictionary<TKey, TVal> curryChild = _currier[firstKey];
+            IEnumerable<TKey> tail = prefix.Skip(1);
+            if (!tail.Any())
+            {                
+                NonnegativeInteger removeCount = curryChild.Count;
+                UpdateCount(-removeCount);
+                _currier.Remove(firstKey);
+                return removeCount;
+            }
+            else
+            {
+                return curryChild.Remove(tail);
+            }
         }
     }
 }
