@@ -11,15 +11,213 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
     public class CurryDictionaryTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
-        
+
+        [Test]
+        public void GIVEN_Dict_WHEN_RemoveEmptyPrefix_THEN_ZeroElementsRemoved()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            const string Value = "Hello";
+            dict.Add(Value, 3, 4, 5, 6);
+
+            //Act
+            int removeCount = dict.Remove();
+
+            //Assert            
+            Assert.AreEqual(0, removeCount, "No elements should be removed if key prefix is empty");
+            string element = dict[3, 4, 5, 6];
+            Assert.AreEqual(Value, element, "Value in the dictionary should be unchanged by remove");
+        }
+
+        [Test, TestCase(3), TestCase(3, 2), TestCase(4, 2, 1, 1)]
+        public void GIVEN_NullaryDict_WHEN_RemoveWrongArity_THEN_ArgumentException(params int[] prefix)
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            const string Value = "Hello";
+            dict.Add(Value, 3, 4, 5, 6);
+            ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(3, 4, 5, 6);
+
+            //Act / Assert
+            Assert.Throws<ArgumentException>(() => nullaryDict.Remove(prefix));
+        }
+
+        [Test]
+        public void GIVEN_NullaryDict_WHEN_RemoveEmptyPrefix_THEN_ZeroElementsRemoved()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            const string Value = "Hello";
+            dict.Add(Value, 3, 4, 5, 6);
+            ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(3, 4, 5, 6);
+            int nullaryArity = nullaryDict.Arity;
+            Assert.AreEqual(0, nullaryArity, "GIVEN: Unexpected arity for nullary dict");
+
+            //Act
+            int removeCount = nullaryDict.Remove();
+
+            //Assert            
+            Assert.AreEqual(0, removeCount, "No elements should be removed from a nullary dictionary");
+            string element = nullaryDict.GetValueFromTuple();
+            Assert.AreEqual(Value, element, "Value in the nullary dictionary should be unchanged by remove");
+        }
+
+        [Test,
+            //Key exists cases
+            TestCase(3), TestCase(3, 2), TestCase(4, 2, 1, 1),
+            //Key doesn't exist cases
+            TestCase(5), TestCase(3, 4, 6), TestCase(4, 2, 1, 2)]
+        public void GIVEN_Dict_WHEN_RemoveAnyPrefix_THEN_DictDoesNotContainPrefixAfterRemove(params int[] prefix)
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+            dict.Add("Goodbye", 3, 2, 1, 0);
+            dict.Add("To Remove", 3, 2, 1, 1);
+            dict.Add("To Remove", 4, 2, 1, 1);
+            int count = dict.Count;
+            Assert.AreEqual(4, count, "GIVEN: Curried dictionary count is not as expected to begin with");
+
+            //Act
+            dict.Remove(prefix);
+
+            //Assert
+            bool isContained = dict.ContainsKeyTuplePrefix(prefix);
+            Assert.IsFalse(isContained, "Dictionary should not contain a key-tuple prefix that has been removed");
+        }
+
+        [Test, TestCase(9), TestCase(3, 6), TestCase(4, 2, 1, 8)]
+        public void GIVEN_Dict_WHEN_RemoveNonExistingPrefix_THEN_RemoveCountIsZero(params int[] prefix)
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+            dict.Add("Goodbye", 3, 2, 1, 0);
+            dict.Add("To Remove", 3, 2, 1, 1);
+            dict.Add("To Remove", 4, 2, 1, 1);
+
+            //Act
+            int removeCount = dict.Remove(prefix);
+
+            //Assert
+            Assert.AreEqual(0, removeCount);            
+        }
+
+        [Test, TestCase(3), TestCase(3, 2), TestCase(4, 2, 1, 1)]
+        public void GIVEN_Dict_WHEN_RemoveExistingPrefix_THEN_RemoveCountIsNonZeroAndEqualsCountDifference(params int[] prefix)
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+            dict.Add("Goodbye", 3, 2, 1, 0);
+            dict.Add("To Remove", 3, 2, 1, 1);
+            dict.Add("To Remove", 4, 2, 1, 1);
+            int originalCount = dict.Count;
+            Assert.AreEqual(4, originalCount, "GIVEN: Curried dictionary count is not as expected to begin with");
+
+            //Act
+            int removeCount = dict.Remove(prefix);
+
+            //Assert
+            int newCount = dict.Count;
+            int delta = originalCount - newCount;
+            Assert.AreNotEqual(0, removeCount, "Non-zero amount of mappings should have been removed for a matching key");
+            Assert.AreEqual(delta, removeCount, "Count of removed items should match difference between original and new counts");
+        }
+
+        [Test,
+            //Key exists cases
+            TestCase(1, 3), TestCase(2, 3, 2), TestCase(3, 4, 2, 1, 1),
+            //Key doesn't exist cases
+            TestCase(4, 5), TestCase(4, 3, 4, 6), TestCase(4, 4, 2, 1, 2)]
+        public void GIVEN_Dict_WHEN_Remove_THEN_CountIsAsExpected(int expectedCount, params int[] prefix)
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+            dict.Add("Goodbye", 3, 2, 1, 0);
+            dict.Add("To Remove", 3, 2, 1, 1);
+            dict.Add("To Remove", 4, 2, 1, 1);
+            int count = dict.Count;
+            Assert.AreEqual(4, count, "GIVEN: Curried dictionary count is not as expected to begin with");
+
+            //Act
+            dict.Remove(prefix);
+
+            //Assert
+            count = dict.Count;
+            Assert.AreEqual(expectedCount, count);
+        }
+
+        [Test]
+        public void GIVEN_CurriedAndDoublyCurried_WHEN_RemoveFromDoublyCurried_THEN_BothCountsUpdate()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+            dict.Add("Goodbye", 3, 2, 1, 0);
+            dict.Add("To Remove", 3, 2, 1, 1);
+            ICurryDictionary<int, string> curried = dict.GetCurriedDictionary(3);
+            ICurryDictionary<int, string> doublyCurried = dict.GetCurriedDictionary(3, 2);
+            int curriedCount = curried.Count;
+            int doublyCurriedCount = doublyCurried.Count;
+
+            Assert.AreEqual(3, curriedCount, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(2, doublyCurriedCount, "GIVEN: Doubly curried dictionary count is not as expected to begin with");
+
+            //Act
+            doublyCurried.Remove(1);
+
+            //Assert
+            curriedCount = curried.Count;
+            doublyCurriedCount = doublyCurried.Count;
+            Assert.AreEqual(1, curriedCount);
+            Assert.AreEqual(0, doublyCurriedCount);
+        }
+
+        [Test]
+        public void GIVEN_CurriedDict_WHEN_RemoveFromCurried_THEN_OriginalAndCurriedCountsUpdate()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello", 3, 4, 5);
+            dict.Add("Goodbye", 3, 2, 1);
+            dict.Add("To Remove", 3, 2, 2);
+            ICurryDictionary<int, string> curried = dict.GetCurriedDictionary(3);
+            int curriedCount = curried.Count;
+            int count = dict.Count;
+
+            Assert.AreEqual(3, curriedCount, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(3, count, "GIVEN: Curried dictionary count is not as expected to begin with");
+
+            //Act
+            curried.Remove(2);
+
+            //Assert
+            curriedCount = curried.Count;
+            count = dict.Count;
+            Assert.AreEqual(1, curriedCount);
+            Assert.AreEqual(1, count);
+        }
+
+        [Test, TestCase(1), TestCase(1, 2), TestCase(9, 4, 6, 7)]
+        public void GIVEN_CurryDictionary_WHEN_RemoveWithWrongArity_Then_ArgumentException(params int[] prefix)
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Blah", 1, 2, 3);
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => dict.Remove(prefix));
+        }
+
         [Test, TestCase(1), TestCase(1, 2), TestCase(9, 4, 6, 7)]
         public void GIVEN_CurryDictionary_WHEN_UpdateWithWrongArity_Then_ArgumentException(params int[] keyTuple)
         {
             //Assemble
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
-            int dictCount = dict.Count;
-            Assert.AreEqual(1, dictCount, "GIVEN: Initial count not as expected");
 
             //Act / Assert
 
@@ -148,7 +346,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        public void GIVEN_CurriedDict_WHEN_AddToCurried_THEN_OriginalAndCurriedCountsUpdate()
+        public void GIVEN_CurriedDict_WHEN_AddToCurried_THEN_OriginalAndCurriedCountsUpdated()
         {
             //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
@@ -167,8 +365,8 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             //Assert
             curriedCount = curried.Count;
             count = dict.Count;
-            Assert.AreEqual(3, curriedCount, "GIVEN: Curried dictionary count is not as expected to begin with");
-            Assert.AreEqual(3, count, "GIVEN: Curried dictionary count is not as expected to begin with");
+            Assert.AreEqual(3, curriedCount);
+            Assert.AreEqual(3, count);
         }
 
         [Test]

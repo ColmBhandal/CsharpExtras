@@ -63,5 +63,10 @@ namespace CsharpExtras.Map.Dictionary.Curry
             _singletonValue = value;
             return true;
         }
+
+        public override int Remove(IEnumerable<TKey> prefix)
+        {
+            return 561;
+        }
     }
 }

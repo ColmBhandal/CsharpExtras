@@ -155,5 +155,10 @@ namespace CsharpExtras.Map.Dictionary.Curry
             IEnumerable<TKey> tail = keyTuple.Skip(1);
             return recursor(curriedChild, tail);
         }
+
+        public override int Remove(IEnumerable<TKey> prefix)
+        {
+            return 211;
+        }
     }
 }

@@ -65,6 +65,13 @@ namespace CsharpExtras.Map.Dictionary.Curry
         bool Add(TVal value, IEnumerable<TKey> keyTuple);
 
         /// <summary>
+        /// Removes all mappings corresponding to the given prefix.
+        /// </summary>
+        /// <param name="prefix">A key-tuple prefix which should be less than or equal to the arity of this dictionary</param>
+        /// <returns>The number of elements removed. Specifically, if there are no matching keys, returns 0.</returns>
+        int Remove(IEnumerable<TKey> prefix);
+
+        /// <summary>
         /// Updates the value at the given key tuple if it's there, otherwise does nothing
         /// </summary>
         /// <param name="value">The value with which to overwrite the existing value</param>
@@ -79,6 +86,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <param name="keyTuple">The index of the value to update. Must match arity of this dictionary.</param>
         /// <returns>True if an existing value was updated, false if there was no value at the given key tuple.</returns>
         bool Update(TVal value, IEnumerable<TKey> keyTuple);
+        int Remove(params TKey[] prefix);
 
         /// <summary>
         /// The total number of values in this dictionary
