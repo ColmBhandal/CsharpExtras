@@ -49,6 +49,13 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }
         public abstract bool Add(TVal value, IEnumerable<TKey> keys);
 
+        public bool Update(TVal value, params TKey[] keys)
+        {
+            return Update(value, keys as IEnumerable<TKey>);
+        }
+
+        public abstract bool Update(TVal value, IEnumerable<TKey> keyTuple);
+
         protected void AssertArityIsCorrect(IEnumerable<TKey> keyTuple)
         {
             int keyLength = keyTuple.Count();

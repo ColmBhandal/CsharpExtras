@@ -12,6 +12,99 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
         
+        [Test, TestCase(1), TestCase(1, 2), TestCase(9, 4, 6, 7)]
+        public void GIVEN_CurryDictionary_WHEN_UpdateWithWrongArity_Then_ArgumentException(params int[] keyTuple)
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Blah", 1, 2, 3);
+            int dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "GIVEN: Initial count not as expected");
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => dict.Update("Blah", keyTuple));
+        }
+
+        [Test]
+        public void GIVEN_CurryDictionary_WHEN_UpdateNonExisting_Then_NoValueAddedAndFalseReturned()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Blah", 1, 2, 3);
+            int dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "GIVEN: Initial count not as expected");
+            bool hasKey = dict.ContainsKeyTuple(1, 2, 9);
+            Assert.IsFalse(hasKey, "GIVEN: Dictionary should not contain the given key");
+
+            //Act
+
+            bool isSuccess = dict.Update("This update will get lost", 1, 2, 9);
+
+            //Assert
+            Assert.IsFalse(isSuccess);
+            hasKey = dict.ContainsKeyTuple(1, 2, 9);
+            Assert.IsFalse(hasKey, "Dictionary should not contain the given key");
+        }
+
+        [Test]
+        public void GIVEN_CurryDictionary_WHEN_UpdateNonExisting_Then_CountDoesNotChange()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Blah", 1, 2, 3);
+            int dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "GIVEN: Initial count not as expected");
+            bool hasKey = dict.ContainsKeyTuple(1, 2, 9);
+            Assert.IsFalse(hasKey, "GIVEN: Dictionary should not contain the given key");
+
+            //Act
+
+            dict.Update("This update will get lost", 1, 2, 9);
+
+            //Assert
+            dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "Count should not change after update");
+        }
+
+        [Test]
+        public void GIVEN_CurryDictionary_WHEN_UpdateExsting_Then_ValueUpdatedAndTrueReturned()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Blah", 1, 2, 3);
+            int dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "GIVEN: Initial count not as expected");
+
+            //Act
+
+            const string UpdatedValue = "Updated value";
+            bool isSuccess = dict.Update(UpdatedValue, 1, 2, 3);
+
+            //Assert
+            Assert.IsTrue(isSuccess);
+            string currentValue = dict[1, 2, 3];
+            Assert.AreEqual(UpdatedValue, currentValue);
+        }
+
+        [Test]
+        public void GIVEN_CurryDictionary_WHEN_UpdateExsting_Then_CountDoesNotChange()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Blah", 1, 2, 3);
+            int dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "GIVEN: Initial count not as expected");
+
+            //Act
+
+            dict.Update("Updated value", 1, 2, 3);
+
+            //Assert
+            dictCount = dict.Count;
+            Assert.AreEqual(1, dictCount, "Count should not change after update");
+        }
+
         [Test]
         public void GIVEN_CurryDictionary_WHEN_AddToSameKeyTwice_Then_CountDoesNotChange()
         {

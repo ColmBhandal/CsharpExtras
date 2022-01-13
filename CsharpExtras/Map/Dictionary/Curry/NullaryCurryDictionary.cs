@@ -7,18 +7,18 @@ namespace CsharpExtras.Map.Dictionary.Curry
 {
     class NullaryCurryDictionary<TKey, TVal> : CurryDictionaryBase<TKey, TVal>
     {
-        private readonly TVal _singletonImmutableValue;
+        private TVal _singletonValue;
 
         public override TVal this[params TKey[] keys]
         {
-            get => GetSingletonValue(keys);
+            get => GetValueFromTuple(keys);
         }
 
         public override NonnegativeInteger Arity => (NonnegativeInteger)0;
 
         public NullaryCurryDictionary(TVal singletonValue)
         {
-            _singletonImmutableValue = singletonValue;
+            _singletonValue = singletonValue;
         }
 
         public override IEnumerable<IList<TKey>> Keys =>
@@ -36,7 +36,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         public override TVal GetValueFromTuple(IEnumerable<TKey> keyTuple)
         {
             AssertArityIsCorrect(keyTuple);
-            return _singletonImmutableValue;
+            return _singletonValue;
         }
 
         public override bool Add(TVal value, IEnumerable<TKey> keyTUple)
@@ -57,15 +57,11 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return this;
         }
 
-        private TVal GetSingletonValue(TKey[] keyTuple)
+        public override bool Update(TVal value, IEnumerable<TKey> keyTuple)
         {
-            int keyLength = keyTuple.Length;
-            if (keyLength != 0)
-            {
-                throw new ArgumentException($"Nullary dictionary can only accept 0 keys. " +
-                    $"Instead, found {keyLength} keys.");
-            }
-            return _singletonImmutableValue;
+            /*AssertArityIsCorrect(keyTuple);
+            _singletonValue = value;*/
+            return true;
         }
     }
 }

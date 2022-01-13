@@ -53,7 +53,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         ICurryDictionary<TKey, TVal> GetCurriedDictionary(IEnumerable<TKey> prefix);
 
-
         /// <summary>
         /// Adds the element at the given key if it's not already there.
         /// </summary>
@@ -64,6 +63,22 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         /// <returns>True iff the value was added</returns>
         bool Add(TVal value, IEnumerable<TKey> keyTuple);
+
+        /// <summary>
+        /// Updates the value at the given key tuple if it's there, otherwise does nothing
+        /// </summary>
+        /// <param name="value">The value with which to overwrite the existing value</param>
+        /// <param name="keyTuple">The index of the value to update. Must match arity of this dictionary.</param>
+        /// <returns>True if an existing value was updated, false if there was no value at the given key tuple.</returns>
+        bool Update(TVal value, params TKey[] keyTuple);
+
+        /// <summary>
+        /// Updates the value at the given key tuple if it's there, otherwise does nothing
+        /// </summary>
+        /// <param name="value">The value with which to overwrite the existing value</param>
+        /// <param name="keyTuple">The index of the value to update. Must match arity of this dictionary.</param>
+        /// <returns>True if an existing value was updated, false if there was no value at the given key tuple.</returns>
+        bool Update(TVal value, IEnumerable<TKey> keyTuple);
 
         /// <summary>
         /// The total number of values in this dictionary
