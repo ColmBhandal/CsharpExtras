@@ -94,7 +94,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// The total number of values in this dictionary
         /// </summary>
         NonnegativeInteger Count { get; }
-
-        IDictionaryComparison DictEquals(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> valueComparer);
+        
+        /// <summary>
+        /// Compares this dictionary to another one. Dictionaries are deemed equal if they are the same size and contain the same set of key/value pairs.
+        /// </summary>
+        /// <param name="isEqualValues">This function is used to compare values within the dictionary, returning true iff values are equal in some sense</param>
+        /// <returns>A dictionary comparison result</returns>
+        IDictionaryComparison Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
     }
 }

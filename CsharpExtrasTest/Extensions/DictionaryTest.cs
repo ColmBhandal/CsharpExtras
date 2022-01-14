@@ -16,7 +16,7 @@ namespace CsharpExtrasTest.Extensions
         private const string Infty = "Infinity and Beyond";
 
         [Test]
-        public void GIVEN_DictionariesWithSameSizeButUnequalPairs_WHEN_DictEquals_THEN_ResultIsNotEqual()
+        public void GIVEN_DictionariesWithSameSizeButUnequalPairs_WHEN_Compare_THEN_ResultIsNotEqual()
         {
             //Arrange
             Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
@@ -33,14 +33,14 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.DictEquals(dictionary2, string.Equals);
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsFalse(comparison.IsEqual, comparison.Message);
         }
 
         [Test]
-        public void GIVEN_ThisDictionaryPairsAreStrictSupersetOfOther_WHEN_DictEquals_THEN_ResultIsNotEqual()
+        public void GIVEN_ThisDictionaryPairsAreStrictSupersetOfOther_WHEN_Compare_THEN_ResultIsNotEqual()
         {
             //Arrange
             Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
@@ -56,14 +56,14 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.DictEquals(dictionary2, string.Equals);
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsFalse(comparison.IsEqual, comparison.Message);
         }
 
         [Test]
-        public void GIVEN_ThisDictionaryPairsAreStrictSubsetOfOther_WHEN_DictEquals_THEN_ResultIsNotEqual()
+        public void GIVEN_ThisDictionaryPairsAreStrictSubsetOfOther_WHEN_Compare_THEN_ResultIsNotEqual()
         {
             //Arrange
             Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
@@ -79,14 +79,14 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.DictEquals(dictionary2, string.Equals);
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsFalse(comparison.IsEqual, comparison.Message);
         }
 
         [Test]
-        public void GIVEN_DictionariesWithSamePairsAddedInDifferentOrder_WHEN_DictEquals_THEN_ResultIsEqual()
+        public void GIVEN_DictionariesWithSamePairsAddedInDifferentOrder_WHEN_Compare_THEN_ResultIsEqual()
         {
             //Arrange
             Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
@@ -103,14 +103,14 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.DictEquals(dictionary2, string.Equals);
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
         [Test]
-        public void GIVEN_EmptyDictionary_WHEN_DictEqualsItself_THEN_ResultIsEqual()
+        public void GIVEN_EmptyDictionary_WHEN_CompareItself_THEN_ResultIsEqual()
         {
             //Arrange
             Dictionary<int, string> dictionary = new Dictionary<int, string>()
@@ -118,14 +118,14 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary.DictEquals(dictionary, string.Equals);
+            IDictionaryComparison comparison = dictionary.Compare(dictionary, string.Equals);
 
             //Assert
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
         [Test]
-        public void GIVEN_FilledDictionary_WHEN_DictEqualsItself_THEN_ResultIsEqual()
+        public void GIVEN_FilledDictionary_WHEN_CompareItself_THEN_ResultIsEqual()
         {
             //Arrange
             Dictionary<int, string> dictionary = new Dictionary<int, string>()
@@ -135,7 +135,7 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary.DictEquals(dictionary, string.Equals);
+            IDictionaryComparison comparison = dictionary.Compare(dictionary, string.Equals);
 
             //Assert
             Assert.IsTrue(comparison.IsEqual, comparison.Message);

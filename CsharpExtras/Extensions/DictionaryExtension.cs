@@ -121,8 +121,13 @@ namespace CsharpExtras.Extensions
             dictionary.Add(key, value);
         }
 
-        public static IDictionaryComparison DictEquals<TKey, TValue>(this IDictionary<TKey, TValue> dictionary
-            , IDictionary<TKey, TValue> other, Func<TValue, TValue, bool> valueComparer)
+        /// <summary>
+        /// Compares this dictionary to another one. Dictionaries are deemed equal if they are the same size and contain the same set of key/value pairs.
+        /// </summary>
+        /// <param name="isEqualValues">This function is used to compare values within the dictionary, returning true iff values are equal in some sense</param>
+        /// <returns>A dictionary comparison result</returns>
+        public static IDictionaryComparison Compare<TKey, TValue>(this IDictionary<TKey, TValue> dictionary
+            , IDictionary<TKey, TValue> other, Func<TValue, TValue, bool> isEqualValues)
         {
             int count = dictionary.Count;
             int otherCount = other.Count;
@@ -137,7 +142,7 @@ namespace CsharpExtras.Extensions
                 {
                     TValue value = kvp.Value;
                     TValue otherValue = other[key];
-                    if(!valueComparer(value, otherValue))
+                    if(!isEqualValues(value, otherValue))
                     {
                         return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, (kvp.Key, kvp.Value));
                     }

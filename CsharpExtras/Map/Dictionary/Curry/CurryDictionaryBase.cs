@@ -79,7 +79,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
         }
 
-        public IDictionaryComparison DictEquals(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> valueComparer)
+        public IDictionaryComparison Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
         {
             //TODO: Make this method abstract & implement on the sub-classes
             return new CurryDictionaryComparisonImpl<TKey, TVal>(45, 21, null);
