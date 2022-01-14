@@ -17,7 +17,8 @@ namespace CsharpExtras.Event.Wrapper
 
         public void Run(Func<TObj, TEvent> action)
         {
-            //TODO
+            TEvent ev = action(_object);
+            _eventHandler(ev);
         }
     }
 }
