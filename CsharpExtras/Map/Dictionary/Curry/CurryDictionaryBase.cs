@@ -1,4 +1,5 @@
-﻿using CsharpExtras.ValidatedType.Numeric.Integer;
+﻿using CsharpExtras.Extensions.Helper.Dictionary;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -76,6 +77,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
                         $"This dictionary expects a tuple of arity = {Arity}.");
                 }
             }
+        }
+
+        public IDictionaryComparison DictEquals(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> valueComparer)
+        {
+            //TODO: Make this method abstract & implement on the sub-classes
+            return new CurryDictionaryComparisonImpl<TKey, TVal>(45, 21, null);
         }
     }
 }

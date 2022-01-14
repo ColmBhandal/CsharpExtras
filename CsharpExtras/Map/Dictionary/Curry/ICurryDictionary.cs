@@ -1,4 +1,6 @@
-﻿using CsharpExtras.ValidatedType.Numeric.Integer;
+﻿using CsharpExtras.Extensions.Helper.Dictionary;
+using CsharpExtras.ValidatedType.Numeric.Integer;
+using System;
 using System.Collections.Generic;
 
 namespace CsharpExtras.Map.Dictionary.Curry
@@ -92,5 +94,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// The total number of values in this dictionary
         /// </summary>
         NonnegativeInteger Count { get; }
+
+        IDictionaryComparison DictEquals(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> valueComparer);
     }
 }

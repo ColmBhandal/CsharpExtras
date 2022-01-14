@@ -13,7 +13,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <param name="thisCount">Number of elements in this dictionary</param>
         /// <param name="otherCount">Number of elements in other dictionary</param>
         /// <param name="firstMismatch">First mistmach, if one exists, including the keys and the underly dictionary comparison</param>
-        public CurryDictionaryComparisonImpl(int thisCount, int otherCount, (IList<TKey> keys, IDictionaryComparison comparison) firstMismatch)
+        public CurryDictionaryComparisonImpl(int thisCount, int otherCount, (IList<TKey> keys, IDictionaryComparison comparison)? firstMismatch)
         {
             ThisCount = thisCount;
             OtherCount = otherCount;
