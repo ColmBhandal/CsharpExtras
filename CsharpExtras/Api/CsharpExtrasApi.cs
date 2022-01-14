@@ -39,7 +39,7 @@ namespace CsharpExtras.Api
         /// <param name="arity">The arity of the key-tuples to index this dictionary. Must be positive.</param>
         public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity)
         {
-            return new CurryDictionaryRecursive<TKey, TVal>(arity);         
+            return new CurryDictionaryRecursive<TKey, TVal>(arity, this);         
         }
         public void SetLogger(ILogger logger)
         {
@@ -127,20 +127,13 @@ namespace CsharpExtras.Api
             return NewVariantDictionary(backingDictionary);
         }
 
-        public IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary)
-        {
-            return new VariantDictionaryImpl<TKey, TVal>(backingDictionary);
-        }
+        public IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary) =>
+            new VariantDictionaryImpl<TKey, TVal>(backingDictionary);
 
         public IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val,
-            Func<TVal, TUpdate, TVal> updater)
-        {
-            return new UpdateNotifierImpl<TVal, TUpdate>(val, updater);
-        }
+            Func<TVal, TUpdate, TVal> updater) => new UpdateNotifierImpl<TVal, TUpdate>(val, updater);
 
         public IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler)
-        {
-            return new EventObjWrapperImpl<TObj, TEvent>(obj, handler);
-        }
+            => new EventObjWrapperImpl<TObj, TEvent>(obj, handler);
     }
 }
