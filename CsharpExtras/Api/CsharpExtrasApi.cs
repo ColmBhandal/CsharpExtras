@@ -138,9 +138,9 @@ namespace CsharpExtras.Api
             return new UpdateNotifierImpl<TVal, TUpdate>(val, updater);
         }
 
-        public IEventWrapper<TObj, TEvent> NewEventWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler)
+        public IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler)
         {
-            return new EventWrapperImpl<TObj, TEvent>(obj, handler);
+            return new EventObjWrapperImpl<TObj, TEvent>(obj, handler);
         }
     }
 }

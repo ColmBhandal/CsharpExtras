@@ -56,6 +56,6 @@ namespace CsharpExtras.Api
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue);
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue);
         IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val, Func<TVal, TUpdate, TVal> updater);
-        IEventWrapper<TObj, TEvent> NewEventWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler);
+        IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler);
     }
 }

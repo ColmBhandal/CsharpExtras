@@ -9,7 +9,7 @@ using System.Text;
 namespace CsharpExtrasTest.Event.Wrapper
 {
     [TestFixture, Category("Unit")]
-    public class EventWrappertTest
+    public class EventObjWrappertTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
@@ -23,8 +23,8 @@ namespace CsharpExtrasTest.Event.Wrapper
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Returns(mockEvent.Object);
 
-            IEventWrapper<IMockObj, IMockEvent> wrapper =
-                Api.NewEventWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
+            IEventObjWrapper<IMockObj, IMockEvent> wrapper =
+                Api.NewEventObjWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
 
             //Act
             wrapper.Run(mockExecutor.Object.Execute);
@@ -45,8 +45,8 @@ namespace CsharpExtrasTest.Event.Wrapper
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Returns(mockEvent.Object);
             mockHandler.Setup(h => h.Handle(mockEvent.Object)).Throws<InvalidOperationException>();
 
-            IEventWrapper<IMockObj, IMockEvent> wrapper =
-                Api.NewEventWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
+            IEventObjWrapper<IMockObj, IMockEvent> wrapper =
+                Api.NewEventObjWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
 
             //Act
             Assert.Throws<InvalidOperationException>(() => wrapper.Run(mockExecutor.Object.Execute));
@@ -66,8 +66,8 @@ namespace CsharpExtrasTest.Event.Wrapper
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Returns(mockEvent.Object);
             
-            IEventWrapper<IMockObj, IMockEvent> wrapper =
-                Api.NewEventWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
+            IEventObjWrapper<IMockObj, IMockEvent> wrapper =
+                Api.NewEventObjWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
 
             //Act
             wrapper.Run(mockExecutor.Object.Execute);
@@ -87,8 +87,8 @@ namespace CsharpExtrasTest.Event.Wrapper
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Throws<InvalidOperationException>();
 
-            IEventWrapper<IMockObj, IMockEvent> wrapper =
-                Api.NewEventWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
+            IEventObjWrapper<IMockObj, IMockEvent> wrapper =
+                Api.NewEventObjWrapper<IMockObj, IMockEvent>(mockObj.Object, mockHandler.Object.Handle);
 
             //Act
             Assert.Throws<InvalidOperationException>(() => wrapper.Run(mockExecutor.Object.Execute));
