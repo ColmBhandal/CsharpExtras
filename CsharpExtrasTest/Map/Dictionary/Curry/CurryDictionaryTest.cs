@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.Map.Dictionary.Curry;
 using NUnit.Framework;
 using System;
@@ -11,6 +12,140 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
     public class CurryDictionaryTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
+
+        [Test]
+        public void GIVEN_EmptyDictAndFilledDict_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("World", 5, 6, 7, 8);
+            dict2.Add("Hello Different", 3, 4, 5, 6);
+
+            //Act
+            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_FilledDictAndEmptyDict_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            dict1.Add("Hello", 3, 4, 5, 6);
+            dict1.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+
+            //Act
+            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DictsWithSameKeysButNotAllValuesTheSame_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            dict1.Add("Hello", 3, 4, 5, 6);
+            dict1.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("World", 5, 6, 7, 8);
+            dict2.Add("Hello Different", 3, 4, 5, 6);
+
+            //Act
+            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_TwoNonContainedDicts_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            dict1.Add("Hello", 3, 4, 5, 6);
+            dict1.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("Hello", 3, 4, 5, 6);
+            dict1.Add("World", 9, 10, 11, 14);
+
+            //Act
+            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DictStrictSupersetOfOther_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            dict1.Add("Hello", 3, 4, 5, 6);
+            dict1.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("Hello", 3, 4, 5, 6);
+
+            //Act
+            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DictStrictSubsetOfOther_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            dict1.Add("Hello", 3, 4, 5, 6);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("World", 5, 6, 7, 8);
+            dict2.Add("Hello", 3, 4, 5, 6);
+
+            //Act
+            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DictsWithSameMappingsAddedInDifferentOrder_WHEN_Compare_THEN_IsEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);            
+            dict1.Add("Hello", 3, 4, 5, 6);
+            dict1.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("World", 5, 6, 7, 8);
+            dict2.Add("Hello", 3, 4, 5, 6);
+
+            //Act
+            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+
+            //Assert            
+            Assert.IsTrue(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_Dict_WHEN_CompareToItself_THEN_IsEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+
+            //Act
+            IDictionaryComparison result = dict.Compare(dict, string.Equals);
+
+            //Assert            
+            Assert.IsTrue(result.IsEqual);
+        }
 
         [Test]
         public void GIVEN_Dict_WHEN_RemoveEmptyPrefix_THEN_ZeroElementsRemoved()
