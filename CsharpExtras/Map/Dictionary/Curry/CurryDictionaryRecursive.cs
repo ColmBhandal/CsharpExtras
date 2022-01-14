@@ -14,7 +14,11 @@ namespace CsharpExtras.Map.Dictionary.Curry
     {
         private readonly ICsharpExtrasApi _api;
 
-        public event Action<int>? CountUpdated;
+        public event Action<int> AfterCountUpdate
+        {
+            add => _countNotifier.AfterUpdate += value;
+            remove => _countNotifier.AfterUpdate -= value;
+        }
 
         public override TVal this[params TKey[] keys]
         {
@@ -49,7 +53,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
         {
             IUpdateNotifier<NonnegativeInteger, int> countNotifier = 
                 _api.NewUpdateNotifier<NonnegativeInteger, int>((NonnegativeInteger)0, UpdateCount);
-            countNotifier.AfterUpdate += d => CountUpdated?.Invoke(d);
             return countNotifier;
         }
 
@@ -138,7 +141,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             else if(Arity > 1)
             {
                 CurryDictionaryRecursive<TKey, TVal> curryChild = new CurryDictionaryRecursive<TKey, TVal>(Arity - 1, _api);
-                curryChild.CountUpdated += _countNotifier.Update;
+                curryChild.AfterCountUpdate += _countNotifier.Update;
                 AddDirectChild(firstKey, curryChild);
                 bool isAddSuccessful = curryChild.Add(value, tail);
                 return isAddSuccessful;
