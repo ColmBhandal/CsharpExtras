@@ -102,7 +102,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockExecutor> mockExecutor = new Mock<IMockExecutor>();
+            Mock<IMockEventExecutor> mockExecutor = new Mock<IMockEventExecutor>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Returns(mockEvent.Object);
 
@@ -123,7 +123,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockExecutor> mockExecutor = new Mock<IMockExecutor>();
+            Mock<IMockEventExecutor> mockExecutor = new Mock<IMockEventExecutor>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Returns(mockEvent.Object);
             
@@ -144,7 +144,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockExecutor> mockExecutor = new Mock<IMockExecutor>();
+            Mock<IMockEventExecutor> mockExecutor = new Mock<IMockEventExecutor>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Returns(mockEvent.Object);
             mockHandler.Setup(h => h.Handle(mockEvent.Object)).Throws<InvalidOperationException>();
@@ -166,7 +166,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockExecutor> mockExecutor = new Mock<IMockExecutor>();
+            Mock<IMockEventExecutor> mockExecutor = new Mock<IMockEventExecutor>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockExecutor.Setup(e => e.Execute(mockObj.Object)).Throws<InvalidOperationException>();
 
@@ -180,24 +180,5 @@ namespace CsharpExtrasTest.Event.Wrapper
             mockHandler.Verify(handler => handler.Handle(It.IsAny<IMockEvent>()), Times.Never,
                 "Handler should not be triggered for any event if the action fails");
         }
-    }
-
-    public interface IMockObj { }
-
-    public interface IMockEvent {}
-
-    public interface IMockEventHandler
-    {
-        void Handle(IMockEvent e);
-    }
-    
-    public interface IMockExecutor
-    {
-        IMockEvent Execute(IMockObj obj);
-    }
-
-    public interface IMockGetter<TResult>
-    {
-        (IMockEvent e, TResult result) ExecuteGet(IMockObj obj);
     }
 }

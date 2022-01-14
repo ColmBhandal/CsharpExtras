@@ -57,5 +57,7 @@ namespace CsharpExtras.Api
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue);
         IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val, Func<TVal, TUpdate, TVal> updater);
         IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler);
+        IPropertyChangedWrapper<TObj, TEvent> NewPropertyChangedWrapper<TObj, TBefore, TAfter, TEvent>
+            (TObj obj, Func<TObj, TBefore> beforeGetter, Func<TObj, TAfter> afterGetter, Func<TBefore, TAfter, TEvent> eventGenerator);
     }
 }
