@@ -13,6 +13,8 @@ namespace CsharpExtras.Event.Wrapper
     /// <typeparam name="TEvent">The event type that must be returned after any access to the object</typeparam>
     public interface IEventObjWrapper<TObj, TEvent>
     {
+        TResult Get<TResult>(Func<TObj, (TEvent e, TResult result)> f);
+
         /// <summary>
         /// This method runs the specified function on the encapsulated object.
         /// </summary>

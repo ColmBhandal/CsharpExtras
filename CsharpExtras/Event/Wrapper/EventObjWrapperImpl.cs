@@ -6,7 +6,7 @@ namespace CsharpExtras.Event.Wrapper
 {
     internal class EventObjWrapperImpl<TObj, TEvent> : IEventObjWrapper<TObj, TEvent>
     {
-        private readonly TObj _object;
+        protected readonly TObj _object;
         private readonly Action<TEvent> _eventHandler;
 
         public EventObjWrapperImpl(TObj obj, Action<TEvent> eventHandler)
@@ -19,6 +19,13 @@ namespace CsharpExtras.Event.Wrapper
         {
             TEvent ev = action(_object);
             _eventHandler(ev);
+        }
+
+        public TResult Get<TResult>(Func<TObj, (TEvent e, TResult result)> f)
+        {
+            (TEvent e, TResult result) = f(_object);
+            _eventHandler(e);
+            return result;
         }
     }
 }
