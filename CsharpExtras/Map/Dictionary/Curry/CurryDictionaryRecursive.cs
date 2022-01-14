@@ -21,7 +21,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }        
         public override NonnegativeInteger Arity { get; }
 
-        //NB: We must not expose this to the outside world - otherwise we risk an inconsistent Count 
+        /// <summary>
+        /// This object encapsulates the direct nested children of this object along enforcing updates to the count when those children change
+        /// </summary>
         private readonly IEventObjWrapper<IDictionary<TKey, ICurryDictionary<TKey, TVal>>, int> _currier;
 
         //NB: Do not update this explicitly - only UpdateCount function should be used for that
