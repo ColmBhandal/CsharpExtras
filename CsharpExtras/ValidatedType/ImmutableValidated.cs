@@ -15,13 +15,14 @@ namespace CsharpExtras.ValidatedType
     /// <typeparam name="TVal">This type should be immutable i.e. objects of this type should not change after construction.
     /// There is no compile-time enforcement of this immutability - it is up to the architect of the sub-class to guarantee it.</typeparam>
     public abstract class ImmutableValidated<TVal>
+        where TVal : IComparable
     {
-        private readonly TVal _value;
+        private readonly TVal _val;
         protected ImmutableValidated(TVal value)
         {
             if (IsValid(value))
             {
-                _value = value;
+                _val = value;
             }
             else
             {
@@ -37,11 +38,31 @@ namespace CsharpExtras.ValidatedType
             return value?.ToString() ?? "NULL";
         }
 
-        public static implicit operator TVal(ImmutableValidated<TVal> validated) => validated._value;
+        public static implicit operator TVal(ImmutableValidated<TVal> validated) => validated._val;
 
         protected abstract bool IsValid(TVal t);
         protected abstract string ValidityConditionTextDescription { get; }
 
-        public override string ToString() => GetValueAsString(_value);
+        public override string ToString() => GetValueAsString(_val);
+
+        public override int GetHashCode()
+        {
+            return _val.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return (obj is ImmutableValidated<TVal> validated &&
+                   EqualityComparer<TVal>.Default.Equals(_val, validated._val))
+                   ||
+                   (obj is TVal val &&
+                   EqualityComparer<TVal>.Default.Equals(_val, val));
+        }
+
+        public static bool operator ==(ImmutableValidated<TVal> thisObj, ImmutableValidated<TVal> other) =>
+            thisObj.Equals(other);
+        public static bool operator !=(ImmutableValidated<TVal> thisObj, ImmutableValidated<TVal> other) =>
+            !(thisObj == other);
+
     }
 }

@@ -81,8 +81,19 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public IDictionaryComparison Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
         {
-            //TODO: Make this method abstract & implement on the sub-classes
-            return new CurryDictionaryComparisonImpl<TKey, TVal>(45, 21, null);
+            int otherArity = other.Arity;
+            int otherCount = other.Count;
+            if (Arity != otherArity || Count != otherCount)
+            {
+                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+            }
+            return IsSubset(other, isEqualValues);
         }
+
+        /// <summary>
+        /// This method is delegated to sub-classes to check is this dictionary a subset of the other one
+        /// </summary>
+        protected abstract IDictionaryComparison IsSubset
+            (ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
     }
 }

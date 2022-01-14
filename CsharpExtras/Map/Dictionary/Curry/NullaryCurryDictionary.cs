@@ -1,4 +1,5 @@
-﻿using CsharpExtras.ValidatedType.Numeric.Integer;
+﻿using CsharpExtras.Extensions.Helper.Dictionary;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -65,6 +66,18 @@ namespace CsharpExtras.Map.Dictionary.Curry
         }
 
         public override NonnegativeInteger Remove(IEnumerable<TKey> prefix) =>
-            (NonnegativeInteger)0;     
+            (NonnegativeInteger)0;
+
+        protected override IDictionaryComparison IsSubset(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
+        {
+            NonnegativeInteger otherArity = other.Arity;
+            NonnegativeInteger otherCount = other.Count;
+            TVal otherVal = other.GetValueFromTuple();
+            if(isEqualValues(_singletonValue, otherVal))
+            {
+                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+            }
+            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue));
+        }
     }
 }

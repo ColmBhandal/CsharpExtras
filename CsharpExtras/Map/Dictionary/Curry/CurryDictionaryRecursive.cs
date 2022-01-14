@@ -2,6 +2,7 @@
 using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
 using CsharpExtras.Extensions;
+using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
@@ -245,6 +246,25 @@ namespace CsharpExtras.Map.Dictionary.Curry
                     return 0;
                 }
             });
+        }
+
+        protected override IDictionaryComparison IsSubset(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
+        {
+            NonnegativeInteger otherArity = other.Arity;
+            NonnegativeInteger otherCount = other.Count;
+            foreach ((IList<TKey> keyTuple, TVal val) pair in KeyValuePairs)
+            {
+                if (!other.ContainsKeyTuple(pair.keyTuple))
+                {
+                    return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, pair);
+                }
+                TVal otherValue = other.GetValueFromTuple(pair.keyTuple);
+                if(!isEqualValues(pair.val, otherValue))
+                {
+                    return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, pair);
+                }
+            }
+            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
         }
     }
 }

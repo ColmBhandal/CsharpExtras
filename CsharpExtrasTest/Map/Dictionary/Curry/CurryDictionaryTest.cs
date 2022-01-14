@@ -12,6 +12,71 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
     public class CurryDictionaryTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
+        [Test]
+        public void GIVEN_NullaryDictsWithDifferentValue_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            dict1.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> nullaryDict1 = dict1.GetCurriedDictionary(5, 6, 7, 8);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("Different World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> nullaryDict2 = dict2.GetCurriedDictionary(5, 6, 7, 8);
+
+            //Act
+            IDictionaryComparison result = nullaryDict1.Compare(nullaryDict2, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_NullaryDictsWithSameValue_WHEN_Compare_THEN_IsEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict1 = Api.NewCurryDictionary<int, string>(4);
+            dict1.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> nullaryDict1 = dict1.GetCurriedDictionary(5, 6, 7, 8);
+            ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
+            dict2.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> nullaryDict2 = dict2.GetCurriedDictionary(5, 6, 7, 8);
+
+            //Act
+            IDictionaryComparison result = nullaryDict1.Compare(nullaryDict2, string.Equals);
+
+            //Assert            
+            Assert.IsTrue(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_NullaryDict_WHEN_CompareToSelf_THEN_IsEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(5, 6, 7, 8);
+
+            //Act
+            IDictionaryComparison result = nullaryDict.Compare(nullaryDict, string.Equals);
+
+            //Assert            
+            Assert.IsTrue(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_NullaryDictAndParentSingletonDict_WHEN_Compare_THEN_NotEqual()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("World", 5, 6, 7, 8);
+            ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(5, 6, 7, 8);
+
+            //Act
+            IDictionaryComparison result = dict.Compare(nullaryDict, string.Equals);
+
+            //Assert            
+            Assert.IsFalse(result.IsEqual);
+        }
 
         [Test]
         public void GIVEN_EmptyDictAndFilledDict_WHEN_Compare_THEN_NotEqual()
