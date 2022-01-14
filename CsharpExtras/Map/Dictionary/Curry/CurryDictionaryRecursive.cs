@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
 using CsharpExtras.Extensions;
 using CsharpExtras.ValidatedType.Numeric.Integer;
@@ -26,9 +27,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         private readonly IEventObjWrapper<IDictionary<TKey, ICurryDictionary<TKey, TVal>>, int> _currier;
 
-        //NB: Do not update this explicitly - only UpdateCount function should be used for that
-        private NonnegativeInteger _count = (NonnegativeInteger)0;
-        public override NonnegativeInteger Count => _count;
+        /// <summary>
+        /// This object encapsulates the count and ensures that any updates to the count result in events being triggered
+        /// </summary>
+        private readonly IUpdateNotifier<NonnegativeInteger, int> _countNotifier;
+
+        public override NonnegativeInteger Count => _countNotifier.Value;
 
         public CurryDictionaryRecursive(int arity, ICsharpExtrasApi api) : this((PositiveInteger)arity, api) { }
 
@@ -36,9 +40,19 @@ namespace CsharpExtras.Map.Dictionary.Curry
         {
             Arity = (NonnegativeInteger)arity;
             _api = api;
+            _countNotifier = NewCountNotifier();
             _currier = _api.NewEventObjWrapper<IDictionary<TKey, ICurryDictionary<TKey, TVal>>, int>
-                (new Dictionary<TKey, ICurryDictionary<TKey, TVal>>(), UpdateCount);
+                (new Dictionary<TKey, ICurryDictionary<TKey, TVal>>(), _countNotifier.Update);
         }
+
+        private IUpdateNotifier<NonnegativeInteger, int> NewCountNotifier()
+        {
+            IUpdateNotifier<NonnegativeInteger, int> countNotifier = 
+                _api.NewUpdateNotifier<NonnegativeInteger, int>((NonnegativeInteger)0, UpdateCount);
+            countNotifier.AfterUpdate += d => CountUpdated?.Invoke(d);
+            return countNotifier;
+        }
+
         public override IEnumerable<IList<TKey>> Keys => _currier.Get(c => (0, GetKeys(c)));
 
         private IEnumerable<IList<TKey>> GetKeys(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier)
@@ -124,7 +138,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             else if(Arity > 1)
             {
                 CurryDictionaryRecursive<TKey, TVal> curryChild = new CurryDictionaryRecursive<TKey, TVal>(Arity - 1, _api);
-                curryChild.CountUpdated += UpdateCount;
+                curryChild.CountUpdated += _countNotifier.Update;
                 AddDirectChild(firstKey, curryChild);
                 bool isAddSuccessful = curryChild.Add(value, tail);
                 return isAddSuccessful;
@@ -154,22 +168,23 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 return false;
             }
             return TailRecurse((d, k) => d.Update(value, k), keyTuple);
-        }            
+        }
 
         /// <summary>
         /// Updates the count by the given amount
         /// </summary>
         /// <param name="delta">The amount, which can be negative, by which to update the count.</param>
+        /// <param name="initialCount">The value of the count before the update happens</param>
+        /// <returns>The resultant count, after summing the delta to the initial count</returns>
         /// <exception cref="ArgumentException">Thrown if the updated count goes negative</exception>
-        private void UpdateCount(int delta)
+        private NonnegativeInteger UpdateCount(NonnegativeInteger initialCount, int delta)
         {
-            int newCount = Count + delta;
+            int newCount = initialCount + delta;
             if(newCount < 0)
             {
                 throw new ArgumentException($"Cannot update count of {Count} by delta {delta} as it would result in a negative count");
             }
-            _count = (NonnegativeInteger) (Count+delta);
-            CountUpdated?.Invoke(delta);
+            return (NonnegativeInteger) (Count+delta);            
         }
 
         //Assumes keyTuple is in this dictionary
