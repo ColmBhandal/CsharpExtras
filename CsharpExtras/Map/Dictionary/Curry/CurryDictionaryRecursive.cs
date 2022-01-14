@@ -50,29 +50,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 (new Dictionary<TKey, ICurryDictionary<TKey, TVal>>(), _countNotifier.Update);
         }
 
-        private IUpdateNotifier<NonnegativeInteger, int> NewCountNotifier()
-        {
-            IUpdateNotifier<NonnegativeInteger, int> countNotifier = 
-                _api.NewUpdateNotifier<NonnegativeInteger, int>((NonnegativeInteger)0, UpdateCount);
-            return countNotifier;
-        }
-
         public override IEnumerable<IList<TKey>> Keys => _currier.Get(c => (0, GetKeys(c)));
-
-        private IEnumerable<IList<TKey>> GetKeys(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier)
-        {
-            foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in currier)
-            {
-                TKey key = pair.Key;
-                ICurryDictionary<TKey, TVal> dict = pair.Value;
-                IEnumerable<IList<TKey>> childKeyset = dict.Keys;
-                foreach (IList<TKey> tuple in childKeyset)
-                {
-                    tuple.Insert(0, key);
-                    yield return tuple;
-                }
-            }
-        }
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
@@ -94,16 +72,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
             ICurryDictionary<TKey, TVal> curriedChild = GetCurriedChild(firstKey);
             IEnumerable<TKey> tailPrefix = prefix.Skip(1);
             return curriedChild.ContainsKeyTuplePrefix(tailPrefix);
-        }
-
-        private ICurryDictionary<TKey, TVal> GetCurriedChild(TKey firstKey)
-        {
-            return _currier.Get(c => (0, c[firstKey]));
-        }
-
-        private bool CurrierContainsKey(TKey firstKey)
-        {
-            return _currier.Get(c => (0, c.ContainsKey(firstKey)));
         }
 
         public override TVal GetValueFromTuple(IEnumerable<TKey> keyTuple)
@@ -129,6 +97,15 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return curriedChild.GetCurriedDictionary(tailPrefix);
         }
 
+        public override bool Update(TVal value, IEnumerable<TKey> keyTuple)
+        {
+            if (!ContainsKeyTuple(keyTuple))
+            {
+                return false;
+            }
+            return TailRecurse((d, k) => d.Update(value, k), keyTuple);
+        }
+
         public override bool Add(TVal value, IEnumerable<TKey> keyTuple)
         {
             AssertArityIsCorrect(keyTuple);
@@ -139,7 +116,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 ICurryDictionary<TKey, TVal> curryChild = GetCurriedChild(firstKey);
                 return curryChild.Add(value, tail);
             }
-            else if(Arity > 1)
+            else if (Arity > 1)
             {
                 CurryDictionaryRecursive<TKey, TVal> curryChild = new CurryDictionaryRecursive<TKey, TVal>(Arity - 1, _api);
                 curryChild.AfterCountUpdate += _countNotifier.Update;
@@ -155,6 +132,50 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
         }
 
+        public override NonnegativeInteger Remove(IEnumerable<TKey> prefix)
+        {
+            if (!prefix.Any())
+            {
+                return (NonnegativeInteger)0;
+            }
+            TKey firstKey = prefix.First();
+            if (!CurrierContainsKey(firstKey))
+            {
+                return (NonnegativeInteger)0;
+            }
+            ICurryDictionary<TKey, TVal> curryChild = GetCurriedChild(firstKey);
+            IEnumerable<TKey> tail = prefix.Skip(1);
+            if (!tail.Any())
+            {
+                NonnegativeInteger removeCount = curryChild.Count;
+                RemoveDirectChild(firstKey);
+                return removeCount;
+            }
+            else
+            {
+                return curryChild.Remove(tail);
+            }
+        }
+
+        protected override IDictionaryComparison IsSubset(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
+        {
+            NonnegativeInteger otherArity = other.Arity;
+            NonnegativeInteger otherCount = other.Count;
+            foreach ((IList<TKey> keyTuple, TVal val) pair in KeyValuePairs)
+            {
+                if (!other.ContainsKeyTuple(pair.keyTuple))
+                {
+                    return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, pair);
+                }
+                TVal otherValue = other.GetValueFromTuple(pair.keyTuple);
+                if (!isEqualValues(pair.val, otherValue))
+                {
+                    return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, pair);
+                }
+            }
+            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+        }
+
         private void AddDirectChild(TKey key, ICurryDictionary<TKey, TVal> curryChild)
         {
             int count = curryChild.Count;
@@ -163,15 +184,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 c.Add(key, curryChild);
                 return count;
             });
-        }
-
-        public override bool Update(TVal value, IEnumerable<TKey> keyTuple)
-        {
-            if (!ContainsKeyTuple(keyTuple))
-            {
-                return false;
-            }
-            return TailRecurse((d, k) => d.Update(value, k), keyTuple);
         }
 
         /// <summary>
@@ -202,31 +214,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return recursor(curriedChild, tail);
         }
 
-        public override NonnegativeInteger Remove(IEnumerable<TKey> prefix)
-        {
-            if (!prefix.Any())
-            {
-                return (NonnegativeInteger)0;
-            }
-            TKey firstKey = prefix.First();
-            if (!CurrierContainsKey(firstKey))
-            {
-                return (NonnegativeInteger)0;
-            }
-            ICurryDictionary<TKey, TVal> curryChild = GetCurriedChild(firstKey);
-            IEnumerable<TKey> tail = prefix.Skip(1);
-            if (!tail.Any())
-            {                
-                NonnegativeInteger removeCount = curryChild.Count;
-                RemoveDirectChild(firstKey);
-                return removeCount;
-            }
-            else
-            {
-                return curryChild.Remove(tail);
-            }
-        }
-
         private void RemoveDirectChild(TKey key)
         {
             if (!CurrierContainsKey(key))
@@ -248,23 +235,35 @@ namespace CsharpExtras.Map.Dictionary.Curry
             });
         }
 
-        protected override IDictionaryComparison IsSubset(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
+        private IUpdateNotifier<NonnegativeInteger, int> NewCountNotifier()
         {
-            NonnegativeInteger otherArity = other.Arity;
-            NonnegativeInteger otherCount = other.Count;
-            foreach ((IList<TKey> keyTuple, TVal val) pair in KeyValuePairs)
+            IUpdateNotifier<NonnegativeInteger, int> countNotifier =
+                _api.NewUpdateNotifier<NonnegativeInteger, int>((NonnegativeInteger)0, UpdateCount);
+            return countNotifier;
+        }
+        private IEnumerable<IList<TKey>> GetKeys(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier)
+        {
+            foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in currier)
             {
-                if (!other.ContainsKeyTuple(pair.keyTuple))
+                TKey key = pair.Key;
+                ICurryDictionary<TKey, TVal> dict = pair.Value;
+                IEnumerable<IList<TKey>> childKeyset = dict.Keys;
+                foreach (IList<TKey> tuple in childKeyset)
                 {
-                    return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, pair);
-                }
-                TVal otherValue = other.GetValueFromTuple(pair.keyTuple);
-                if(!isEqualValues(pair.val, otherValue))
-                {
-                    return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, pair);
+                    tuple.Insert(0, key);
+                    yield return tuple;
                 }
             }
-            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+        }
+
+        private ICurryDictionary<TKey, TVal> GetCurriedChild(TKey firstKey)
+        {
+            return _currier.Get(c => (0, c[firstKey]));
+        }
+
+        private bool CurrierContainsKey(TKey firstKey)
+        {
+            return _currier.Get(c => (0, c.ContainsKey(firstKey)));
         }
     }
 }
