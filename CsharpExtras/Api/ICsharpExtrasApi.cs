@@ -17,6 +17,7 @@ using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using CsharpExtras.Enumerable.Provider.Int;
 using CsharpExtras.Event.Notify;
+using CsharpExtras.Event.Wrapper;
 
 namespace CsharpExtras.Api
 {
@@ -55,5 +56,6 @@ namespace CsharpExtras.Api
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue);
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue);
         IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val, Func<TVal, TUpdate, TVal> updater);
+        IEventWrapper<TObj, TEvent> NewEventWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler);
     }
 }

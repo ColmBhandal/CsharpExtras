@@ -17,6 +17,7 @@ using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using CsharpExtras.Enumerable.Provider.Int;
 using CsharpExtras.Event.Notify;
+using CsharpExtras.Event.Wrapper;
 
 namespace CsharpExtras.Api
 {
@@ -135,6 +136,11 @@ namespace CsharpExtras.Api
             Func<TVal, TUpdate, TVal> updater)
         {
             return new UpdateNotifierImpl<TVal, TUpdate>(val, updater);
+        }
+
+        public IEventWrapper<TObj, TEvent> NewEventWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler)
+        {
+            return new EventWrapperImpl<TObj, TEvent>(obj, handler);
         }
     }
 }
