@@ -13,7 +13,68 @@ namespace CsharpExtrasTest.Extensions
         private const string Zero = "Zero";
         private const string One = "One";
         private const string Two = "Two";
+        private const string Three = "Three";
         private const string Infty = "Infinity and Beyond";
+
+        [Test]
+        public void GIVEN_InjectionOnKeyset_WHEN_MapKeys_THEN_DictionaryIsAsExpected()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" }
+            };
+            Dictionary<string, string> expectedDictionary = new Dictionary<string, string>()
+            {
+                {Zero, "Some value"},
+                {One, "Hello World"},
+                {Two, "x" }
+            };
+
+            //Act
+            //Note: the function here is only injective on the keyset, not across its entire domain
+            IDictionary<string, string> mappedDict = dictionary.MapKeys(MockIntToStringMap);
+
+            //Assert
+            IDictionaryComparison comparison = mappedDict.Compare(expectedDictionary, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_NonInjectionOnKeyset_WHEN_MapKeys_THEN_InjectiveViolationException()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" },
+                {3, "x" },
+                {4, "x" }
+            };
+
+            //Act / Assert
+            //Note: the function is non-injective here because it only maps a subset of ints to unique values
+            Assert.Throws<InjectiveViolationException>(() => dictionary.MapKeys(MockIntToStringMap));
+        }
+
+        [Test]
+        public void GIVEN_ExceptionThrowingFunctionAndEmptyDictionary_WHEN_MapKeys_THEN_EmptyDictionaryReturned()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+            Assert.AreEqual(0, dictionary.Count, "GIVEN: Expected empty dictionary to have count of zero to begin with");
+
+            Func<int, string> exceptionThrower = i => throw new InvalidOperationException();
+
+            //Act
+            IDictionary<string, string> mappedDict = dictionary.MapKeys(exceptionThrower);
+
+            //Assert
+            Assert.AreEqual(0, mappedDict.Count);
+        }
 
         [Test]
         public void GIVEN_DictionariesWithSameSizeButUnequalPairs_WHEN_Compare_THEN_ResultIsNotEqual()

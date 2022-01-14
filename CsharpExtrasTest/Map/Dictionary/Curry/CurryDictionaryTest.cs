@@ -45,7 +45,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             IDictionaryComparison result = nullaryDict1.Compare(nullaryDict2, string.Equals);
 
             //Assert            
-            Assert.IsTrue(result.IsEqual);
+            Assert.IsTrue(result.IsEqual, result.Message);
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             IDictionaryComparison result = nullaryDict.Compare(nullaryDict, string.Equals);
 
             //Assert            
-            Assert.IsTrue(result.IsEqual);
+            Assert.IsTrue(result.IsEqual, result.Message);
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
-            Assert.IsTrue(result.IsEqual);
+            Assert.IsTrue(result.IsEqual, result.Message);
         }
 
         [Test]
@@ -209,7 +209,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             IDictionaryComparison result = dict.Compare(dict, string.Equals);
 
             //Assert            
-            Assert.IsTrue(result.IsEqual);
+            Assert.IsTrue(result.IsEqual, result.Message);
         }
 
         [Test]
