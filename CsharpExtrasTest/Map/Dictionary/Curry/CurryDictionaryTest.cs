@@ -1287,7 +1287,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        public void GIVEN_NonInjectiveFunction_WHEN_UpdateKeys_THEN_InjectiveViolationException()           
+        public void GIVEN_NonInjectiveFunctionAtArity1_WHEN_UpdateKeysAtArity1_THEN_InjectiveViolationException()           
         {
             //Arrange
             ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
@@ -1296,7 +1296,8 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add(5, 1, 3, 1);
             dict.Add(7, 1, 1, 3);
 
-            Func<int, int> nonInjectiveFunction = k => 2*k;
+            //This is non-injective at arity 1, based on the above keyset
+            Func<int, int> nonInjectiveFunction = k => k == 1 ? 2 : k;
 
             //Act / Assert
 
