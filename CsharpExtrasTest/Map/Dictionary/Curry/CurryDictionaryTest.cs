@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.Api;
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.Map.Dictionary.Curry;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -210,6 +211,110 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
+        }
+
+        [Test]
+        public void GIVEN_RemovedDict_WHEN_Remove_THEN_ExParentCountNotAffected()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+            ICurryDictionary<int, string> subDict = dict.GetCurriedDictionary(3, 4);
+            Assert.AreEqual((NonnegativeInteger)1, dict.Count, "GIVEN: Count of dictionary should start at 1");
+            int removeCount = dict.Remove(3, 4);
+            Assert.AreEqual((NonnegativeInteger)1, removeCount, "GIVEN: Expected 1 element to be removed from dictionary for test setup");
+            Assert.AreEqual((NonnegativeInteger)0, dict.Count, "GIVEN: Expected 1 element to be removed from dictionary for test setup");
+            Assert.AreEqual((NonnegativeInteger)1, subDict.Count, "GIVEN: Sub-dictionary count should be 1 before test");
+
+            //Act
+            subDict.Remove(5, 6);
+
+            //Assert            
+            Assert.AreEqual(0, dict.Count, "Dictionary count should be unchanged after removing from an element that was removed");
+        }
+
+
+        [Test]
+        public void GIVEN_RemovedDict_WHEN_Add_THEN_ExParentCountNotAffected()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            dict.Add("Hello", 3, 4, 5, 6);
+            ICurryDictionary<int, string> subDict = dict.GetCurriedDictionary(3, 4);
+            Assert.AreEqual((NonnegativeInteger)1, dict.Count, "GIVEN: Count of dictionary should start at 1");
+            int removeCount = dict.Remove(3, 4);
+            Assert.AreEqual((NonnegativeInteger) 1, removeCount, "GIVEN: Expected 1 element to be removed from dictionary for test setup");
+            Assert.AreEqual((NonnegativeInteger)0, dict.Count, "GIVEN: Expected 1 element to be removed from dictionary for test setup");
+            Assert.AreEqual((NonnegativeInteger)1, subDict.Count, "GIVEN: Sub-dictionary count should be 1 before test");
+
+            //Act
+            subDict.Add("Other Value", 6, 7);
+
+            //Assert            
+            Assert.AreEqual((NonnegativeInteger)0, dict.Count, "Dictionary count should be unchanged after adding to an element that was removed");
+        }
+
+        [Test]
+        public void GIVEN_SingletonDict_WHEN_RemovePrefix_THEN_DictDoesNotContainPrefixOfPrefix()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            const string Value = "Hello";
+            dict.Add(Value, 3, 4, 5, 6);
+            Assert.IsTrue(dict.ContainsKeyTuplePrefix(3, 4), "GIVEN: Dictionary should contain prefix to begin with");
+
+            //Act
+            dict.Remove(3, 4);
+
+            //Assert
+            Assert.IsFalse(dict.ContainsKeyTuplePrefix(3), "Dictionary should not contain prefix of prefix after singleton has been removed");
+        }
+
+        [Test]
+        public void GIVEN_SingletonDict_WHEN_RemovePrefix_THEN_DictDoesNotContainPrefix()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            const string Value = "Hello";
+            dict.Add(Value, 3, 4, 5, 6);
+            Assert.IsTrue(dict.ContainsKeyTuplePrefix(3, 4), "GIVEN: Dictionary should contain prefix to begin with");
+
+            //Act
+            dict.Remove(3, 4);
+
+            //Assert
+            Assert.IsFalse(dict.ContainsKeyTuplePrefix(3, 4), "Dictionary should not contain prefix after it's been removed");
+        }
+
+        [Test]
+        public void GIVEN_SingletonDict_WHEN_RemovePrefix_THEN_DictCountIsZero()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            const string Value = "Hello";
+            dict.Add(Value, 3, 4, 5, 6);
+            Assert.AreEqual((NonnegativeInteger)1, dict.Count, "GIVEN: Dictionary should have count of 1 to begin with");
+
+            //Act
+            dict.Remove(3, 4);
+
+            //Assert
+            Assert.AreEqual((NonnegativeInteger)0, dict.Count, "Diciontary count should be zero after remove");
+        }
+
+        [Test]
+        public void GIVEN_SingletonDict_WHEN_RemovePrefix_THEN_RemoveCountIsOne()
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(4);
+            const string Value = "Hello";
+            dict.Add(Value, 3, 4, 5, 6);
+
+            //Act
+            int removeCount = dict.Remove(3, 4);
+
+            //Assert            
+            Assert.AreEqual(1, removeCount, "No elements should be removed if key prefix is empty");
         }
 
         [Test]
@@ -704,6 +809,38 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             IEnumerable<string> expectedPairs = new List<string>
             {"Hello World 11", "Hello World 12", "Hello World 21"};
             Assert.AreEqual(expectedPairs, values);
+        }
+
+        [Test]
+        public void Given_NewCurryDictionary_When_AddSameObjectToTwoDifferentKeys_Then_ObjectsAtEachKeyAreSame()
+        {
+            //Assemble
+            object obj = new object();
+            ICurryDictionary<int, object> dict = Api.NewCurryDictionary<int, object>(2);
+
+            //Act
+            dict.Add(obj, 1, 1);
+            dict.Add(obj, 1, 2);
+
+            //Assert
+            object objKey1 = dict[1, 1];
+            var objKey2 = dict[1, 2];
+            Assert.AreSame(objKey1, objKey2);
+        }
+
+        [Test]
+        public void Given_NewCurryDictionary_When_AddSameObjectToTwoDifferentKeys_Then_CountIsTwo()
+        {
+            //Assemble
+            object obj = new object();
+            ICurryDictionary<int, object> dict = Api.NewCurryDictionary<int, object>(2);
+
+            //Act
+            dict.Add(obj, 1, 1);
+            dict.Add(obj, 1, 2);
+
+            //Assert
+            Assert.AreEqual((NonnegativeInteger)2, dict.Count);
         }
 
         [Test]
