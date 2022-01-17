@@ -1249,5 +1249,171 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
                 set.Add(dict.GetValueFromTuple());
             }
         }
+
+        [Test, TestCase(1), TestCase(83)]
+        public void GIVEN_NullaryDictionary_WHEN_UpdateKeysWithArityTooLarge_THEN_ArgumentException(int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+
+            ICurryDictionary<int, int> nullaryDict = dict.GetCurriedDictionary(1, 2, 3);
+
+            NonnegativeInteger arityNonneg = (NonnegativeInteger)arity;
+            Func<int, int> identityFunction = k => k;
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => nullaryDict.UpdateKeys(identityFunction, arityNonneg));
+        }
+
+        [Test, TestCase(4), TestCase(700)]
+        public void GIVEN_CurryDictionary_WHEN_UpdateKeysWithArityTooLarge_THEN_ArgumentException
+           (int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            NonnegativeInteger arityNonneg = (NonnegativeInteger)arity;
+            Func<int, int> identityFunction = k => k;
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => dict.UpdateKeys(identityFunction, arityNonneg));
+        }
+
+        [Test]
+        public void GIVEN_NonInjectiveFunction_WHEN_UpdateKeys_THEN_InjectiveViolationException()           
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            Func<int, int> nonInjectiveFunction = k => 2*k;
+
+            //Act / Assert
+
+            Assert.Throws<InjectiveViolationException>(() => dict.UpdateKeys(nonInjectiveFunction, (NonnegativeInteger)1));
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(2)]
+        public void GIVEN_InjectiveFunction_WHEN_UpdateKeysArityLessThanDictArity_THEN_KeyTuplesHaveMappingApplied(int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            Func<int, int> injectiveFunction = k => k + 1;
+
+            //Act
+
+            dict.UpdateKeys(injectiveFunction, (NonnegativeInteger)arity);
+
+            //Assert
+            IEnumerable<IList<int>> keyTuples = dict.KeyTuples;
+            IEnumerable<IList<int>> expectedKeyTuples = new List<IList<int>>
+                {new List<int>{1, 2, 3}, new List<int>{1, 2, 4}, new List<int>{1, 3, 1}, new List<int>{1, 1, 3} };
+            foreach(IList<int> list in expectedKeyTuples)
+            {
+                list[arity] = injectiveFunction(list[arity]);
+            }            
+            Assert.AreEqual(expectedKeyTuples, keyTuples);
+        }
+
+        [Test]
+        public void GIVEN_InjectiveFunction_WHEN_UpdateKeysArityEqualDictArity_THEN_KeyTuplesAreUnchanged()
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            Func<int, int> injectiveFunction = k => k + 1;
+
+            //Act
+
+            dict.UpdateKeys(injectiveFunction, (NonnegativeInteger)3);
+
+            //Assert
+            IEnumerable<IList<int>> keyTuples = dict.KeyTuples;
+            IEnumerable<IList<int>> expectedKeyTuples = new List<IList<int>>
+                {new List<int>{1, 2, 3}, new List<int>{1, 2, 4}, new List<int>{1, 3, 1}, new List<int>{1, 1, 3} };
+            Assert.AreEqual(expectedKeyTuples, keyTuples);
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(2), TestCase(3)]
+        public void GIVEN_InjectiveFunction_WHEN_UpdateKeys_THEN_CountUnchanged(int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            Func<int, int> injectiveFunction = k => k + 1;
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count, "GIVEN: Count is not as expected to begin with");
+
+            //Act
+
+            dict.UpdateKeys(injectiveFunction, (NonnegativeInteger)arity);
+
+            //Assert
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count);
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(2)]
+        public void GIVEN_NonInjectiveFunction_WHEN_UpdateKeysWithLessArity_THEN_InjectiveViolationAndCountUnchanged(int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 2, 1, 3);
+
+            Func<int, int> nonInjectiveFunction = k => 40;
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count, "GIVEN: Count is not as expected to begin with");
+
+            //Act
+
+            Assert.Throws<InjectiveViolationException>(() => dict.UpdateKeys(nonInjectiveFunction, (NonnegativeInteger)arity));
+
+            //Assert
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count);
+        }
+
+        [Test]
+        public void GIVEN_NonInjectiveFunction_WHEN_UpdateKeysWithMatchingArity_THEN_CountUnchanged()
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            Func<int, int> injectiveFunction = k => k + 1;
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count, "GIVEN: Count is not as expected to begin with");
+
+            //Act
+
+            dict.UpdateKeys(injectiveFunction, (NonnegativeInteger)3);
+
+            //Assert
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count);
+        }
     }
 }

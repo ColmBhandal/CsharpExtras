@@ -17,6 +17,53 @@ namespace CsharpExtrasTest.Extensions
         private const string Infty = "Infinity and Beyond";
 
         [Test]
+        public void GIVEN_NonInjectionOnKeyset_WHEN_UpdateKeys_THEN_InjectiveViolationException()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" },
+                {3, "x" },
+                {4, "x" }
+            };
+
+            Func<int, int> nonInjection = i => 7;
+
+            //Act / Assert
+            Assert.Throws<InjectiveViolationException>(() => dictionary.UpdateKeys(nonInjection));
+        }
+
+        [Test]
+        public void GIVEN_InjectionOnKeyset_WHEN_UpdateKeys_THEN_DictionaryIsAsExpected()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" }
+            };
+            Dictionary<int, string> expectedDictionary = new Dictionary<int, string>()
+            {
+                {1, "Some value"},
+                {2, "Hello World"},
+                {3, "x" }
+            };
+
+            Func<int, int> injection = i => i + 1;
+
+            //Act
+            //Note: the function here is only injective on the keyset, not across its entire domain
+            dictionary.UpdateKeys(injection);
+
+            //Assert
+            IDictionaryComparison comparison = dictionary.Compare(expectedDictionary, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
         public void GIVEN_InjectionOnKeyset_WHEN_MapKeys_THEN_DictionaryIsAsExpected()
         {
             //Arrange

@@ -65,31 +65,31 @@ namespace CsharpExtras.Extensions
          /// Maps the keys of this dictionary by applying a mapper function
          /// </summary>
          /// <typeparam name="TMapped">The type of keys in the resulting dictionary</typeparam>
-         /// <param name="mapper">A function which maps keys in one dictionary to those in another.
+         /// <param name="injectiveMapper">A function which maps keys in one dictionary to those in another.
          /// This function must be injective on the original keyset.</param>
          /// <returns>A new dictionary, whose keys are the result of applying the mapper function & whose values are the same as in the original</returns>
          /// <exception cref="InjectiveViolationException">Thrown if two keys in the original dictionary map to the same key via the mapper function.</exception>
         public static IDictionary<TMapped, TValue> MapKeys<TKey, TValue, TMapped>
-            (this IDictionary<TKey, TValue> dictionary, Func<TKey, TMapped> mapper) =>
-            dictionary.MapKeys((k, v) => mapper(k));
+            (this IDictionary<TKey, TValue> dictionary, Func<TKey, TMapped> injectiveMapper) =>
+            dictionary.MapKeys((k, v) => injectiveMapper(k));
 
         /// <summary>
         /// Maps the keys of this dictionary by applying a mapper function
         /// </summary>
         /// <typeparam name="TMapped">The type of keys in the resulting dictionary</typeparam>
-        /// <param name="mapper">A function which maps keys and values in one dictionary to keys in another.
+        /// <param name="injectiveMapper">A function which maps keys and values in one dictionary to keys in another.
         /// This function must be injective on the original set of key-value pairs.</param>
         /// <returns>A new dictionary, whose keys are the result of applying the mapper function & whose values are the same as in the original</returns>
-        /// <exception cref="InjectiveViolationException">Thrown if two keys in the original dictionary map to the same key via the mapper function.</exception>
+        /// <exception cref="InjectiveViolationException">Thrown if two pairs in the original dictionary map to the same key via the mapper function.</exception>
         public static IDictionary<TMapped, TValue> MapKeys<TKey, TValue, TMapped>
-            (this IDictionary<TKey, TValue> dictionary, Func<TKey, TValue, TMapped> mapper)
+            (this IDictionary<TKey, TValue> dictionary, Func<TKey, TValue, TMapped> injectiveMapper)
         {
             IDictionary<TMapped, TValue> dictToReturn = new Dictionary<TMapped, TValue>();
             foreach (KeyValuePair<TKey, TValue> pair in dictionary)
             {
                 TKey key = pair.Key;
                 TValue value = pair.Value;
-                TMapped mappedKey = mapper(key, value);
+                TMapped mappedKey = injectiveMapper(key, value);
                 if (dictToReturn.ContainsKey(mappedKey))
                 {
                     throw new InjectiveViolationException($"Mapper function mapped two separate keys to the same value. " +
@@ -98,6 +98,34 @@ namespace CsharpExtras.Extensions
                 dictToReturn.Add(mappedKey, value);
             }
             return dictToReturn;
+        }
+
+        /// <summary>
+        /// Updates of this dictionary the keys in place by applying a mapper function
+        /// </summary>
+        /// <param name="injectiveMapper">A function which maps keys in the dictionary to new keys.
+        /// This function must be injective on the original set of keys.</param>
+        /// <exception cref="InjectiveViolationException">Thrown if two keys in the original dictionary map to the same key via the mapper function.</exception>
+        public static void UpdateKeys<TKey, TValue>
+            (this IDictionary<TKey, TValue> dictionary, Func<TKey, TKey> injectiveMapper) =>
+            dictionary.UpdateKeys((k, v) => injectiveMapper(k));
+
+        /// <summary>
+        /// Updates of this dictionary the keys in place by applying a mapper function
+        /// </summary>
+        /// <param name="injectiveMapper">A function which maps keys and values in the dictionary to new keys.
+        /// This function must be injective on the original set of key-value pairs.</param>
+        /// <exception cref="InjectiveViolationException">Thrown if two pairs in the original dictionary map to the same key via the mapper function.</exception>
+        public static void UpdateKeys<TKey, TValue>
+            (this IDictionary<TKey, TValue> dictionary, Func<TKey, TValue, TKey> injectiveMapper)
+        {
+            //Non-MVP: Perhaps there is a more efficient way to update they keys in-place
+            IDictionary<TKey, TValue> mapped = dictionary.MapKeys(injectiveMapper);
+            dictionary.Clear();
+            foreach (KeyValuePair<TKey, TValue> pair in mapped)
+            {
+                dictionary.Add(pair);
+            }
         }
 
         /// <summary>

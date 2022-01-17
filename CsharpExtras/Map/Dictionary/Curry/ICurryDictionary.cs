@@ -122,5 +122,18 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <param name="action">The action to perform. It takes a key prefix and a curried dictionary as arguments.</param>
         /// <param name="arity">The arity of the key tuples uset to generate all the pairs</param>
         void DoForAllPairs(Action<IList<TKey>, ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity);
+
+        /// <summary>
+        /// Updates the keys for all curried dictionaries at the given arity.
+        /// </summary>
+        /// <param name="keyInjection">A function which maps keys to keys. This must be injective on the keyset of every dictionary at the given arity.</param>
+        /// <param name="prefixArity">The arity of the key tuples uset to generate all the curried dictionaries upon which to apply the map</param>
+        void UpdateKeys(Func<TKey, TKey> keyInjection, NonnegativeInteger prefixArity);
+        
+        /// <summary>
+        /// Updates the keys mapping the direct descendants of this curry dictionary
+        /// </summary>
+        /// <param name="keyInjection">A function mapping keys to keys, which must be injective on the singleton key prefixes of this dictionary</param>
+        void UpdateDirectDescendantsKeys(Func<TKey, TKey> keyInjection);
     }
 }

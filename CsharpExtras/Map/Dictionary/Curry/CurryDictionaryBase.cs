@@ -113,5 +113,17 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 action(prefix, curriedChild);
             }
         }
+
+        public void UpdateKeys(Func<TKey, TKey> keyInjection, NonnegativeInteger arity)
+        {
+            if(arity > Arity)
+            {
+                throw new ArgumentException
+                    ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
+            }
+            DoForAllCurriedDictionaries(d => d.UpdateDirectDescendantsKeys(keyInjection), arity);
+        }
+
+        public abstract void UpdateDirectDescendantsKeys(Func<TKey, TKey> keyInjection);
     }
 }

@@ -309,5 +309,17 @@ namespace CsharpExtras.Map.Dictionary.Curry
         {
             return _currier.Get(c => (0, c.ContainsKey(firstKey)));
         }
+
+        public override void UpdateDirectDescendantsKeys(Func<TKey, TKey> keyInjection)
+        {
+            _currier.Run(d => UpdateKeys(d, keyInjection));
+        }
+
+        /// <returns>A count difference of zero is returned, as we assume that the key update function on dictionaries does not affect count</returns>
+        int UpdateKeys(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier, Func<TKey, TKey> keyInjection)
+        {
+            currier.UpdateKeys(keyInjection);
+            return 0;
+        }
     }
 }
