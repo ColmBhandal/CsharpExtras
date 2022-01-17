@@ -50,7 +50,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 (new Dictionary<TKey, ICurryDictionary<TKey, TVal>>(), _countNotifier.Update);
         }
 
-        public override IEnumerable<IList<TKey>> Keys => _currier.Get(c => (0, GetKeys(c)));
+        public override IEnumerable<IList<TKey>> KeyTuples => _currier.Get(c => (0, GetKeys(c)));
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
@@ -256,7 +256,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             {
                 TKey key = pair.Key;
                 ICurryDictionary<TKey, TVal> dict = pair.Value;
-                IEnumerable<IList<TKey>> childKeyset = dict.Keys;
+                IEnumerable<IList<TKey>> childKeyset = dict.KeyTuples;
                 foreach (IList<TKey> tuple in childKeyset)
                 {
                     tuple.Insert(0, key);

@@ -755,24 +755,6 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        public void Given_NewCurryDictionary_When_Add_Then_KeysMatchExpectation()
-        {
-            //Assemble
-            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
-
-            //Act
-            dict.Add("Hello World 11", 1, 1);
-            dict.Add("Hello World 12", 1, 2);
-            dict.Add("Hello World 21", 2, 1);
-
-            //Assert
-            IEnumerable<IList<int>> keyset = dict.Keys;
-            IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>
-                {new List<int>{1,1}, new List<int>{1,2}, new List<int>{2,1} };
-            Assert.AreEqual(expectedKeyset, keyset);
-        }
-
-        [Test]
         public void Given_NewCurryDictionary_When_Add_Then_KeyValuePairsMatchExpectation()
         {
             //Assemble
@@ -944,7 +926,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        public void Given_CurryDictionary_When_Curry_Then_KeysetMatchesExpectation()
+        public void Given_CurryDictionary_When_Curry_Then_KeyTuplesMatchExpectation()
         {
             //Assemble
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
@@ -957,10 +939,28 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> curried = dict.GetCurriedDictionary(1);
 
             //Assert
-            IEnumerable<IList<int>> keyset = curried.Keys;
-            IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>
+            IEnumerable<IList<int>> keyTuples = curried.KeyTuples;
+            IEnumerable<IList<int>> expectedKeyTuples = new List<IList<int>>
                 {new List<int>{1,3}, new List<int>{2,3} };
-            Assert.AreEqual(expectedKeyset, keyset);
+            Assert.AreEqual(expectedKeyTuples, keyTuples);
+        }
+
+        [Test]
+        public void Given_NewCurryDictionary_When_Add_Then_KeyTuplesMatchExpectation()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
+
+            //Act
+            dict.Add("Hello World 11", 1, 1);
+            dict.Add("Hello World 12", 1, 2);
+            dict.Add("Hello World 21", 2, 1);
+
+            //Assert
+            IEnumerable<IList<int>> keyTuples = dict.KeyTuples;
+            IEnumerable<IList<int>> expectedKeyTuples = new List<IList<int>>
+                {new List<int>{1,1}, new List<int>{1,2}, new List<int>{2,1} };
+            Assert.AreEqual(expectedKeyTuples, keyTuples);
         }
 
         [Test]
@@ -971,11 +971,11 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
 
             //Act
 
-            IEnumerable<IList<int>> keys = dict.Keys;
+            IEnumerable<IList<int>> keyTuples = dict.KeyTuples;
 
             //Assert
-            IEnumerable<IList<int>> expectedKeyset = new List<IList<int>>();
-            Assert.AreEqual(expectedKeyset, keys);
+            IEnumerable<IList<int>> expectedKeyTuples = new List<IList<int>>();
+            Assert.AreEqual(expectedKeyTuples, keyTuples);
         }
 
         [Test]

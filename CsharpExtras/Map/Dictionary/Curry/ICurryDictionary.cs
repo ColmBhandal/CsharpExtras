@@ -9,7 +9,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
     {
         NonnegativeInteger Arity { get; }
         TVal this[params TKey[] keyTuple] { get; }
-        IEnumerable<IList<TKey>> Keys { get; }
+        IEnumerable<IList<TKey>> KeyTuples { get; }
         IEnumerable<(IList<TKey>, TVal)> KeyValuePairs { get; }
         IEnumerable<TVal> Values { get; }
 

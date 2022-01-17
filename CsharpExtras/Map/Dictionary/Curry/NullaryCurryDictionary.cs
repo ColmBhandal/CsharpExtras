@@ -22,7 +22,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             _singletonValue = singletonValue;
         }
 
-        public override IEnumerable<IList<TKey>> Keys =>
+        public override IEnumerable<IList<TKey>> KeyTuples =>
             //A nullary dictionary actually does have exactly 1 key tuple: the empty tuple
             new List<IList<TKey>> { new List<TKey>() };
 
