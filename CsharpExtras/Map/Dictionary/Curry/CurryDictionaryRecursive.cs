@@ -153,7 +153,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             else
             {
-                return curryChild.Remove(tail);
+                NonnegativeInteger removeCount = curryChild.Remove(tail);
+                if(curryChild.Count == 0)
+                {
+                    RemoveDirectChild(firstKey);
+                }
+                return removeCount;
             }
         }
 
