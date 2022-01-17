@@ -19,7 +19,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockGetter<int>> mockGetter = new Mock<IMockGetter<int>>();
+            Mock<IMockEventGetter<int>> mockGetter = new Mock<IMockEventGetter<int>>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockGetter.Setup(e => e.ExecuteGet(mockObj.Object)).Returns((mockEvent.Object, 7));
 
@@ -39,7 +39,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockGetter<int>> mockGetter = new Mock<IMockGetter<int>>();
+            Mock<IMockEventGetter<int>> mockGetter = new Mock<IMockEventGetter<int>>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockGetter.Setup(e => e.ExecuteGet(mockObj.Object)).Returns((mockEvent.Object, 7));
 
@@ -60,7 +60,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockGetter<int>> mockGetter = new Mock<IMockGetter<int>>();
+            Mock<IMockEventGetter<int>> mockGetter = new Mock<IMockEventGetter<int>>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockGetter.Setup(e => e.ExecuteGet(mockObj.Object)).Returns((mockEvent.Object, 7));
 
@@ -81,7 +81,7 @@ namespace CsharpExtrasTest.Event.Wrapper
             //Arrange
             Mock<IMockObj> mockObj = new Mock<IMockObj>();
             Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockGetter<int>> mockGetter = new Mock<IMockGetter<int>>();
+            Mock<IMockEventGetter<int>> mockGetter = new Mock<IMockEventGetter<int>>();
             Mock<IMockEventHandler> mockHandler = new Mock<IMockEventHandler>();
             mockGetter.Setup(e => e.ExecuteGet(mockObj.Object)).Throws<InvalidOperationException>();
 

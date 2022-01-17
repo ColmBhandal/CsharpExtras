@@ -135,5 +135,10 @@ namespace CsharpExtras.Api
 
         public IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler)
             => new EventObjWrapperImpl<TObj, TEvent>(obj, handler);
+
+        public IPropertyChangedWrapper<TObj, TEvent> NewPropertyChangedWrapper
+            <TObj, TBefore, TAfter, TEvent>(TObj obj, Func<TObj, TBefore> beforeGetter,
+            Func<TObj, TAfter> afterGetter, Func<TBefore, TAfter, TEvent> eventGenerator) =>
+            new PropertyChangedWrapperImpl<TObj, TBefore, TAfter, TEvent>(obj, beforeGetter, afterGetter, eventGenerator);
     }
 }

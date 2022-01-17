@@ -35,8 +35,13 @@ namespace CsharpExtrasTest.Event.Wrapper
         IMockEvent Execute(IMockObj obj);
     }
 
-    public interface IMockGetter<TResult>
+    public interface IMockEventGetter<TResult>
     {
         (IMockEvent e, TResult result) ExecuteGet(IMockObj obj);
+    }
+
+    public interface IMockGetter<TResult>
+    {
+        TResult Get(IMockObj obj);
     }
 }
