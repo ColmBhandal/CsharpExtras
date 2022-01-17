@@ -19,7 +19,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public abstract NonnegativeInteger Count { get; }
 
-        public abstract TVal this[params TKey[] keys] { get;}
+        public abstract TVal this[params TKey[] keys] { get; }
+
+        public abstract IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity);
 
         public bool ContainsKeyTuple(params TKey[] keys)
         {

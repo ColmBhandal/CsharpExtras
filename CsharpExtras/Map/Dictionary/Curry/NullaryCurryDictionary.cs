@@ -79,5 +79,15 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue));
         }
+
+        public override IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity)
+        {
+            if(arity > Arity)
+            {
+                throw new ArgumentException
+                    ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
+            }
+            yield return new List<TKey>();
+        }
     }
 }

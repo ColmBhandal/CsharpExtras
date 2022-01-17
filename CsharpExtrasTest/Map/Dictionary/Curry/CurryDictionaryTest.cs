@@ -788,9 +788,9 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
 
             //Assert
             IEnumerable<string> values = dict.Values;
-            IEnumerable<string> expectedPairs = new List<string>
+            IEnumerable<string> expectedValues = new List<string>
             {"Hello World 11", "Hello World 12", "Hello World 21"};
-            Assert.AreEqual(expectedPairs, values);
+            Assert.AreEqual(expectedValues, values);
         }
 
         [Test]

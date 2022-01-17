@@ -14,6 +14,13 @@ namespace CsharpExtras.Map.Dictionary.Curry
         IEnumerable<TVal> Values { get; }
 
         /// <summary>
+        /// Gets all the key tuple prefixes of the given arity
+        /// </summary>
+        /// <param name="arity">The arity of each key prefix i.e. the number of keys in each prefix-tuple</param>
+        /// <returns>An enumerable which iterates through the key prefixes of the given arity</returns>
+        IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity);
+
+        /// <summary>
         /// Checks if the key tuple is contained in the dictionary.
         /// Throws exception if tuple is of incorrect length.
         /// </summary>

@@ -50,7 +50,10 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 (new Dictionary<TKey, ICurryDictionary<TKey, TVal>>(), _countNotifier.Update);
         }
 
-        public override IEnumerable<IList<TKey>> KeyTuples => _currier.Get(c => (0, GetKeys(c)));
+        public override IEnumerable<IList<TKey>> KeyTuples => KeyTuplePrefixes(Arity);
+
+        public override IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity)
+            => _currier.Get(c => (0, GetKeyTuplePrefixes(c, arity)));
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
@@ -250,17 +253,37 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 _api.NewUpdateNotifier<NonnegativeInteger, int>((NonnegativeInteger)0, UpdateCount);
             return countNotifier;
         }
-        private IEnumerable<IList<TKey>> GetKeys(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier)
-        {
-            foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in currier)
+        
+        /// <summary>
+        /// Gets all key prefixes of the given arity from the currier object
+        /// </summary>
+        /// <param name="currier">The dictionary object from which to get the key prefixes</param>
+        /// <param name="arity">The arity of the key prefixes. This must be less than or equal to the arity of the currier.</param>
+        /// <returns>An enumerable of key prefixes in the given currier matching the given arity</returns>
+        private IEnumerable<IList<TKey>> GetKeyTuplePrefixes(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier,
+            NonnegativeInteger arity)
+        {            
+            if(arity == (NonnegativeInteger)0)
             {
-                TKey key = pair.Key;
-                ICurryDictionary<TKey, TVal> dict = pair.Value;
-                IEnumerable<IList<TKey>> childKeyset = dict.KeyTuples;
-                foreach (IList<TKey> tuple in childKeyset)
+                yield return new List<TKey>{};
+            }
+            else
+            {
+                NonnegativeInteger subArity = (NonnegativeInteger) (arity - 1);
+                foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in currier)
                 {
-                    tuple.Insert(0, key);
-                    yield return tuple;
+                    TKey key = pair.Key;
+                    ICurryDictionary<TKey, TVal> dict = pair.Value;
+                    if(dict.Count == 0)
+                    {
+                        throw new InvalidOperationException("Unexpectedly found a nested dictionary with no elements");
+                    }
+                    IEnumerable<IList<TKey>> childKeyset = dict.KeyTuplePrefixes(subArity);
+                    foreach (IList<TKey> tuple in childKeyset)
+                    {
+                        tuple.Insert(0, key);
+                        yield return tuple;
+                    }
                 }
             }
         }
