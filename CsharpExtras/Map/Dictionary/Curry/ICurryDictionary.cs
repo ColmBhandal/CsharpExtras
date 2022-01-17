@@ -108,5 +108,19 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <param name="isEqualValues">This function is used to compare values within the dictionary, returning true iff values are equal in some sense</param>
         /// <returns>A dictionary comparison result</returns>
         IDictionaryComparison Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
+
+        /// <summary>
+        /// Performs the given action on all curried dictionaries at the given arity
+        /// </summary>
+        /// <param name="action">Action to perform on each curried dictionary</param>
+        /// <param name="arity">The arity of the key tuples uset to generate all the curried dictionaries</param>
+        void DoForAllCurriedDictionaries(Action<ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity);
+
+        /// <summary>
+        /// Performs the given action on all pairs of key-prefixes and curried dictionaries at the given arity
+        /// </summary>
+        /// <param name="action">The action to perform. It takes a key prefix and a curried dictionary as arguments.</param>
+        /// <param name="arity">The arity of the key tuples uset to generate all the pairs</param>
+        void DoForAllPairs(Action<IList<TKey>, ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity);
     }
 }

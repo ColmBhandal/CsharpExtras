@@ -2,6 +2,7 @@
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -518,7 +519,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             TestCase(1, 2, 3, 9), TestCase(1, 2, 3, 4, 6, 7, 10, 11)]
         public void GIVEN_CurryDictionary_WHEN_RemoveKeyWithTooLargeArity_Then_RemovedCountEqualsZero(params int[] prefix)
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
 
@@ -532,7 +533,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test, TestCase(1), TestCase(1, 2), TestCase(9, 4, 6, 7)]
         public void GIVEN_CurryDictionary_WHEN_UpdateWithWrongArity_Then_ArgumentException(params int[] keyTuple)
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
 
@@ -543,7 +544,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void GIVEN_CurryDictionary_WHEN_UpdateNonExisting_Then_NoValueAddedAndFalseReturned()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
             int dictCount = dict.Count;
@@ -564,7 +565,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void GIVEN_CurryDictionary_WHEN_UpdateNonExisting_Then_CountDoesNotChange()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
             int dictCount = dict.Count;
@@ -584,7 +585,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void GIVEN_CurryDictionary_WHEN_UpdateExsting_Then_ValueUpdatedAndTrueReturned()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
             int dictCount = dict.Count;
@@ -604,7 +605,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void GIVEN_CurryDictionary_WHEN_UpdateExsting_Then_CountDoesNotChange()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
             int dictCount = dict.Count;
@@ -622,7 +623,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void GIVEN_CurryDictionary_WHEN_AddToSameKeyTwice_Then_CountDoesNotChange()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Blah", 1, 2, 3);
             int dictCount = dict.Count;
@@ -732,7 +733,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_DelegateDictionary_When_AddDelegate_Then_DelegateFoundAtGivenKeyAndReturnsExpectedValue()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, MikhailsDelegate> dict = Api.NewCurryDictionary<int, MikhailsDelegate>(2);
 
             //Act
@@ -747,7 +748,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_PositiveInteger_When_ConstructCurryDictionary_Then_ArityMatchesCtorParameter()
         {
-            //Assemble / Act
+            //Arrange / Act
             const int ExpectedArity = 23;
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(ExpectedArity);
 
@@ -758,7 +759,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_Add_Then_KeyValuePairsMatchExpectation()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
 
             //Act
@@ -779,7 +780,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_Add_Then_ValuesMatchExpectation()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
 
             //Act
@@ -797,7 +798,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_AddSameObjectToTwoDifferentKeys_Then_ObjectsAtEachKeyAreSame()
         {
-            //Assemble
+            //Arrange
             object obj = new object();
             ICurryDictionary<int, object> dict = Api.NewCurryDictionary<int, object>(2);
 
@@ -814,7 +815,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_AddSameObjectToTwoDifferentKeys_Then_CountIsTwo()
         {
-            //Assemble
+            //Arrange
             object obj = new object();
             ICurryDictionary<int, object> dict = Api.NewCurryDictionary<int, object>(2);
 
@@ -829,7 +830,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_Add_Then_DictContainsKeyTuple()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
 
             //Act
@@ -842,7 +843,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_Add_Then_DictContainsKeyTuplePrefix()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
 
             //Act
@@ -855,7 +856,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_CurryDictionary_When_PrefixNotThere_Then_ContainsKeyTuplePrefixReturnsFalse()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World", 1, 2, 3);
             dict.Add("Hello World again", 2, 17, 34);
@@ -870,7 +871,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void GIVEN_CurryDictionary_WHEN_AddToSameKeyTwice_Then_FirstAddSucceedsAndSecondFails()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
 
             //Act
@@ -888,7 +889,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_EmptyCurryDictionary_When_ContainsKeyTuplePrefix_Then_FalseReturned()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
 
             //Act
@@ -901,7 +902,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_EmptyCurryDictionary_When_ContainsKeyTuple_Then_FalseReturned()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
 
             //Act
@@ -914,7 +915,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_Add_Then_GetReturnsValue()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
 
             //Act
@@ -929,7 +930,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test, TestCase(1), TestCase(3)]
         public void Given_ArityTooLarge_When_GetKeyTuplePrefixesFromNullaryDict_Then_ArgumentException(int arity)
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(1, 1, 3);
@@ -942,7 +943,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test, TestCase(4), TestCase(700)]
         public void Given_ArityTooLarge_When_GetKeyTuplePrefixes_Then_ArgumentException(int arity)
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             dict.Add("Hello World 12", 1, 2, 3);
@@ -956,7 +957,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test, TestCase(0), TestCase(1), TestCase(2), TestCase(3)]
         public void Given_Dict_When_GetKeyTuplePrefixesOfArity_Then_DictCountPreserved(int arity)
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             dict.Add("Hello World 12", 1, 2, 3);
@@ -975,7 +976,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test, TestCase(0, 1), TestCase(1, 1), TestCase(2, 3), TestCase(3, 4)]
         public void Given_Dict_When_GetKeyTuplePrefixesOfArity_Then_PrefixesHaveExpectedCount(int arity, int expectedCount)
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             dict.Add("Hello World 12", 1, 2, 3);
@@ -993,7 +994,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_Dict_When_GetKeyTuplePrefixesZeroArity_Then_SingletonEmptyTupleReturned()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             dict.Add("Hello World 12", 1, 2, 3);
@@ -1011,7 +1012,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_Dict_When_GetKeyTuplePrefixesMatchingArity_Then_KeyTuplesMatchExpectation()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             dict.Add("Hello World 12", 1, 2, 3);
@@ -1030,7 +1031,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_Dict_When_GetKeyTuplePrefixesStrictlyLessArity_Then_KeyTuplesMatchExpectation()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             dict.Add("Hello World 12", 1, 2, 3);
@@ -1049,7 +1050,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_CurryDictionary_When_Curry_Then_KeyTuplesMatchExpectation()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
             dict.Add("Hello World 11", 1, 1, 3);
             dict.Add("Hello World 12", 1, 2, 3);
@@ -1069,7 +1070,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_NewCurryDictionary_When_Add_Then_KeyTuplesMatchExpectation()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(2);
 
             //Act
@@ -1087,7 +1088,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_EmptyCurryDictionary_When_GetKeys_Then_ResultIsEmptyEnumerable()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
 
             //Act
@@ -1102,7 +1103,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_EmptyCurryDictionary_When_GetValues_Then_ResultIsEmptyEnumerable()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
 
             //Act
@@ -1117,7 +1118,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         [Test]
         public void Given_EmptyCurryDictionary_When_GetKeyValuePairs_Then_ResultIsEmptyEnumerable()
         {
-            //Assemble
+            //Arrange
             ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
 
             //Act
@@ -1127,6 +1128,126 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             //Assert
             IEnumerable<(IList<int>, string)> expectedKeyset = new List<(IList<int>, string)>();
             Assert.AreEqual(expectedKeyset, pairs);
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(2), TestCase(3)]
+        public void GIVEN_CurryDictionary_WHEN_DoForAllPairsStoringKeyEntriesSummed_THEN_ResultantSetMatchesKeyTupleEntriesSummed(int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 113", 1, 1, 1);
+            dict.Add("Hello World 123", 2, 2, 2);
+            dict.Add("Hello World 213", 3, 3, 3);
+            dict.Add("Hello World 313", 4, 4, 4);
+
+            NonnegativeInteger arityNonneg = (NonnegativeInteger)arity;
+            Func<IList<int>, int> sumKeyEntries = k => k.Any() ? k.Aggregate((x, y) => x + y) : 0;
+            ISet<int> expectedKeyTupleSet = dict.KeyTuplePrefixes(arityNonneg)
+                .Select(sumKeyEntries).ToHashSet();
+            HashSet<int> resultantSet = new HashSet<int>();
+            Action<IList<int>, ICurryDictionary<int, string>> action = (k, d) => resultantSet.Add(sumKeyEntries(k));
+
+            //Act
+
+            dict.DoForAllPairs(action, arityNonneg);
+
+            //Assert
+            Assert.IsTrue(expectedKeyTupleSet.SetEquals(resultantSet));
+        }
+
+        [Test, TestCase(0, 3), TestCase(1, 2), TestCase(2, 1), TestCase(3, 0)]
+        public void GIVEN_CurryDictionaryAndAritiesSummingUptoArity_WHEN_DoForAllDictsNestedStoringNullaryNodesOnly_THEN_ResultantSetMatchesValues
+            (int arity1, int arity2)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            NonnegativeInteger arityNonneg1 = (NonnegativeInteger)arity1;
+            NonnegativeInteger arityNonneg2 = (NonnegativeInteger)arity2;
+            ISet<int> expectedSet = dict.Values.ToHashSet();
+            HashSet<int> resultantSet = new HashSet<int>();
+            Action<ICurryDictionary<int, int>> action = d => AddValueIfNullary(resultantSet, d);
+
+            //Act
+
+            dict.DoForAllCurriedDictionaries(d1 =>
+                d1.DoForAllCurriedDictionaries(d2 =>
+                    AddValueIfNullary(resultantSet, d2),
+                    arityNonneg2
+                ),
+                arityNonneg1
+            );
+
+            //Assert
+            Assert.IsTrue(expectedSet.SetEquals(resultantSet));
+        }
+
+        [Test, TestCase(4), TestCase(700)]
+        public void GIVEN_CurryDictionary_WHEN_DoForAllDictsWithArityTooLarge_THEN_ArgumentException
+           (int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+            dict.Add(7, 1, 1, 3);
+
+            NonnegativeInteger arityNonneg = (NonnegativeInteger)arity;
+            Action<ICurryDictionary<int, int>> doNothing = d => { };
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => dict.DoForAllCurriedDictionaries(doNothing, arityNonneg));
+        }
+
+        [Test, TestCase(1), TestCase(83)]
+        public void GIVEN_NullaryDictionary_WHEN_DoForAllDictsWithArityTooLarge_THEN_ArgumentException
+           (int arity)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+
+            ICurryDictionary<int, int> nullaryDict = dict.GetCurriedDictionary(1, 2, 3);
+
+            NonnegativeInteger arityNonneg = (NonnegativeInteger)arity;
+            Action<ICurryDictionary<int, int>> doNothing = d => { };
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => nullaryDict.DoForAllCurriedDictionaries(doNothing, arityNonneg));
+        }
+
+        [Test]
+        public void GIVEN_NullaryDictionary_WHEN_DoForAllDictsWithArityZero_THEN_ActionIsInvoked()
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(2, 1, 2, 3);
+
+            ICurryDictionary<int, int> nullaryDict = dict.GetCurriedDictionary(1, 2, 3);
+            Mock<Action<ICurryDictionary<int, int>>> mockAction = new Mock<Action<ICurryDictionary<int, int>>>();
+            mockAction.Setup(m => m.Invoke(nullaryDict)).Verifiable();
+
+            //Act
+
+            nullaryDict.DoForAllCurriedDictionaries(mockAction.Object, (NonnegativeInteger) 0);
+
+            //Assert
+            mockAction.Verify();
+        }
+
+        private void AddValueIfNullary(ISet<int> set, ICurryDictionary<int, int> dict)
+        {
+            if(dict.Arity == (NonnegativeInteger)0)
+            {
+                set.Add(dict.GetValueFromTuple());
+            }
         }
     }
 }

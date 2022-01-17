@@ -97,5 +97,21 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         protected abstract IDictionaryComparison IsSubset
             (ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
+
+        public void DoForAllCurriedDictionaries(Action<ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity)
+        {
+            Action<IList<TKey>, ICurryDictionary<TKey, TVal>> pairAction = (k, d) => action(d);
+            DoForAllPairs(pairAction, arity);
+        }
+
+        public void DoForAllPairs(Action<IList<TKey>, ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity)
+        {
+            IEnumerable<IList<TKey>> prefixes = KeyTuplePrefixes(arity);
+            foreach (IList<TKey> prefix in prefixes)
+            {
+                ICurryDictionary<TKey, TVal> curriedChild = GetCurriedDictionary(prefix);
+                action(prefix, curriedChild);
+            }
+        }
     }
 }
