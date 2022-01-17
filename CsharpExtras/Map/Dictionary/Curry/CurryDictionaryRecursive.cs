@@ -226,6 +226,10 @@ namespace CsharpExtras.Map.Dictionary.Curry
             {
                 if (c.Remove(key))
                 {
+                    if(curryChild is CurryDictionaryRecursive<TKey, TVal> recDict)
+                    {
+                        recDict.AfterCountUpdate -= _countNotifier.Update;
+                    }
                     return -count;
                 }
                 else

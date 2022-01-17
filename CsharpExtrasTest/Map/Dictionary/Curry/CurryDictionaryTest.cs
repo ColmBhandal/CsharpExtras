@@ -230,7 +230,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             subDict.Remove(5, 6);
 
             //Assert            
-            Assert.AreEqual(0, dict.Count, "Dictionary count should be unchanged after removing from an element that was removed");
+            Assert.AreEqual((NonnegativeInteger)0, dict.Count, "Dictionary count should be unchanged after removing from an element that was removed");
         }
 
 
