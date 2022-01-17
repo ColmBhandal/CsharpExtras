@@ -262,19 +262,31 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <returns>An enumerable of key prefixes in the given currier matching the given arity</returns>
         private IEnumerable<IList<TKey>> GetKeyTuplePrefixes(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier,
             NonnegativeInteger arity)
-        {            
-            if(arity == (NonnegativeInteger)0)
+        {          
+            if(arity > Arity)
             {
-                yield return new List<TKey>{};
+                throw new ArgumentException
+                    ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
+            }
+            return GetKeyTuplePrefixesUnsafe(currier, arity);
+        }
+
+        //Does not do arity check
+        private IEnumerable<IList<TKey>> GetKeyTuplePrefixesUnsafe(IDictionary<TKey, ICurryDictionary<TKey, TVal>> currier,
+            NonnegativeInteger arity)
+        {
+            if (arity == (NonnegativeInteger)0)
+            {
+                yield return new List<TKey> { };
             }
             else
             {
-                NonnegativeInteger subArity = (NonnegativeInteger) (arity - 1);
+                NonnegativeInteger subArity = (NonnegativeInteger)(arity - 1);
                 foreach (KeyValuePair<TKey, ICurryDictionary<TKey, TVal>> pair in currier)
                 {
                     TKey key = pair.Key;
                     ICurryDictionary<TKey, TVal> dict = pair.Value;
-                    if(dict.Count == 0)
+                    if (dict.Count == 0)
                     {
                         throw new InvalidOperationException("Unexpectedly found a nested dictionary with no elements");
                     }

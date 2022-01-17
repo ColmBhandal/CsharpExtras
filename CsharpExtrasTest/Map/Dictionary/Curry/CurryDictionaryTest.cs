@@ -5,6 +5,7 @@ using CsharpExtras.ValidatedType.Numeric.Integer;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CsharpExtrasTest.Map.Dictionary.Curry
@@ -923,6 +924,126 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             //Assert
             string value = dict[1, 2];
             Assert.AreEqual(InsertValue, value);
+        }
+
+        [Test, TestCase(1), TestCase(3)]
+        public void Given_ArityTooLarge_When_GetKeyTuplePrefixesFromNullaryDict_Then_ArgumentException(int arity)
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 11", 1, 1, 3);
+            ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(1, 1, 3);
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => nullaryDict.KeyTuplePrefixes((NonnegativeInteger)arity));
+        }
+
+        [Test, TestCase(4), TestCase(700)]
+        public void Given_ArityTooLarge_When_GetKeyTuplePrefixes_Then_ArgumentException(int arity)
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 11", 1, 1, 3);
+            dict.Add("Hello World 12", 1, 2, 3);
+            dict.Add("Hello World 21", 2, 1, 3);
+
+            //Act / Assert
+
+            Assert.Throws<ArgumentException>(() => dict.KeyTuplePrefixes((NonnegativeInteger) arity));
+        }
+
+        [Test, TestCase(0), TestCase(1), TestCase(2), TestCase(3)]
+        public void Given_Dict_When_GetKeyTuplePrefixesOfArity_Then_DictCountPreserved(int arity)
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 11", 1, 1, 3);
+            dict.Add("Hello World 12", 1, 2, 3);
+            dict.Add("Hello World 21", 1, 2, 4);
+            dict.Add("Hello World 13", 1, 3, 4);
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count, "GIVEN: Count not as expected");
+
+            //Act
+
+            dict.KeyTuplePrefixes((NonnegativeInteger)arity);
+
+            //Assert
+            Assert.AreEqual((NonnegativeInteger)4, dict.Count, "Count not as expected");
+        }
+
+        [Test, TestCase(0, 1), TestCase(1, 1), TestCase(2, 3), TestCase(3, 4)]
+        public void Given_Dict_When_GetKeyTuplePrefixesOfArity_Then_PrefixesHaveExpectedCount(int arity, int expectedCount)
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 11", 1, 1, 3);
+            dict.Add("Hello World 12", 1, 2, 3);
+            dict.Add("Hello World 21", 1, 2, 4);
+            dict.Add("Hello World 13", 1, 3, 4);
+
+            //Act
+
+            IEnumerable<IList<int>> prefixes = dict.KeyTuplePrefixes((NonnegativeInteger)arity);
+
+            //Assert
+            Assert.AreEqual(expectedCount, prefixes.Count());
+        }
+
+        [Test]
+        public void Given_Dict_When_GetKeyTuplePrefixesZeroArity_Then_SingletonEmptyTupleReturned()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 11", 1, 1, 3);
+            dict.Add("Hello World 12", 1, 2, 3);
+            dict.Add("Hello World 21", 1, 2, 4);
+
+            //Act
+
+            IEnumerable<IList<int>> prefixes = dict.KeyTuplePrefixes((NonnegativeInteger)0);
+
+            //Assert
+            IEnumerable<IList<int>> expectedKeyPrefixes = new List<IList<int>>{new List<int>{}};
+            Assert.AreEqual(expectedKeyPrefixes, prefixes);
+        }
+
+        [Test]
+        public void Given_Dict_When_GetKeyTuplePrefixesMatchingArity_Then_KeyTuplesMatchExpectation()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 11", 1, 1, 3);
+            dict.Add("Hello World 12", 1, 2, 3);
+            dict.Add("Hello World 21", 1, 2, 4);
+
+            //Act
+
+            IEnumerable<IList<int>> prefixes = dict.KeyTuplePrefixes((NonnegativeInteger)3);
+
+            //Assert
+            IEnumerable<IList<int>> expectedKeyPrefixes = new List<IList<int>>
+                {new List<int>{1,1, 3}, new List<int>{1,2,3}, new List<int>{1,2,4} };
+            Assert.AreEqual(expectedKeyPrefixes, prefixes);
+        }
+
+        [Test]
+        public void Given_Dict_When_GetKeyTuplePrefixesStrictlyLessArity_Then_KeyTuplesMatchExpectation()
+        {
+            //Assemble
+            ICurryDictionary<int, string> dict = Api.NewCurryDictionary<int, string>(3);
+            dict.Add("Hello World 11", 1, 1, 3);
+            dict.Add("Hello World 12", 1, 2, 3);
+            dict.Add("Hello World 21", 1, 2, 4);
+
+            //Act
+
+            IEnumerable<IList<int>> prefixes = dict.KeyTuplePrefixes((NonnegativeInteger)2);
+
+            //Assert
+            IEnumerable<IList<int>> expectedKeyPrefixes = new List<IList<int>>
+                {new List<int>{1,1}, new List<int>{1,2} };
+            Assert.AreEqual(expectedKeyPrefixes, prefixes);
         }
 
         [Test]

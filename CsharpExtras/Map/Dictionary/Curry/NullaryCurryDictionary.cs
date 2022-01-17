@@ -28,6 +28,22 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public override NonnegativeInteger Count => (NonnegativeInteger)1;
 
+        public override IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity)
+        {
+            if (arity > Arity)
+            {
+                throw new ArgumentException
+                    ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
+            }
+            return KeyTuplePrefixesUnsafe(arity);
+        }
+
+        //Does not do arity check
+        private IEnumerable<IList<TKey>> KeyTuplePrefixesUnsafe(NonnegativeInteger arity)
+        {
+            yield return new List<TKey>();
+        }
+
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
             AssertArityIsCorrect(keyTuple);
@@ -78,16 +94,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
             }
             return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue));
-        }
-
-        public override IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity)
-        {
-            if(arity > Arity)
-            {
-                throw new ArgumentException
-                    ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
-            }
-            yield return new List<TKey>();
         }
     }
 }
