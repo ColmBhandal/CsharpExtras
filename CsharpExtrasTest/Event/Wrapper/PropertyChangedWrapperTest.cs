@@ -81,33 +81,6 @@ namespace CsharpExtrasTest.Event.Wrapper
         }
 
         [Test]
-        public void GIVEN_Wrapper_WHEN_Run_THEN_WrappedObjectReturned()
-        {
-            //Arrange
-
-            Mock<IMockBefore> mockBefore = new Mock<IMockBefore>();
-            Mock<IMockAfter> mockAfter = new Mock<IMockAfter>();
-            Mock<IMockObj> mockObj = new Mock<IMockObj>();
-            Mock<IMockEvent> mockEvent = new Mock<IMockEvent>();
-            Mock<IMockGenerator> mockGenerator = new Mock<IMockGenerator>();
-            Mock<IMockActionExecutor> mockExecutor = new Mock<IMockActionExecutor>();
-
-            mockObj.Setup(o => o.GetBefore).Returns(mockBefore.Object);
-            mockExecutor.Setup(e => e.Execute(mockObj.Object));
-            mockObj.Setup(o => o.GetAfter).Returns(mockAfter.Object);
-            mockGenerator.Setup(g => g.Generate(mockBefore.Object, mockAfter.Object)).Returns(mockEvent.Object);
-
-            IPropertyChangedWrapper<IMockObj, IMockEvent> wrapper = Api.NewPropertyChangedWrapper
-                (mockObj.Object, o => o.GetBefore, o => o.GetAfter, mockGenerator.Object.Generate);
-
-            //Act
-            IMockObj obj = wrapper.Run(mockExecutor.Object.Execute);
-
-            //Assert
-            Assert.AreSame(obj, mockObj.Object);
-        }
-
-        [Test]
         public void GIVEN_Wrapper_WHEN_Run_THEN_AllOperationsRunInExpectedOrder()
         {
             

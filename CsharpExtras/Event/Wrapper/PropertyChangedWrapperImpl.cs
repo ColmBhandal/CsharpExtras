@@ -35,10 +35,10 @@ namespace CsharpExtras.Event.Wrapper
             return returnValue;
         }
 
-        public TObj Run(Action<TObj> act)
+        public void Run(Action<TObj> act)
         {
             Func<TObj, TObj> actAsFunc = o => { act(o); return o; };
-            return Get(actAsFunc);
+            Get(actAsFunc);
         }
     }
 }
