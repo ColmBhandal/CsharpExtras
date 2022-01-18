@@ -7,10 +7,32 @@ namespace CsharpExtras.Map.Dictionary.Curry
 {
     public interface ICurryDictionary<TKey, TVal>
     {
+        /// <summary>
+        /// The arity of the dictionary is the number of elements in each full key tuple that maps to a value
+        /// </summary>
         NonnegativeInteger Arity { get; }
+        
+        /// <summary>
+        /// Gets the value stored at the given key tuple
+        /// </summary>
+        /// <param name="keyTuple">A key tuple whose length must match the arity of this dictionary.
+        /// The tuple must correspond to an existing element of the dictionary.</param>
+        /// <returns>The value that's stored at the specified key. Throws a key not found exceptoin otherwise.</returns>
         TVal this[params TKey[] keyTuple] { get; }
+
+        /// <summary>
+        /// Enumerable of all key tuples in this dictionary i.e. all key tuples that map to some value
+        /// </summary>
         IEnumerable<IList<TKey>> KeyTuples { get; }
+
+        /// <summary>
+        /// Enumerable of all key-tuple / value pairs in this dictionary
+        /// </summary>
         IEnumerable<(IList<TKey>, TVal)> KeyValuePairs { get; }
+
+        /// <summary>
+        /// Enumerable of all values in this dictionary
+        /// </summary>
         IEnumerable<TVal> Values { get; }
 
         /// <summary>
@@ -95,6 +117,12 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <param name="keyTuple">The index of the value to update. Must match arity of this dictionary.</param>
         /// <returns>True if an existing value was updated, false if there was no value at the given key tuple.</returns>
         bool Update(TVal value, IEnumerable<TKey> keyTuple);
+
+        /// <summary>
+        /// Removes all key-tuple to value mappings matching the given key-tuple prefix
+        /// </summary>
+        /// <param name="prefix">Any key tuples to value mappings whose key tuple starts with this prefix will be removed</param>
+        /// <returns></returns>
         NonnegativeInteger Remove(params TKey[] prefix);
 
         /// <summary>
