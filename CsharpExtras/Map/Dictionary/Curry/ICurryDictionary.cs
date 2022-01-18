@@ -131,9 +131,13 @@ namespace CsharpExtras.Map.Dictionary.Curry
         void UpdateKeys(Func<TKey, TKey> keyInjection, NonnegativeInteger prefixArity);
         
         /// <summary>
-        /// Updates the keys mapping the direct descendants of this curry dictionary
+        /// Updates the first key in every key tuple of this curry dictionary
         /// </summary>
-        /// <param name="keyInjection">A function mapping keys to keys, which must be injective on the singleton key prefixes of this dictionary</param>
-        void UpdateDirectDescendantsKeys(Func<TKey, TKey> keyInjection);
+        /// <param name="keyInjection">A function mapping keys to keys, which must be injective on the set of keys upon which it operates.
+        /// Example: If (2, 5) and (3, 4) are both key tuples in a dictionary, then a key injection function which maps all keys to the value 1 will fail.
+        /// This is the case even though the key-tuples (1, 5) and (1, 4) are unique. This function does not look at full key tuples, it only
+        /// considers the first keys. So the set of keys upon which it operates is {2, 3}.
+        /// And since 2 and 3 will map to 1 in this case, then the function is non-injective and the update will fail.</param>
+        void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection);
     }
 }

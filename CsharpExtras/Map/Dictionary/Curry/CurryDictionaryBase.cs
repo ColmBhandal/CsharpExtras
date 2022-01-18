@@ -121,9 +121,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 throw new ArgumentException
                     ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
             }
-            DoForAllCurriedDictionaries(d => d.UpdateDirectDescendantsKeys(keyInjection), arity);
+            DoForAllCurriedDictionaries(d => d.UpdateFirstKeyInTuples(keyInjection), arity);
         }
 
-        public abstract void UpdateDirectDescendantsKeys(Func<TKey, TKey> keyInjection);
+        public abstract void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection);
     }
 }

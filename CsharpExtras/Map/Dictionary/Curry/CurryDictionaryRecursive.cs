@@ -310,7 +310,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return _currier.Get(c => (0, c.ContainsKey(firstKey)));
         }
 
-        public override void UpdateDirectDescendantsKeys(Func<TKey, TKey> keyInjection)
+        public override void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection)
         {
             _currier.Run(d => UpdateKeys(d, keyInjection));
         }

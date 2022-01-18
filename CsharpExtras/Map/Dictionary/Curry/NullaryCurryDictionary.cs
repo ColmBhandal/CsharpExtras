@@ -96,7 +96,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue));
         }
 
-        public override void UpdateDirectDescendantsKeys(Func<TKey, TKey> keyInjection)
+        public override void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection)
         {
             //Do nothing
         }
