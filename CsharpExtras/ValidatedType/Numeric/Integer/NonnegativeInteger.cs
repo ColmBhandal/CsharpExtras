@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CsharpExtras.ValidatedType.Numeric.Integer
 {
-    public class NonnegativeInteger : Validated<int>
+    public class NonnegativeInteger : ImmutableValidated<int>
     {
         public NonnegativeInteger(int value) : base(value)
         {

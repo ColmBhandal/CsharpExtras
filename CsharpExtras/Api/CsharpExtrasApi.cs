@@ -16,18 +16,30 @@ using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using CsharpExtras.Enumerable.Provider.Int;
+using CsharpExtras.Event.Notify;
+using CsharpExtras.Event.Wrapper;
 
 namespace CsharpExtras.Api
 {
     public class CsharpExtrasApi : ICsharpExtrasApi
     {
+
+        /// <summary>
+        /// Creates a new curry dictionary with the given arity
+        /// </summary>
+        /// <param name="arity">The arity of the key-tuples to index this dictionary. Must be positive.</param>
         public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(int arity)
         {
             return NewCurryDictionary<TKey, TVal>((PositiveInteger) arity);
         }
+
+        /// <summary>
+        /// Creates a new curry dictionary with the given arity
+        /// </summary>
+        /// <param name="arity">The arity of the key-tuples to index this dictionary. Must be positive.</param>
         public ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity)
         {
-            return new CurryDictionaryRecursive<TKey, TVal>(arity);         
+            return new CurryDictionaryRecursive<TKey, TVal>(arity, this);         
         }
         public void SetLogger(ILogger logger)
         {
@@ -115,9 +127,18 @@ namespace CsharpExtras.Api
             return NewVariantDictionary(backingDictionary);
         }
 
-        public IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary)
-        {
-            return new VariantDictionaryImpl<TKey, TVal>(backingDictionary);
-        }
+        public IVariantDictionary<TKey, TVal> NewVariantDictionary<TKey, TVal>(IDictionary<TKey, TVal> backingDictionary) =>
+            new VariantDictionaryImpl<TKey, TVal>(backingDictionary);
+
+        public IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val,
+            Func<TVal, TUpdate, TVal> updater) => new UpdateNotifierImpl<TVal, TUpdate>(val, updater);
+
+        public IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler)
+            => new EventObjWrapperImpl<TObj, TEvent>(obj, handler);
+
+        public IPropertyChangedWrapper<TObj, TEvent> NewPropertyChangedWrapper
+            <TObj, TBefore, TAfter, TEvent>(TObj obj, Func<TObj, TBefore> beforeGetter,
+            Func<TObj, TAfter> afterGetter, Func<TBefore, TAfter, TEvent> eventGenerator) =>
+            new PropertyChangedWrapperImpl<TObj, TBefore, TAfter, TEvent>(obj, beforeGetter, afterGetter, eventGenerator);
     }
 }

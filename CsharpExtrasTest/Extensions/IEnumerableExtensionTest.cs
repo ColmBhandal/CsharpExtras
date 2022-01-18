@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 
-namespace CustomExtensions
+namespace CsharpExtrasTest.Extensions
 {
     [TestFixture]
     public class IEnumerableTest

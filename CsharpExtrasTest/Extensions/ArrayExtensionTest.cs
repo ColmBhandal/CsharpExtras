@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Map.Dictionary.Collection;
 
-namespace CustomExtensions
+namespace CsharpExtrasTest.Extensions
 {
     [TestFixture, Category("Unit")]
     public class ArrayExtensionTest

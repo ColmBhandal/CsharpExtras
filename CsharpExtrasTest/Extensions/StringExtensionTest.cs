@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using CsharpExtras.Extensions;
 
-namespace CustomExtensions
+namespace CsharpExtrasTest.Extensions
 {
     [TestFixture]
     public class StringExtensionTest

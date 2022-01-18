@@ -1,4 +1,6 @@
-﻿using CsharpExtras.ValidatedType.Numeric.Integer;
+﻿using CsharpExtras.Extensions.Helper.Dictionary;
+using CsharpExtras.ValidatedType.Numeric.Integer;
+using System;
 using System.Collections.Generic;
 
 namespace CsharpExtras.Map.Dictionary.Curry
@@ -7,9 +9,16 @@ namespace CsharpExtras.Map.Dictionary.Curry
     {
         NonnegativeInteger Arity { get; }
         TVal this[params TKey[] keyTuple] { get; }
-        IEnumerable<IList<TKey>> Keys { get; }
+        IEnumerable<IList<TKey>> KeyTuples { get; }
         IEnumerable<(IList<TKey>, TVal)> KeyValuePairs { get; }
         IEnumerable<TVal> Values { get; }
+
+        /// <summary>
+        /// Gets all the key tuple prefixes of the given arity
+        /// </summary>
+        /// <param name="arity">The arity of each key prefix i.e. the number of keys in each prefix-tuple</param>
+        /// <returns>An enumerable which iterates through the key prefixes of the given arity</returns>
+        IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity);
 
         /// <summary>
         /// Checks if the key tuple is contained in the dictionary.
@@ -53,7 +62,6 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         ICurryDictionary<TKey, TVal> GetCurriedDictionary(IEnumerable<TKey> prefix);
 
-
         /// <summary>
         /// Adds the element at the given key if it's not already there.
         /// </summary>
@@ -64,5 +72,72 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         /// <returns>True iff the value was added</returns>
         bool Add(TVal value, IEnumerable<TKey> keyTuple);
+
+        /// <summary>
+        /// Removes all mappings corresponding to the given prefix.
+        /// </summary>
+        /// <param name="prefix">A key-tuple prefix which should be less than or equal to the arity of this dictionary</param>
+        /// <returns>The number of elements removed. Specifically, if there are no matching keys, returns 0.</returns>
+        NonnegativeInteger Remove(IEnumerable<TKey> prefix);
+
+        /// <summary>
+        /// Updates the value at the given key tuple if it's there, otherwise does nothing
+        /// </summary>
+        /// <param name="value">The value with which to overwrite the existing value</param>
+        /// <param name="keyTuple">The index of the value to update. Must match arity of this dictionary.</param>
+        /// <returns>True if an existing value was updated, false if there was no value at the given key tuple.</returns>
+        bool Update(TVal value, params TKey[] keyTuple);
+
+        /// <summary>
+        /// Updates the value at the given key tuple if it's there, otherwise does nothing
+        /// </summary>
+        /// <param name="value">The value with which to overwrite the existing value</param>
+        /// <param name="keyTuple">The index of the value to update. Must match arity of this dictionary.</param>
+        /// <returns>True if an existing value was updated, false if there was no value at the given key tuple.</returns>
+        bool Update(TVal value, IEnumerable<TKey> keyTuple);
+        NonnegativeInteger Remove(params TKey[] prefix);
+
+        /// <summary>
+        /// The total number of values in this dictionary
+        /// </summary>
+        NonnegativeInteger Count { get; }
+        
+        /// <summary>
+        /// Compares this dictionary to another one. Dictionaries are deemed equal if they are the same size and contain the same set of key/value pairs.
+        /// </summary>
+        /// <param name="isEqualValues">This function is used to compare values within the dictionary, returning true iff values are equal in some sense</param>
+        /// <returns>A dictionary comparison result</returns>
+        IDictionaryComparison Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
+
+        /// <summary>
+        /// Performs the given action on all curried dictionaries at the given arity
+        /// </summary>
+        /// <param name="action">Action to perform on each curried dictionary</param>
+        /// <param name="arity">The arity of the key tuples uset to generate all the curried dictionaries</param>
+        void DoForAllCurriedDictionaries(Action<ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity);
+
+        /// <summary>
+        /// Performs the given action on all pairs of key-prefixes and curried dictionaries at the given arity
+        /// </summary>
+        /// <param name="action">The action to perform. It takes a key prefix and a curried dictionary as arguments.</param>
+        /// <param name="arity">The arity of the key tuples uset to generate all the pairs</param>
+        void DoForAllPairs(Action<IList<TKey>, ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity);
+
+        /// <summary>
+        /// Updates the keys for all curried dictionaries at the given arity.
+        /// </summary>
+        /// <param name="keyInjection">A function which maps keys to keys. This must be injective on the keyset of every dictionary at the given arity.</param>
+        /// <param name="prefixArity">The arity of the key tuples uset to generate all the curried dictionaries upon which to apply the map</param>
+        void UpdateKeys(Func<TKey, TKey> keyInjection, NonnegativeInteger prefixArity);
+        
+        /// <summary>
+        /// Updates the first key in every key tuple of this curry dictionary
+        /// </summary>
+        /// <param name="keyInjection">A function mapping keys to keys, which must be injective on the set of keys upon which it operates.
+        /// Example: If (2, 5) and (3, 4) are both key tuples in a dictionary, then a key injection function which maps all keys to the value 1 will fail.
+        /// This is the case even though the key-tuples (1, 5) and (1, 4) are unique. This function does not look at full key tuples, it only
+        /// considers the first keys. So the set of keys upon which it operates is {2, 3}.
+        /// And since 2 and 3 will map to 1 in this case, then the function is non-injective and the update will fail.</param>
+        void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection);
     }
 }

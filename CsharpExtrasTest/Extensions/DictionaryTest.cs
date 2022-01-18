@@ -3,19 +3,253 @@ using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Extensions;
 using System;
+using CsharpExtras.Extensions.Helper.Dictionary;
 
-namespace CustomExtensions
+namespace CsharpExtrasTest.Extensions
 {
-    [TestFixture]
+    [TestFixture,Category("Unit")]
     public class DictionaryTest
     {
         private const string Zero = "Zero";
         private const string One = "One";
         private const string Two = "Two";
+        private const string Three = "Three";
         private const string Infty = "Infinity and Beyond";
 
         [Test]
-        [Category("Unit")]
+        public void GIVEN_NonInjectionOnKeyset_WHEN_UpdateKeys_THEN_InjectiveViolationException()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" },
+                {3, "x" },
+                {4, "x" }
+            };
+
+            Func<int, int> nonInjection = i => 7;
+
+            //Act / Assert
+            Assert.Throws<InjectiveViolationException>(() => dictionary.UpdateKeys(nonInjection));
+        }
+
+        [Test]
+        public void GIVEN_InjectionOnKeyset_WHEN_UpdateKeys_THEN_DictionaryIsAsExpected()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" }
+            };
+            Dictionary<int, string> expectedDictionary = new Dictionary<int, string>()
+            {
+                {1, "Some value"},
+                {2, "Hello World"},
+                {3, "x" }
+            };
+
+            Func<int, int> injection = i => i + 1;
+
+            //Act
+            //Note: the function here is only injective on the keyset, not across its entire domain
+            dictionary.UpdateKeys(injection);
+
+            //Assert
+            IDictionaryComparison comparison = dictionary.Compare(expectedDictionary, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_InjectionOnKeyset_WHEN_MapKeys_THEN_DictionaryIsAsExpected()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" }
+            };
+            Dictionary<string, string> expectedDictionary = new Dictionary<string, string>()
+            {
+                {Zero, "Some value"},
+                {One, "Hello World"},
+                {Two, "x" }
+            };
+
+            //Act
+            //Note: the function here is only injective on the keyset, not across its entire domain
+            IDictionary<string, string> mappedDict = dictionary.MapKeys(MockIntToStringMap);
+
+            //Assert
+            IDictionaryComparison comparison = mappedDict.Compare(expectedDictionary, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_NonInjectionOnKeyset_WHEN_MapKeys_THEN_InjectiveViolationException()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                {0, "Some value"},
+                {1, "Hello World"},
+                {2, "x" },
+                {3, "x" },
+                {4, "x" }
+            };
+
+            //Act / Assert
+            //Note: the function is non-injective here because it only maps a subset of ints to unique values
+            Assert.Throws<InjectiveViolationException>(() => dictionary.MapKeys(MockIntToStringMap));
+        }
+
+        [Test]
+        public void GIVEN_ExceptionThrowingFunctionAndEmptyDictionary_WHEN_MapKeys_THEN_EmptyDictionaryReturned()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>();
+            Assert.AreEqual(0, dictionary.Count, "GIVEN: Expected empty dictionary to have count of zero to begin with");
+
+            Func<int, string> exceptionThrower = i => throw new InvalidOperationException();
+
+            //Act
+            IDictionary<string, string> mappedDict = dictionary.MapKeys(exceptionThrower);
+
+            //Assert
+            Assert.AreEqual(0, mappedDict.Count);
+        }
+
+        [Test]
+        public void GIVEN_DictionariesWithSameSizeButUnequalPairs_WHEN_Compare_THEN_ResultIsNotEqual()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
+            {
+                {2, "Some other value"},
+                { 1, "Hello World"},
+                {3, "x" }
+            };
+            Dictionary<int, string> dictionary2 = new Dictionary<int, string>()
+            {
+                { 1, "Hello World"},
+                {3, "x" },
+                {4, "The fourth dimension was discovered by Einstein" }
+            };
+
+            //Act
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+
+            //Assert
+            Assert.IsFalse(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_ThisDictionaryPairsAreStrictSupersetOfOther_WHEN_Compare_THEN_ResultIsNotEqual()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
+            {
+                {2, "Some other value"},
+                { 1, "Hello World"},
+                {3, "x" }
+            };
+            Dictionary<int, string> dictionary2 = new Dictionary<int, string>()
+            {
+                { 1, "Hello World"},
+                {3, "x" }
+            };
+
+            //Act
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+
+            //Assert
+            Assert.IsFalse(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_ThisDictionaryPairsAreStrictSubsetOfOther_WHEN_Compare_THEN_ResultIsNotEqual()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
+            {
+                { 1, "Hello World"},
+                {3, "x" }
+            };
+            Dictionary<int, string> dictionary2 = new Dictionary<int, string>()
+            {
+                {2, "Some other value"},
+                { 1, "Hello World"},
+                {3, "x" }
+            };
+
+            //Act
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+
+            //Assert
+            Assert.IsFalse(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_DictionariesWithSamePairsAddedInDifferentOrder_WHEN_Compare_THEN_ResultIsEqual()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary1 = new Dictionary<int, string>()
+            {
+                { 1, "Hello World"},
+                {2, "Some other value" },
+                {3, "x" }
+            };
+            Dictionary<int, string> dictionary2 = new Dictionary<int, string>()
+            {
+                {2, "Some other value"},
+                { 1, "Hello World"},
+                {3, "x" }
+            };
+
+            //Act
+            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+
+            //Assert
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_EmptyDictionary_WHEN_CompareItself_THEN_ResultIsEqual()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+            };
+
+            //Act
+            IDictionaryComparison comparison = dictionary.Compare(dictionary, string.Equals);
+
+            //Assert
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_FilledDictionary_WHEN_CompareItself_THEN_ResultIsEqual()
+        {
+            //Arrange
+            Dictionary<int, string> dictionary = new Dictionary<int, string>()
+            {
+                { 1, "Hello World"},
+                {2, "Some other value" }
+            };
+
+            //Act
+            IDictionaryComparison comparison = dictionary.Compare(dictionary, string.Equals);
+
+            //Assert
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
         public void GivenStringIntDictionaryAndStringBoolDictionaryWhenZippedWithNegationOperatorThenResultantDictionaryIsAsExpected()
         {
             //Arrange
@@ -34,7 +268,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         public void GivenStringIntDictionaryWhenValuesMappedToStringThenValuesMatchExpectedMapValues()
         {
             //Arrange
@@ -51,7 +284,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         public void GivenStringIntDictionaryWhenValuesMappedToStringThenKeysRemainUnchanged()
         {
             //Arrange
@@ -65,7 +297,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         public void GivenDictionaryWhenAddWithKeyDerivedFromValueCalledThenCorrectItemAddedToDictionary()
         {
             //Arrange
@@ -86,7 +317,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         public void GIVEN_Dictionary_WHEN_MapValuesWithKeyValueMapper_THEN_ExpectedDictionaryReturned()
         {
             //Assemble
@@ -104,7 +334,6 @@ namespace CustomExtensions
         }
 
         [Test]
-        [Category("Unit")]
         public void GivenDictionaryWhenAddWithValueDerivedFromKeyCalledThenCorrectItemAddedToDictionary()
         {
             //Arrange

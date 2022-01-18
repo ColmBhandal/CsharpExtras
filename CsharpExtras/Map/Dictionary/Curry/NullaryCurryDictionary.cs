@@ -1,4 +1,5 @@
-﻿using CsharpExtras.ValidatedType.Numeric.Integer;
+﻿using CsharpExtras.Extensions.Helper.Dictionary;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,23 +8,41 @@ namespace CsharpExtras.Map.Dictionary.Curry
 {
     class NullaryCurryDictionary<TKey, TVal> : CurryDictionaryBase<TKey, TVal>
     {
-        private readonly TVal _singletonImmutableValue;
+        private TVal _singletonValue;
 
         public override TVal this[params TKey[] keys]
         {
-            get => GetSingletonValue(keys);
+            get => GetValueFromTuple(keys);
         }
 
         public override NonnegativeInteger Arity => (NonnegativeInteger)0;
 
         public NullaryCurryDictionary(TVal singletonValue)
         {
-            _singletonImmutableValue = singletonValue;
+            _singletonValue = singletonValue;
         }
 
-        public override IEnumerable<IList<TKey>> Keys =>
+        public override IEnumerable<IList<TKey>> KeyTuples =>
             //A nullary dictionary actually does have exactly 1 key tuple: the empty tuple
             new List<IList<TKey>> { new List<TKey>() };
+
+        public override NonnegativeInteger Count => (NonnegativeInteger)1;
+
+        public override IEnumerable<IList<TKey>> KeyTuplePrefixes(NonnegativeInteger arity)
+        {
+            if (arity > Arity)
+            {
+                throw new ArgumentException
+                    ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
+            }
+            return KeyTuplePrefixesUnsafe(arity);
+        }
+
+        //Does not do arity check
+        private IEnumerable<IList<TKey>> KeyTuplePrefixesUnsafe(NonnegativeInteger arity)
+        {
+            yield return new List<TKey>();
+        }
 
         public override bool ContainsKeyTuple(IEnumerable<TKey> keyTuple)
         {
@@ -34,7 +53,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         public override TVal GetValueFromTuple(IEnumerable<TKey> keyTuple)
         {
             AssertArityIsCorrect(keyTuple);
-            return _singletonImmutableValue;
+            return _singletonValue;
         }
 
         public override bool Add(TVal value, IEnumerable<TKey> keyTUple)
@@ -55,15 +74,31 @@ namespace CsharpExtras.Map.Dictionary.Curry
             return this;
         }
 
-        private TVal GetSingletonValue(TKey[] keyTuple)
+        public override bool Update(TVal value, IEnumerable<TKey> keyTuple)
         {
-            int keyLength = keyTuple.Length;
-            if (keyLength != 0)
+            AssertArityIsCorrect(keyTuple);
+            _singletonValue = value;
+            return true;
+        }
+
+        public override NonnegativeInteger Remove(IEnumerable<TKey> prefix) =>
+            (NonnegativeInteger)0;
+
+        protected override IDictionaryComparison IsSubset(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
+        {
+            NonnegativeInteger otherArity = other.Arity;
+            NonnegativeInteger otherCount = other.Count;
+            TVal otherVal = other.GetValueFromTuple();
+            if(isEqualValues(_singletonValue, otherVal))
             {
-                throw new ArgumentException($"Nullary dictionary can only accept 0 keys. " +
-                    $"Instead, found {keyLength} keys.");
+                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
             }
-            return _singletonImmutableValue;
+            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue));
+        }
+
+        public override void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection)
+        {
+            //Do nothing
         }
     }
 }

@@ -33,6 +33,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new map functions that take indices into account (#103)
 - Added support for lambda/constant array initialisation (#104)
 - [BREAKING] Changed array orientation meaning in 1D-2D array conversion functions to be more intuitive. ROW and COLUMN now mean the opposite to before. (#106)
+- [BREAKING] Enhanced curry dictionary with new properties and methods. This includes renaming some existing properties. (#109)
+- Added UpdateNotifier, EventObjectWrapper and PropertyChangedWrapper types for encapsulating objects in a way that enforces event firing (#111)
+- Added MapKeys, UpdateKeys and Compare dictionary extension methods (#112)
+- [BREAKING] Renamed Validated to ImmutableValidated and added equality/hashcode logic, delegating to the underlying singleton value (#113)
+- [BREAKING] BinaryDigit is now written in terms of bytes instead of ints, for space efficiency (#113)
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)

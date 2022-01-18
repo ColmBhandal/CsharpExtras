@@ -1,5 +1,4 @@
-﻿using CustomExtensions;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -8,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using CsharpExtras.Extensions;
 
-namespace CustomExtensions
+namespace CsharpExtrasTest.Extensions
 {
     [TestFixture]
     class DateTimeExtensionTest
