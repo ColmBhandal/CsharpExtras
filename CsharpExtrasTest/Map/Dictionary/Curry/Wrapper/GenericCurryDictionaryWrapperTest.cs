@@ -16,15 +16,15 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry.Wrapper
         {
             //Arrange
             ICurryDictionary<int, string> backingDict = Api.NewCurryDictionary<int, string>(4);
-            backingDict.Add("1024", 3, 4, 5, 6);
-            backingDict.Add("512", 5, 6, 7, 8);
+            backingDict.Add("1024", 3, 8, 15, 24);
+            backingDict.Add("512", 5, 12, 21, 32);
 
             ICurryDictionary<string, int> expectedDict = Api.NewCurryDictionary<string, int>(4);
             expectedDict.Add(1024, "3", "4", "5", "6");
             expectedDict.Add(512, "5", "6", "7", "8");
 
             ICurryDictionary<string, int> wrappedDict = Api.NewGenericCurryDictionaryWrapper
-                (backingDict, int.Parse, i => i.ToString(), i => i.ToString(), int.Parse);
+                (backingDict, (s, i) => (i + 1) * int.Parse(s), (k, i) => (k/ (i + 1)).ToString(), i => i.ToString(), int.Parse);
 
             //Act
 

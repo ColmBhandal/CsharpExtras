@@ -45,7 +45,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             if (FirstMismatch is (IList<TKey> keyTuple, TVal val))
             {
-                return ($"Mismatch found at key tuple {keyTuple} and value {val}", false);
+                return ($"Mismatch found at key tuple {string.Join(",", keyTuple)} and value {val}", false);
             }
             return ("Dictionaries are equal", true);
         }

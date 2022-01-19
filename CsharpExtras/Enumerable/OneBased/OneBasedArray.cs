@@ -142,9 +142,9 @@ namespace CsharpExtras.Enumerable.OneBased
             return new OneBasedArrayImpl<TResult>(zeroBasedMapped);
         }
 
-        public IOneBasedArray<TResult> Map<TResult>(Func<int, TVal, TResult> mapper)
+        public IOneBasedArray<TResult> Map<TResult>(Func<TVal, int, TResult> mapper)
         {
-            TResult zeroBasedFunc(int i, TVal x) => mapper(i + 1, x);
+            TResult zeroBasedFunc(TVal x, int i) => mapper(x, i + 1);
             TResult[] zeroBasedMapped = ZeroBasedEquivalent.Map(zeroBasedFunc);
             return new OneBasedArrayImpl<TResult>(zeroBasedMapped);
         }

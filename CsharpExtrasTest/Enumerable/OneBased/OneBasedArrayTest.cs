@@ -23,7 +23,7 @@ namespace OneBased
         {
             //Assemble
             IOneBasedArray<string> array = new OneBasedArrayImpl<string>(new string[]{ "One", "Two" });
-            Func<int, string, string> func = (i, s) => s + i;
+            Func<string, int, string> func = (s, i) => s + i;
 
             //Act
             IOneBasedArray<string> result = array.Map(func);

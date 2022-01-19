@@ -95,7 +95,7 @@ namespace CsharpExtras.Api
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, Func<int, TVal> initialiser)
         {
             IOneBasedArray<TVal> array = new OneBasedArrayImpl<TVal>(size);
-            return array.Map((i, x) => initialiser(i));
+            return array.Map((x, i) => initialiser(i));
         }
 
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue) =>
@@ -144,12 +144,12 @@ namespace CsharpExtras.Api
 
         public ICurryDictionary<TKeyOuter, TValOuter> NewGenericCurryDictionaryWrapper<TKeyInner, TKeyOuter, TValInner, TValOuter>
             (ICurryDictionary<TKeyInner, TValInner> backingDictionary,
-            Func<TKeyOuter, TKeyInner> keyInTransform,
-            Func<TKeyInner, TKeyOuter> keyOutTransform,
+            Func<TKeyOuter, int, TKeyInner> keyInTransform,
+            Func<TKeyInner, int, TKeyOuter> keyOutTransform,
             Func<TValOuter, TValInner> valInTransform,
             Func<TValInner, TValOuter> valOutTransform) =>
             new GenericCurryDictionaryWrapperImpl<TKeyInner, TKeyOuter, TValInner, TValOuter>
-            (backingDictionary, keyInTransform, keyOutTransform, valInTransform, valOutTransform);
+            (backingDictionary, keyInTransform, keyOutTransform, valInTransform, valOutTransform, this);
 
     }
 }
