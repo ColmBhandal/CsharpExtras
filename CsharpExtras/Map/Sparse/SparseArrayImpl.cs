@@ -31,19 +31,19 @@ namespace CsharpExtras.Map.Sparse
                 ((p) => new ValidIndex(p.index, (PositiveInteger)p.dimension, this));
         }
 
-        private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int dimension) => index;
+        private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int dimensionIndex) => index;
 
-        private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int dimension) => _validIndexCache[(index, dimension)];
+        private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int dimensionIndex) => _validIndexCache[(index, dimensionIndex)];
 
         private class ValidIndex : ImmutableValidated<int>
         {
-            private readonly PositiveInteger _dimension;
+            private readonly PositiveInteger _dimensionIndex;
             private readonly SparseArrayImpl<TVal> _array;
 
             public ValidIndex(int index, PositiveInteger dimension, SparseArrayImpl<TVal> array) : base(index)
             {
                 _array = array;
-                _dimension = dimension;
+                _dimensionIndex = dimension;
             }
 
             protected override string ValidityConditionTextDescription =>
@@ -51,7 +51,7 @@ namespace CsharpExtras.Map.Sparse
 
             protected override bool IsValid(int t)
             {
-                //TODO: Implement using the _validationFunction of the array & also ensure the dimension is leq that of the array.
+                //TODO: Implement using the _validationFunction of the array & also ensure the dimension is less than that of the array.
                 return false;
             }
         }
