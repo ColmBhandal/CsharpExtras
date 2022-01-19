@@ -18,6 +18,7 @@ using CsharpExtras.ValidatedType.Numeric.Integer;
 using CsharpExtras.Enumerable.Provider.Int;
 using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
+using CsharpExtras.Map.Dictionary.Curry.Wrapper;
 
 namespace CsharpExtras.Api
 {
@@ -140,5 +141,15 @@ namespace CsharpExtras.Api
             <TObj, TBefore, TAfter, TEvent>(TObj obj, Func<TObj, TBefore> beforeGetter,
             Func<TObj, TAfter> afterGetter, Func<TBefore, TAfter, TEvent> eventGenerator) =>
             new PropertyChangedWrapperImpl<TObj, TBefore, TAfter, TEvent>(obj, beforeGetter, afterGetter, eventGenerator);
+
+        public ICurryDictionary<TKeyOuter, TValOuter> NewGenericCurryDictionaryWrapper<TKeyInner, TKeyOuter, TValInner, TValOuter>
+            (ICurryDictionary<TKeyInner, TValInner> backingDictionary,
+            Func<TKeyOuter, TKeyInner> keyInTransform,
+            Func<TKeyInner, TKeyOuter> keyOutTransform,
+            Func<TValOuter, TValInner> valInTransform,
+            Func<TValInner, TValOuter> valOutTransform) =>
+            new GenericCurryDictionaryWrapperImpl<TKeyInner, TKeyOuter, TValInner, TValOuter>
+            (backingDictionary, keyInTransform, keyOutTransform, valInTransform, valOutTransform);
+
     }
 }
