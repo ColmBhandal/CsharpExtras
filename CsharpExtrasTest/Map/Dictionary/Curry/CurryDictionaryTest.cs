@@ -1287,7 +1287,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
         }
 
         [Test]
-        public void GIVEN_NonInjectiveFunctionAtArity1_WHEN_UpdateKeysAtArity1_THEN_InjectiveViolationException()           
+        public void GIVEN_NonInjectiveFunctionAtArity1_WHEN_UpdateKeysAtArity1_THEN_InjectiveViolationExceptionAndDictionaryUnchanged()           
         {
             //Arrange
             ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
@@ -1296,12 +1296,22 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add(5, 1, 3, 1);
             dict.Add(7, 1, 1, 3);
 
-            //This is non-injective at arity 1, based on the above keyset
-            Func<int, int> nonInjectiveFunction = k => k == 1 ? 2 : k;
+            ICurryDictionary<int, int> expectedDict = Api.NewCurryDictionary<int, int>(3);
+            expectedDict.Add(2, 1, 2, 3);
+            expectedDict.Add(3, 1, 2, 4);
+            expectedDict.Add(5, 1, 3, 1);
+            expectedDict.Add(7, 1, 1, 3);
 
-            //Act / Assert
+            //This function is non-injective but won't fail on the first call - this tests the atomicity the update
+            Func<int, int> nonInjectiveFunction = k => k == 1 ? 5 : k + 3;
+
+            //Act
 
             Assert.Throws<InjectiveViolationException>(() => dict.UpdateKeys(nonInjectiveFunction, (NonnegativeInteger)1));
+
+            //Assert
+            IDictionaryComparison comparison = expectedDict.Compare(dict, (i, j) => i == j);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
         [Test, TestCase(0), TestCase(1), TestCase(2)]
