@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.Api;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,18 +10,40 @@ namespace CsharpExtras.Map.Sparse
 {
     internal class SparseArrayImpl<TVal>
     {
-        public int IndexBase { get; }
+        public PositiveInteger Dimension { get; }
 
         private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
         private readonly ICsharpExtrasApi _api;
+        
+        private readonly Func<int, int, bool> _validationFunction;
 
+        private ILazyFunctionMap<(int index, int dimension), SparseArrayImpl<TVal>.ValidIndex> _validIndexCache;
 
+        public SparseArrayImpl(int indexBase, PositiveInteger dimension, ICsharpExtrasApi api,
+            Func<int, int, bool> validationFunction)
+        {
+            Dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
+            _api = api ?? throw new ArgumentNullException(nameof(api));
+            _validationFunction = validationFunction;
+            _backingDictionary = api.NewGenericCurryDictionaryWrapper(
+                api.NewCurryDictionary<int, TVal>(Dimension), KeyInTransform, KeyOutTransform, v => v, v => v);
+            _validIndexCache = api.NewLazyFunctionMap<(int index, int dimension), SparseArrayImpl<TVal>.ValidIndex>
+                ((p) => new ValidIndex(p.index, (PositiveInteger)p.dimension, this));
+        }
+
+        private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int dimension) => index;
+
+        private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int dimension) => _validIndexCache[(index, dimension)];
 
         private class ValidIndex : ImmutableValidated<int>
         {
-            //A private constructor ensures that this type controls validation, nobody else
-            private ValidIndex(int value) : base(value)
+            private readonly PositiveInteger _dimension;
+            private readonly SparseArrayImpl<TVal> _array;
+
+            public ValidIndex(int index, PositiveInteger dimension, SparseArrayImpl<TVal> array) : base(index)
             {
+                _array = array;
+                _dimension = dimension;
             }
 
             protected override string ValidityConditionTextDescription =>
@@ -28,7 +51,7 @@ namespace CsharpExtras.Map.Sparse
 
             protected override bool IsValid(int t)
             {
-                //TODO: Implement. For efficiency, use a pool - implement it as a dictionary from (dimension, index) => ValidIndex
+                //TODO: Implement using the _validationFunction of the array.
                 return false;
             }
         }
