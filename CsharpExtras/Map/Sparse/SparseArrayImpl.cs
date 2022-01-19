@@ -51,7 +51,7 @@ namespace CsharpExtras.Map.Sparse
 
             protected override bool IsValid(int t)
             {
-                //TODO: Implement using the _validationFunction of the array.
+                //TODO: Implement using the _validationFunction of the array & also ensure the dimension is leq that of the array.
                 return false;
             }
         }
