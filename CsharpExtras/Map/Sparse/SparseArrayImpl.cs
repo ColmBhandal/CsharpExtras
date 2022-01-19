@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CsharpExtras.Api;
+using CsharpExtras.Map.Dictionary.Curry;
+using CsharpExtras.ValidatedType;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,12 +9,28 @@ namespace CsharpExtras.Map.Sparse
 {
     internal class SparseArrayImpl<TVal>
     {
-        /// <summary>
-        /// This class encapsulates validated types which are validated according to the range validation functions
-        /// Through private encapsulation of the underlying constructor, the class only exposes indexes that are valid
-        /// </summary>
-        private class ValidIndex
+        public int IndexBase { get; }
+
+        private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
+        private readonly ICsharpExtrasApi _api;
+
+
+
+        private class ValidIndex : ImmutableValidated<int>
         {
+            //A private constructor ensures that this type controls validation, nobody else
+            private ValidIndex(int value) : base(value)
+            {
+            }
+
+            protected override string ValidityConditionTextDescription =>
+                "Ensures an index at a given dimension is valid";
+
+            protected override bool IsValid(int t)
+            {
+                //TODO: Implement. For efficiency, use a pool - implement it as a dictionary from (dimension, index) => ValidIndex
+                return false;
+            }
         }
     }
 }
