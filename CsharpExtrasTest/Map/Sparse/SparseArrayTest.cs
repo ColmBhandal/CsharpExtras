@@ -57,7 +57,8 @@ namespace CsharpExtrasTest.Map.Sparse
             IComparisonResult comparison = empty1.CompareUsedValues(empty2, (s1, s2) => false);
 
             //Assert
-            Assert.IsTrue(comparison.IsEqual, "Empty arrays should always be equal across used values, even if the comparison function is false");
+            //Empty arrays should always be equal across used values, even if the comparison function is false & defaults differ
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
         [Test]
