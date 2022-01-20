@@ -79,7 +79,7 @@ namespace CsharpExtras.Api
         public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, Func<int, int, TVal> initialiser)
         {
             IOneBasedArray2D<TVal> array = new OneBasedArray2DImpl<TVal>(rows, columns);
-            return array.Map((i, j, _) => initialiser(i, j));
+            return array.Map((_, i, j) => initialiser(i, j));
         }
         public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue) =>
             NewOneBasedArray2D(rows, columns, (i, j) => initialValue);

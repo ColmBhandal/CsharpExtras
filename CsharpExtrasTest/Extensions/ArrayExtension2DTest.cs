@@ -13,7 +13,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Assemble
             string[,] array = new string[,] { { "ZeroZero", "ZeroOne" }, { "OneZero", "OneOne" } };
-            Func<int, int, string, string> func = (i, j, s) => $"{s}{i},{j}";
+            Func<string, int, int, string> func = (s, i, j) => $"{s}{i},{j}";
 
             //Act
             string[,] result = array.Map(func);
