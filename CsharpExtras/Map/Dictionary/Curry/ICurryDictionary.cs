@@ -1,4 +1,5 @@
-﻿using CsharpExtras.Extensions.Helper.Dictionary;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
@@ -135,7 +136,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         /// <param name="isEqualValues">This function is used to compare values within the dictionary, returning true iff values are equal in some sense</param>
         /// <returns>A dictionary comparison result</returns>
-        IDictionaryComparison Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
+        IComparisonResult Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
 
         /// <summary>
         /// Performs the given action on all curried dictionaries at the given arity

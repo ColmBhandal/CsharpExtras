@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.Compare;
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
@@ -27,7 +28,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict2 = dict2.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = nullaryDict1.Compare(nullaryDict2, string.Equals);
+            IComparisonResult result = nullaryDict1.Compare(nullaryDict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -45,7 +46,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict2 = dict2.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = nullaryDict1.Compare(nullaryDict2, string.Equals);
+            IComparisonResult result = nullaryDict1.Compare(nullaryDict2, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -60,7 +61,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = nullaryDict.Compare(nullaryDict, string.Equals);
+            IComparisonResult result = nullaryDict.Compare(nullaryDict, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -75,7 +76,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = dict.Compare(nullaryDict, string.Equals);
+            IComparisonResult result = dict.Compare(nullaryDict, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -91,7 +92,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello Different", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -107,7 +108,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -125,7 +126,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello Different", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -143,7 +144,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict1.Add("World", 9, 10, 11, 14);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -160,7 +161,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -177,7 +178,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -195,7 +196,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -209,7 +210,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict.Compare(dict, string.Equals);
+            IComparisonResult result = dict.Compare(dict, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -1312,7 +1313,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             Assert.Throws<ArgumentException>(() => dict.UpdateKeys(errorProneFunction, (NonnegativeInteger)1));
 
             //Assert
-            IDictionaryComparison comparison = expectedDict.Compare(dict, (i, j) => i == j);
+            IComparisonResult comparison = expectedDict.Compare(dict, (i, j) => i == j);
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
@@ -1340,7 +1341,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             Assert.Throws<InjectiveViolationException>(() => dict.UpdateKeys(nonInjectiveFunction, (NonnegativeInteger)1));
 
             //Assert
-            IDictionaryComparison comparison = expectedDict.Compare(dict, (i, j) => i == j);
+            IComparisonResult comparison = expectedDict.Compare(dict, (i, j) => i == j);
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 

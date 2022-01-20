@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.Compare;
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.Map.Dictionary.Curry;
 using NUnit.Framework;
@@ -28,7 +29,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry.Wrapper
 
             //Act
 
-            IDictionaryComparison comparison = expectedDict.Compare(wrappedDict, (i, j) => i == j);
+            IComparisonResult comparison = expectedDict.Compare(wrappedDict, (i, j) => i == j);
 
             //Assert            
             Assert.IsTrue(comparison.IsEqual, comparison.Message);

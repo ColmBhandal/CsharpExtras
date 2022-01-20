@@ -1,4 +1,5 @@
-﻿using CsharpExtras.Extensions.Helper.Dictionary;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
@@ -81,7 +82,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
         }
 
-        public IDictionaryComparison Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
+        public IComparisonResult Compare(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
         {
             int otherArity = other.Arity;
             int otherCount = other.Count;
@@ -95,7 +96,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <summary>
         /// This method is delegated to sub-classes to check is this dictionary a subset of the other one
         /// </summary>
-        protected abstract IDictionaryComparison IsSubset
+        protected abstract IComparisonResult IsSubset
             (ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues);
 
         public void DoForAllCurriedDictionaries(Action<ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity)

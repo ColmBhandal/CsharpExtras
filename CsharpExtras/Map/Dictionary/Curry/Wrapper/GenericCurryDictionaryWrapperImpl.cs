@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.Compare;
 using CsharpExtras.Extensions;
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.ValidatedType.Numeric.Integer;
@@ -64,7 +65,7 @@ namespace CsharpExtras.Map.Dictionary.Curry.Wrapper
             return _backingDictionary.Add(_valInTransform(value), keyTuple.Select(_keyInTransform));
         }
 
-        public IDictionaryComparison Compare(ICurryDictionary<TKeyOuter, TValOuter> other,
+        public IComparisonResult Compare(ICurryDictionary<TKeyOuter, TValOuter> other,
             Func<TValOuter, TValOuter, bool> isEqualValues)
         {
             ICurryDictionary<TKeyInner, TValInner> otherWrapped = ReverseWrap(other);

@@ -4,6 +4,7 @@ using System.Linq;
 using CsharpExtras.Extensions;
 using System;
 using CsharpExtras.Extensions.Helper.Dictionary;
+using CsharpExtras.Compare;
 
 namespace CsharpExtrasTest.Extensions
 {
@@ -59,7 +60,7 @@ namespace CsharpExtrasTest.Extensions
             dictionary.UpdateKeys(injection);
 
             //Assert
-            IDictionaryComparison comparison = dictionary.Compare(expectedDictionary, string.Equals);
+            IComparisonResult comparison = dictionary.Compare(expectedDictionary, string.Equals);
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
@@ -85,7 +86,7 @@ namespace CsharpExtrasTest.Extensions
             IDictionary<string, string> mappedDict = dictionary.MapKeys(MockIntToStringMap);
 
             //Assert
-            IDictionaryComparison comparison = mappedDict.Compare(expectedDictionary, string.Equals);
+            IComparisonResult comparison = mappedDict.Compare(expectedDictionary, string.Equals);
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
@@ -141,7 +142,7 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+            IComparisonResult comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsFalse(comparison.IsEqual, comparison.Message);
@@ -164,7 +165,7 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+            IComparisonResult comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsFalse(comparison.IsEqual, comparison.Message);
@@ -187,7 +188,7 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+            IComparisonResult comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsFalse(comparison.IsEqual, comparison.Message);
@@ -211,7 +212,7 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary1.Compare(dictionary2, string.Equals);
+            IComparisonResult comparison = dictionary1.Compare(dictionary2, string.Equals);
 
             //Assert
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
@@ -226,7 +227,7 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary.Compare(dictionary, string.Equals);
+            IComparisonResult comparison = dictionary.Compare(dictionary, string.Equals);
 
             //Assert
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
@@ -243,7 +244,7 @@ namespace CsharpExtrasTest.Extensions
             };
 
             //Act
-            IDictionaryComparison comparison = dictionary.Compare(dictionary, string.Equals);
+            IComparisonResult comparison = dictionary.Compare(dictionary, string.Equals);
 
             //Assert
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
