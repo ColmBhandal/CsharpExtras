@@ -17,7 +17,7 @@ namespace CsharpExtrasTest.Extensions
         {
             //Assemble
             string[] array = new string[] { "Zero", "One" };
-            Func<int, string, string> func = (i, s) => s + i;
+            Func<string, int, string> func = (s, i) => s + i;
 
             //Act
             string[] result = array.Map(func);

@@ -1,4 +1,5 @@
-﻿using CsharpExtras.Extensions.Helper.Dictionary;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Extensions.Helper.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -195,8 +196,8 @@ namespace CsharpExtras.Extensions
         /// </summary>
         /// <param name="isEqualValues">This function is used to compare values within the dictionary, returning true iff values are equal in some sense</param>
         /// <returns>A dictionary comparison result</returns>
-        public static IDictionaryComparison Compare<TKey, TValue>(this IDictionary<TKey, TValue> dictionary
-            , IDictionary<TKey, TValue> other, Func<TValue, TValue, bool> isEqualValues)
+        public static IComparisonResult Compare<TKey, TValue>(this IDictionary<TKey, TValue> dictionary,
+            IDictionary<TKey, TValue> other, Func<TValue, TValue, bool> isEqualValues)
         {
             int count = dictionary.Count;
             int otherCount = other.Count;

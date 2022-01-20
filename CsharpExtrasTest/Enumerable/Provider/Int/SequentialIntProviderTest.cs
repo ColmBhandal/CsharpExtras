@@ -1,11 +1,11 @@
 ﻿using CsharpExtras.Api;
-using CsharpExtras.Enumerable.Provider.Int;
+using CsharpExtras._Enumerable.Provider.Int;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CsharpExtrasTest.Enumerable.Provider.Int
+namespace CsharpExtrasTest._Enumerable.Provider.Int
 {
     [TestFixture, Category("Unit")]    
     public class SequentialIntProviderTest

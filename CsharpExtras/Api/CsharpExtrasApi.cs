@@ -1,8 +1,8 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.Map.Dictionary;
 using CsharpExtras.Map.Dictionary.Collection;
-using CsharpExtras.Enumerable.NonEmpty;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.NonEmpty;
+using CsharpExtras._Enumerable.OneBased;
 using CsharpExtras.IO;
 using CsharpExtras.Log;
 using CsharpExtras.Map;
@@ -15,9 +15,11 @@ using System.Collections.Generic;
 using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
-using CsharpExtras.Enumerable.Provider.Int;
+using CsharpExtras._Enumerable.Provider.Int;
 using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
+using CsharpExtras.Map.Dictionary.Curry.Wrapper;
+using CsharpExtras.Map.Sparse.Builder;
 
 namespace CsharpExtras.Api
 {
@@ -77,7 +79,7 @@ namespace CsharpExtras.Api
         public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, Func<int, int, TVal> initialiser)
         {
             IOneBasedArray2D<TVal> array = new OneBasedArray2DImpl<TVal>(rows, columns);
-            return array.Map((i, j, _) => initialiser(i, j));
+            return array.Map((_, i, j) => initialiser(i, j));
         }
         public IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue) =>
             NewOneBasedArray2D(rows, columns, (i, j) => initialValue);
@@ -94,7 +96,7 @@ namespace CsharpExtras.Api
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, Func<int, TVal> initialiser)
         {
             IOneBasedArray<TVal> array = new OneBasedArrayImpl<TVal>(size);
-            return array.Map((i, x) => initialiser(i));
+            return array.Map((x, i) => initialiser(i));
         }
 
         public IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue) =>
@@ -140,5 +142,17 @@ namespace CsharpExtras.Api
             <TObj, TBefore, TAfter, TEvent>(TObj obj, Func<TObj, TBefore> beforeGetter,
             Func<TObj, TAfter> afterGetter, Func<TBefore, TAfter, TEvent> eventGenerator) =>
             new PropertyChangedWrapperImpl<TObj, TBefore, TAfter, TEvent>(obj, beforeGetter, afterGetter, eventGenerator);
+
+        public ICurryDictionary<TKeyOuter, TValOuter> NewGenericCurryDictionaryWrapper<TKeyInner, TKeyOuter, TValInner, TValOuter>
+            (ICurryDictionary<TKeyInner, TValInner> backingDictionary,
+            Func<TKeyOuter, int, TKeyInner> keyInTransform,
+            Func<TKeyInner, int, TKeyOuter> keyOutTransform,
+            Func<TValOuter, TValInner> valInTransform,
+            Func<TValInner, TValOuter> valOutTransform) =>
+            new GenericCurryDictionaryWrapperImpl<TKeyInner, TKeyOuter, TValInner, TValOuter>
+            (backingDictionary, keyInTransform, keyOutTransform, valInTransform, valOutTransform, this);
+
+        public ISparseArrayBuilder<TVal> NewSparseArrayBuilder<TVal>(PositiveInteger dimension, TVal defaultValue) =>
+            new SparseArrayBuilderImpl<TVal>(defaultValue, dimension, this);
     }
 }

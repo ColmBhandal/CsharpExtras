@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CsharpExtras.Enumerable.NonEmpty
+namespace CsharpExtras._Enumerable.NonEmpty
 {
     public interface INonEmptyEnumerable<T> : IEnumerable<T>
     {

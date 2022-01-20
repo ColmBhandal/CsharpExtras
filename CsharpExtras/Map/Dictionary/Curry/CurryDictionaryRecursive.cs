@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.Compare;
 using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
 using CsharpExtras.Extensions;
@@ -165,7 +166,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
         }
 
-        protected override IDictionaryComparison IsSubset(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
+        protected override IComparisonResult IsSubset(ICurryDictionary<TKey, TVal> other, Func<TVal, TVal, bool> isEqualValues)
         {
             NonnegativeInteger otherArity = other.Arity;
             NonnegativeInteger otherCount = other.Count;

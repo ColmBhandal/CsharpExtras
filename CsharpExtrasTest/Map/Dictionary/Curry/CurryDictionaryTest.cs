@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Api;
+using CsharpExtras.Compare;
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
@@ -27,7 +28,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict2 = dict2.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = nullaryDict1.Compare(nullaryDict2, string.Equals);
+            IComparisonResult result = nullaryDict1.Compare(nullaryDict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -45,7 +46,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict2 = dict2.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = nullaryDict1.Compare(nullaryDict2, string.Equals);
+            IComparisonResult result = nullaryDict1.Compare(nullaryDict2, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -60,7 +61,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = nullaryDict.Compare(nullaryDict, string.Equals);
+            IComparisonResult result = nullaryDict.Compare(nullaryDict, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -75,7 +76,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> nullaryDict = dict.GetCurriedDictionary(5, 6, 7, 8);
 
             //Act
-            IDictionaryComparison result = dict.Compare(nullaryDict, string.Equals);
+            IComparisonResult result = dict.Compare(nullaryDict, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -91,7 +92,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello Different", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -107,7 +108,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             ICurryDictionary<int, string> dict2 = Api.NewCurryDictionary<int, string>(4);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -125,7 +126,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello Different", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -143,7 +144,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict1.Add("World", 9, 10, 11, 14);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -160,7 +161,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -177,7 +178,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsFalse(result.IsEqual);
@@ -195,7 +196,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict2.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict1.Compare(dict2, string.Equals);
+            IComparisonResult result = dict1.Compare(dict2, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -209,7 +210,7 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add("Hello", 3, 4, 5, 6);
 
             //Act
-            IDictionaryComparison result = dict.Compare(dict, string.Equals);
+            IComparisonResult result = dict.Compare(dict, string.Equals);
 
             //Assert            
             Assert.IsTrue(result.IsEqual, result.Message);
@@ -1286,8 +1287,38 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             Assert.Throws<ArgumentException>(() => dict.UpdateKeys(identityFunction, arityNonneg));
         }
 
+        [Test, TestCase(1), TestCase(2), TestCase(3),]
+        /// <param name="failingKey">The exception will be thrown for this key - the reason for parametrising on this is we
+        /// want to ensure the test tests for atomicity, and doesn't just fail at the first key. So testing for all keys should ensure
+        /// at least one of them fails after some others were processed.</param>
+        public void GIVEN_ErrorInUpdate_WHEN_UpdateKeysAtArity1_THEN_ErrorThrownAndDictionaryUnchanged(int failingKey)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(7, 1, 1, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+
+            ICurryDictionary<int, int> expectedDict = Api.NewCurryDictionary<int, int>(3);
+            expectedDict.Add(7, 1, 1, 3);
+            expectedDict.Add(3, 1, 2, 4);
+            expectedDict.Add(5, 1, 3, 1);
+
+            //This function is non-injective but won't fail on the first call - this tests the atomicity the update
+            Func<int, int> errorProneFunction = k => k == failingKey ?
+                throw new ArgumentException($"Exception encountered at key {failingKey}") : k + 3;
+
+            //Act
+
+            Assert.Throws<ArgumentException>(() => dict.UpdateKeys(errorProneFunction, (NonnegativeInteger)1));
+
+            //Assert
+            IComparisonResult comparison = expectedDict.Compare(dict, (i, j) => i == j);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
         [Test]
-        public void GIVEN_NonInjectiveFunctionAtArity1_WHEN_UpdateKeysAtArity1_THEN_InjectiveViolationException()           
+        public void GIVEN_NonInjectiveFunctionAtArity1_WHEN_UpdateKeysAtArity1_THEN_InjectiveViolationExceptionAndDictionaryUnchanged()           
         {
             //Arrange
             ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
@@ -1296,12 +1327,22 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             dict.Add(5, 1, 3, 1);
             dict.Add(7, 1, 1, 3);
 
-            //This is non-injective at arity 1, based on the above keyset
-            Func<int, int> nonInjectiveFunction = k => k == 1 ? 2 : k;
+            ICurryDictionary<int, int> expectedDict = Api.NewCurryDictionary<int, int>(3);
+            expectedDict.Add(2, 1, 2, 3);
+            expectedDict.Add(3, 1, 2, 4);
+            expectedDict.Add(5, 1, 3, 1);
+            expectedDict.Add(7, 1, 1, 3);
 
-            //Act / Assert
+            //This function is non-injective but won't fail on the first call - this tests the atomicity the update
+            Func<int, int> nonInjectiveFunction = k => k == 1 ? 5 : k + 3;
+
+            //Act
 
             Assert.Throws<InjectiveViolationException>(() => dict.UpdateKeys(nonInjectiveFunction, (NonnegativeInteger)1));
+
+            //Assert
+            IComparisonResult comparison = expectedDict.Compare(dict, (i, j) => i == j);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
         [Test, TestCase(0), TestCase(1), TestCase(2)]

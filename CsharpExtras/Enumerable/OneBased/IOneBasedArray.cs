@@ -5,7 +5,7 @@ using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
 using CsharpExtras.Map.Dictionary.Collection;
 
-namespace CsharpExtras.Enumerable.OneBased
+namespace CsharpExtras._Enumerable.OneBased
 {
     public interface IOneBasedArray<TVal> : IEnumerable<TVal>
     {
@@ -34,7 +34,7 @@ namespace CsharpExtras.Enumerable.OneBased
         /// </summary>
         /// <param name="mapper">A function which takes a value & a one-based index and returns a result</param>
         /// <returns>A new array, the same size as this one, filled with the result of applying the mapper function to the original values & one-based indices.</returns>
-        IOneBasedArray<TResult> Map<TResult>(Func<int, TVal, TResult> mapper);
+        IOneBasedArray<TResult> Map<TResult>(Func<TVal, int, TResult> mapper);
 
         IDictionary<TVal, IList<int>> InverseMap();
 

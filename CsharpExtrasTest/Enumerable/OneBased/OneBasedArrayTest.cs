@@ -1,12 +1,12 @@
 ﻿using CsharpExtras.Api;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.OneBased;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Extensions;
 
-namespace OneBased
+namespace CsharpExtrasTest._Enumerable.OneBased
 {
     [TestFixture]
     [Category("Unit")]
@@ -23,7 +23,7 @@ namespace OneBased
         {
             //Assemble
             IOneBasedArray<string> array = new OneBasedArrayImpl<string>(new string[]{ "One", "Two" });
-            Func<int, string, string> func = (i, s) => s + i;
+            Func<string, int, string> func = (s, i) => s + i;
 
             //Act
             IOneBasedArray<string> result = array.Map(func);

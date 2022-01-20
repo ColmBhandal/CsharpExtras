@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CsharpExtras.Enumerable.OneBased
+namespace CsharpExtras._Enumerable.OneBased
 {
     /// <summary>
     /// This is a two dimensional (non-jagged) array whose indices are one-based.
@@ -20,7 +20,7 @@ namespace CsharpExtras.Enumerable.OneBased
         /// </summary>
         /// <param name="mapper">Takes as arguments a row index, column index and value in the source array and returns the values for the corresponding row/column in the new array</param>
         /// <returns>A new array containing mapped values</returns>
-        IOneBasedArray2D<TResult> Map<TResult>(Func<int, int, TVal, TResult> mapper);
+        IOneBasedArray2D<TResult> Map<TResult>(Func<TVal, int, int, TResult> mapper);
 
         /// <summary>
         /// Zip two 2D arrays into a single 2D array using a custom zipper function.

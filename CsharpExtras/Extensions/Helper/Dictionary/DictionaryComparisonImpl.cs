@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CsharpExtras.Compare;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CsharpExtras.Extensions.Helper.Dictionary
 {
-    internal class DictionaryComparisonImpl<TKey, TVal> : IDictionaryComparison
+    internal class DictionaryComparisonImpl<TKey, TVal> : IComparisonResult
     {
         public bool IsEqual => MessageAndIsEqual.isEqual;
         public string Message => MessageAndIsEqual.message;

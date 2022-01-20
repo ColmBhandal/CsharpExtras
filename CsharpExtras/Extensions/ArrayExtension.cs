@@ -207,7 +207,7 @@ namespace CsharpExtras.Extensions
         /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array.</returns>
         public static TResult[] Map<TVal, TResult>(this TVal[] array, Func<TVal, TResult> mapper)
         {
-            TResult func(int i, TVal x) => mapper(x);
+            TResult func(TVal x, int i) => mapper(x);
             return array.Map(func);
         }
 
@@ -216,13 +216,13 @@ namespace CsharpExtras.Extensions
         /// </summary>
         /// <param name="mapper">A function which maps an element and its index in the original array to an element in the new array.</param>
         /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array & its index.</returns>
-        public static TResult[] Map<TVal, TResult>(this TVal[] array, Func<int, TVal, TResult> mapper)
+        public static TResult[] Map<TVal, TResult>(this TVal[] array, Func<TVal, int, TResult> mapper)
         {
             int length = array.Length;
             TResult[] resultArray = new TResult[length];
             for (int i = 0; i < length; i++)
             {
-                resultArray[i] = mapper(i, array[i]);
+                resultArray[i] = mapper(array[i], i);
             }
             return resultArray;
         }

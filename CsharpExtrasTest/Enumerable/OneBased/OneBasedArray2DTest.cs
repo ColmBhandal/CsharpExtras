@@ -1,12 +1,12 @@
 ﻿using CsharpExtras.Api;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.OneBased;
 using NUnit.Framework;
 using System;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
 using System.Collections.Generic;
 
-namespace OneBased
+namespace CsharpExtrasTest._Enumerable.OneBased
 {
     [TestFixture, Category("Unit")]
     public class OneBasedArray2DTest
@@ -23,7 +23,7 @@ namespace OneBased
         {
             //Assemble
             IOneBasedArray2D<string> array = new OneBasedArray2DImpl<string>(new string[,] { { "OneOne", "OneTwo" }, { "TwoOne", "TwoTwo" } });
-            Func<int, int, string, string> func = (i, j, s) => $"{s}{i},{j}";
+            Func<string, int, int, string> func = (s, i, j) => $"{s}{i},{j}";
 
             //Act
             IOneBasedArray2D<string> result = array.Map(func);

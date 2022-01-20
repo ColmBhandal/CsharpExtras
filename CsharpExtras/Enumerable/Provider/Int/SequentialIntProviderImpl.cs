@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CsharpExtras.Enumerable.Provider.Int
+namespace CsharpExtras._Enumerable.Provider.Int
 {
     internal class SequentialIntProviderImpl : ISequentialIntProvider
     {

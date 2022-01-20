@@ -1,11 +1,12 @@
-﻿using CsharpExtras.Extensions.Helper.Dictionary;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Extensions.Helper.Dictionary;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace CsharpExtras.Map.Dictionary.Curry
 {
-    internal class CurryDictionaryComparisonImpl<TKey, TVal> : IDictionaryComparison
+    internal class CurryDictionaryComparisonImpl<TKey, TVal> : IComparisonResult
     {
         public bool IsEqual => MessageAndIsEqual.isEqual;
         public string Message => MessageAndIsEqual.message;
@@ -45,7 +46,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             if (FirstMismatch is (IList<TKey> keyTuple, TVal val))
             {
-                return ($"Mismatch found at key tuple {keyTuple} and value {val}", false);
+                return ($"Mismatch found at key tuple {string.Join(",", keyTuple)} and value {val}", false);
             }
             return ("Dictionaries are equal", true);
         }
