@@ -24,12 +24,21 @@ namespace CsharpExtras.Map.Sparse
         private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
         private readonly ICsharpExtrasApi _api;
 
-        private readonly Func<int, int, bool> _validationFunction;
+        private readonly Func<NonnegativeInteger, int, bool> _validationFunction;
 
         private ILazyFunctionMap<(int index, int dimension), SparseArrayImpl<TVal>.ValidIndex> _validIndexCache;
 
+        /// <summary>
+        /// Constructs a new sparse array
+        /// </summary>
+        /// <param name="dimension">The dimension i.e. number of coordinates per mapping in the sparse array</param>        
+        /// <param name="validationFunction">Given an axis index and an index along that axis, returns whether the given index is valid.
+        /// Note: this function only needs to handle axis indices from 0 up to the dimension of this array,
+        /// even though that parameter is typed for all positive integers</param>
+        /// <param name="defaultValue"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public SparseArrayImpl(PositiveInteger dimension, ICsharpExtrasApi api,
-            Func<int, int, bool> validationFunction, TVal defaultValue)
+            Func<NonnegativeInteger, int, bool> validationFunction, TVal defaultValue)
         {
             Dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
             DefaultValue = defaultValue;

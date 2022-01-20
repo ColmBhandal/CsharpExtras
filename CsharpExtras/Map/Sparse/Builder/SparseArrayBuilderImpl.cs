@@ -19,12 +19,12 @@ namespace CsharpExtras.Map.Sparse.Builder
             _api = api ?? throw new ArgumentNullException(nameof(api));
         }
 
-        public ISparseArray<TVal> Builder()
+        public ISparseArray<TVal> Build()
         {
             return new SparseArrayImpl<TVal>(Dimension, _api, (i, j) => true, DefaultValue);
         }
 
-        public ISparseArrayBuilder<TVal> WithValidationFunction(Func<int, bool> indexValidationFunction, int axisIndex)
+        public ISparseArrayBuilder<TVal> WithValidationFunction(Func<int, bool> indexValidationFunction, NonnegativeInteger axisIndex)
         {
             return this;
         }
