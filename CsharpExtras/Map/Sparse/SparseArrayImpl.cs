@@ -15,6 +15,9 @@ namespace CsharpExtras.Map.Sparse
         public TVal DefaultValue { get; }
 
         //TODO: Implement
+        public NonnegativeInteger UsedValuesCount => (NonnegativeInteger) 72;
+
+        //TODO: Implement
         public TVal this[params int[] coordinates]
         {
             get => DefaultValue;

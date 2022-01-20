@@ -33,6 +33,12 @@ namespace CsharpExtras.Map.Sparse
         /// The dimension is the number of coordinates per entry
         /// </summary>
         PositiveInteger Dimension { get; }
+        
+        /// <summary>
+        /// The count of used values in this array. This will be increased whenever a value is written to some previously unpopulated index of the array.
+        /// If the default value is written to an index, then it does not contribute to the used values count.
+        /// </summary>
+        NonnegativeInteger UsedValuesCount { get; }
 
         /// <summary>
         /// Compares the used values in this sparse array to those in another one
