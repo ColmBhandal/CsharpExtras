@@ -28,7 +28,7 @@ namespace CsharpExtras.Map.Sparse
 
         private ILazyFunctionMap<(int index, int dimension), SparseArrayImpl<TVal>.ValidIndex> _validIndexCache;
 
-        public SparseArrayImpl(int indexBase, PositiveInteger dimension, ICsharpExtrasApi api,
+        public SparseArrayImpl(PositiveInteger dimension, ICsharpExtrasApi api,
             Func<int, int, bool> validationFunction, TVal defaultValue)
         {
             Dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
