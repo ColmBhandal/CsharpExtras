@@ -3,6 +3,7 @@ using CsharpExtras.Compare;
 using CsharpExtras.Map.Sparse;
 using CsharpExtras.Map.Sparse.Builder;
 using CsharpExtras.ValidatedType.Numeric.Integer;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -151,5 +152,154 @@ namespace CsharpExtrasTest.Map.Sparse
             IComparisonResult comparison = emptyArray.CompareUsedValues(array, string.Equals);
             Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
+
+        [Test]
+        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionAfterWriteNonDefault_THEN_NoExceptionThrown()
+        {
+            //Arrange
+            int uniqueInvalidIndex = 7;
+            IntWrapper wrappedUniqueInvalidIndex = new IntWrapper();
+            //Initially, the validation function validates against a different index to the unique value index
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex+1;
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            const string WrittenValue = "Something";
+
+            //Act
+            array[uniqueInvalidIndex] = WrittenValue;
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
+
+            //Assert
+            string value = array[uniqueInvalidIndex];
+            Assert.Pass("No exception was thrown retrieving the value from the array - test passed");
+        }
+
+        [Test]
+        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionAfterWriteDefault_THEN_NoExceptionThrown()
+        {
+            //Arrange
+            int uniqueInvalidIndex = 7;
+            IntWrapper wrappedUniqueInvalidIndex = new IntWrapper();
+            //Initially, the validation function validates against a different index to the unique value index
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            //Act
+            array[uniqueInvalidIndex] = DefaultValue;
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
+
+            //Assert
+            string value = array[uniqueInvalidIndex];
+            Assert.Pass("No exception was thrown retrieving the value from the array - test passed");
+        }
+
+        [Test]
+        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionBeforeWriteNonDefault_THEN_ArgumentException()
+        {
+            //Arrange
+            int uniqueInvalidIndex = 7;
+            IntWrapper wrappedUniqueInvalidIndex = new IntWrapper();
+            //Initially, the validation function validates against a different index to the unique value index
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            const string WrittenValue = "Something";
+
+            //Act
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
+            array[uniqueInvalidIndex] = WrittenValue;
+
+            //Assert
+            Assert.Throws<ArgumentException>(() => { string _ = array[uniqueInvalidIndex]; });
+        }
+
+        [Test]
+        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionBeforeWriteDefault_THEN_ArgumentException()
+        {
+            //Arrange
+            int uniqueInvalidIndex = 7;
+            IntWrapper wrappedUniqueInvalidIndex = new IntWrapper();
+            //Initially, the validation function validates against a different index to the unique value index
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            //Act
+            wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
+            array[uniqueInvalidIndex] = DefaultValue;
+
+            //Assert
+            Assert.Throws<ArgumentException>(() => { string _ = array[uniqueInvalidIndex]; });
+        }
+
+        [Test]
+        public void GIVEN_Array_WHEN_WriteToSameIndexTwice_THEN_ValidationCalledExactlyOnce()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
+            mockValidationFunc.Setup(f => f.Invoke(It.IsAny<int>())).Returns(true);
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            //Act
+            array[1] = "Hello";
+            array[1] = "World";
+
+            //Assert
+            mockValidationFunc.Verify(f => f.Invoke(1), Times.Once());
+        }
+
+        [Test]
+        public void GIVEN_Array_WHEN_ReadFromSameIndexTwice_THEN_ValidationCalledExactlyOnce()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
+            mockValidationFunc.Setup(f => f.Invoke(It.IsAny<int>())).Returns(true);
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            //Act
+            string x = array[1];
+            x = array[1];
+
+            //Assert
+            mockValidationFunc.Verify(f => f.Invoke(1), Times.Once());
+        }
+
+        [Test]
+        public void GIVEN_Array_WHEN_WriteThenReadAtSameIndex_THEN_ValidationCalledExactlyOnce()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
+            mockValidationFunc.Setup(f => f.Invoke(It.IsAny<int>())).Returns(true);
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            //Act
+            array[1] = "Hello";
+            string x = array[1];
+
+            //Assert
+            mockValidationFunc.Verify(f => f.Invoke(1), Times.Once());
+        }
+
+        private class IntWrapper { public int Val; };
     }
 }
