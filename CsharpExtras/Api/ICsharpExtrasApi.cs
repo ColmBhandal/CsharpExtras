@@ -60,6 +60,25 @@ namespace CsharpExtras.Api
         IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler);
         IPropertyChangedWrapper<TObj, TEvent> NewPropertyChangedWrapper<TObj, TBefore, TAfter, TEvent>
             (TObj obj, Func<TObj, TBefore> beforeGetter, Func<TObj, TAfter> afterGetter, Func<TBefore, TAfter, TEvent> eventGenerator);
+
+        /// <summary>
+        /// Creates a new curry dictionary wrapper. A curry dictionary wrapper is a curry dictionary which is backed by another curry dictionary
+        /// and exposes all of its methods through conversion functions which convert keys and value to/from the original dictionary.
+        /// The backing dictionary can be referred to as the inner dictionary and the wrapper as the outer dictionary.
+        /// Note: a sensible usage of this wrapper is to make the pairs of key/value transforms bijections. Non-bijective transform pairs may give strange results.
+        /// </summary>
+        /// <typeparam name="TKeyInner">The key type of the inner dictionary</typeparam>
+        /// <typeparam name="TKeyOuter">The key type of the outer dictionary</typeparam>
+        /// <typeparam name="TValInner">The value type of the inner dictionary</typeparam>
+        /// <typeparam name="TValOuter">The value type of the outer dictionary</typeparam>
+        /// <param name="backingDictionary">The inner dictionary.</param>
+        /// <param name="keyInTransform">A transformation function that converts an outer key and an index to an inner key.
+        /// The index is the index of the key in a key tuple. Keys at different indices may be transformed differently.</param>
+        /// <param name="keyOutTransform">A transformation function that converts an inner key and an index to an outer key.
+        /// The index is the index of the key in a key tuple. Keys at different indices may be transformed differently.</param>
+        /// <param name="valInTransform">A transformation function that converts outer values to inner values</param>
+        /// <param name="valOutTransform">A transformation function that converts inner values to outer values</param>
+        /// <returns>A new curry dictionary, which wraps around the backing dictionary and exposes the new key/value type</returns>
         ICurryDictionary<TKeyOuter, TValOuter> NewGenericCurryDictionaryWrapper<TKeyInner, TKeyOuter, TValInner, TValOuter>
             (ICurryDictionary<TKeyInner, TValInner> backingDictionary,
             Func<TKeyOuter, int, TKeyInner> keyInTransform,
