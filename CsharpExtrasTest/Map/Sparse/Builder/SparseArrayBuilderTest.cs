@@ -32,12 +32,33 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
         }
 
         [Test, TestCase(1, 0, 3), TestCase(2, 0, 3), TestCase(3, 2, -79)]
+        /*The index we're getting is "invalid" only according to a validation function that was later added to the builder
+         * What we're testing here is that said validation function does not come into effect for an object that's already been built*/
+        public void GIVEN_BuilderAndBuiltObject_WHEN_AddValidationsToBuilderAfterBuild_THEN_GetInvalidIndexReturnsDefault
+            (int dimension, int axisIndex, int uniqueInvalidIndex)
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)dimension, DefaultValue);
+            ISparseArray<string> array = builder.Build();
+
+            //Act
+            builder.WithValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger)axisIndex);
+
+            //Assert
+            int[] coordinates = new int[dimension];
+            coordinates[axisIndex] = uniqueInvalidIndex;
+            string valueAtCoordinates = array[coordinates];
+            Assert.AreEqual(DefaultValue, valueAtCoordinates);
+        }
+
+        [Test, TestCase(1, 0, 3), TestCase(2, 0, 3), TestCase(3, 2, -79)]
         public void GIVEN_BuilderWithValidations_WHEN_Build_THEN_GetInvalidIndexThrowsArgumentException
             (int dimension, int axisIndex, int uniqueInvalidIndex)
         {
             //Arrange
-
-            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger) dimension, "DEFAULT")
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger) dimension, DefaultValue)
                 .WithValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger) axisIndex);
 
             //Act
@@ -54,7 +75,6 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
             (int dimension, int axisIndex, int uniqueInvalidIndex)
         {
             //Arrange
-
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)dimension, DefaultValue)
                 .WithValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger)axisIndex);

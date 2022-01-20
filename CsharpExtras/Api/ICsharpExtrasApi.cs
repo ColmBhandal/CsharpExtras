@@ -39,6 +39,10 @@ namespace CsharpExtras.Api
         IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size);
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(TVal[,] zeroBasedBackingArray);
         IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns);
+        IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, Func<int, int, TVal> initialiser);
+        IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, Func<int, TVal> initialiser);
+        IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue);
+        IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue);
         IPathDecorator NewPathDecorator();
         IRandomStringGenerator NewRandomStringGenerator();
         IRegexPatternDictionary<TVal> NewRegexPatternDictionary<TVal>();
@@ -52,10 +56,6 @@ namespace CsharpExtras.Api
         ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(int arity);
         ICurryDictionary<TKey, TVal> NewCurryDictionary<TKey, TVal>(PositiveInteger arity);
         ISequentialIntProvider NewSequentialIntProvider(int start, int step);
-        IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, Func<int, int, TVal> initialiser);
-        IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, Func<int, TVal> initialiser);
-        IOneBasedArray2D<TVal> NewOneBasedArray2D<TVal>(int rows, int columns, TVal initialValue);
-        IOneBasedArray<TVal> NewOneBasedArray<TVal>(int size, TVal initialValue);
         IUpdateNotifier<TVal, TUpdate> NewUpdateNotifier<TVal, TUpdate>(TVal val, Func<TVal, TUpdate, TVal> updater);
         IEventObjWrapper<TObj, TEvent> NewEventObjWrapper<TObj, TEvent>(TObj obj, Action<TEvent> handler);
         IPropertyChangedWrapper<TObj, TEvent> NewPropertyChangedWrapper<TObj, TBefore, TAfter, TEvent>
