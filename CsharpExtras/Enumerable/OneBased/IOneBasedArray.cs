@@ -5,7 +5,7 @@ using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
 using CsharpExtras.Map.Dictionary.Collection;
 
-namespace CsharpExtras.Enumerable.OneBased
+namespace CsharpExtras._Enumerable.OneBased
 {
     public interface IOneBasedArray<TVal> : IEnumerable<TVal>
     {

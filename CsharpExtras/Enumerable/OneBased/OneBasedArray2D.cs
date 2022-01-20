@@ -3,7 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace CsharpExtras.Enumerable.OneBased
+namespace CsharpExtras._Enumerable.OneBased
 {
     class OneBasedArray2DImpl<TVal> : IOneBasedArray2D<TVal>
     {

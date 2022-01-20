@@ -1,12 +1,12 @@
 ﻿using CsharpExtras.Api;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.OneBased;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Extensions;
 
-namespace OneBased
+namespace CsharpExtrasTest._Enumerable.OneBased
 {
     [TestFixture]
     [Category("Unit")]

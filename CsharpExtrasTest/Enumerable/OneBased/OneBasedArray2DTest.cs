@@ -1,12 +1,12 @@
 ﻿using CsharpExtras.Api;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.OneBased;
 using NUnit.Framework;
 using System;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
 using System.Collections.Generic;
 
-namespace OneBased
+namespace CsharpExtrasTest._Enumerable.OneBased
 {
     [TestFixture, Category("Unit")]
     public class OneBasedArray2DTest

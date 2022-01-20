@@ -1,8 +1,8 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.Map.Dictionary;
 using CsharpExtras.Map.Dictionary.Collection;
-using CsharpExtras.Enumerable.NonEmpty;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.NonEmpty;
+using CsharpExtras._Enumerable.OneBased;
 using CsharpExtras.IO;
 using CsharpExtras.Log;
 using CsharpExtras.Map;
@@ -15,10 +15,11 @@ using System.Collections.Generic;
 using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
-using CsharpExtras.Enumerable.Provider.Int;
+using CsharpExtras._Enumerable.Provider.Int;
 using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
 using CsharpExtras.Map.Dictionary.Curry.Wrapper;
+using CsharpExtras.Map.Sparse.Builder;
 
 namespace CsharpExtras.Api
 {
@@ -151,5 +152,7 @@ namespace CsharpExtras.Api
             new GenericCurryDictionaryWrapperImpl<TKeyInner, TKeyOuter, TValInner, TValOuter>
             (backingDictionary, keyInTransform, keyOutTransform, valInTransform, valOutTransform, this);
 
+        public ISparseArrayBuilder<TVal> NewSparseArrayBuilder<TVal>(PositiveInteger dimension, TVal defaultValue) =>
+            new SparseArrayBuilderImpl<TVal>(defaultValue, dimension, this);
     }
 }

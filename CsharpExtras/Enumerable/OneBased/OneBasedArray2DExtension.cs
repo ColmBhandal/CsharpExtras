@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace CsharpExtras.Enumerable.OneBased
+namespace CsharpExtras._Enumerable.OneBased
 {
     public static class OneBasedArray2DExtension
     {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using CsharpExtras.Map.Dictionary.Collection;
 
-namespace CsharpExtras.Enumerable.OneBased
+namespace CsharpExtras._Enumerable.OneBased
 {
     class OneBasedArrayImpl<TVal> : IOneBasedArray<TVal>
     {

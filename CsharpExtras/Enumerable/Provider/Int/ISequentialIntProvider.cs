@@ -1,4 +1,4 @@
-﻿namespace CsharpExtras.Enumerable.Provider.Int
+﻿namespace CsharpExtras._Enumerable.Provider.Int
 {
     /// <summary>
     /// Provides iteration over an arithmetic sequence of ints, starting at the given value & increasing by the given step

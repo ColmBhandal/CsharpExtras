@@ -1,7 +1,7 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.Map.Dictionary;
-using CsharpExtras.Enumerable.NonEmpty;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.NonEmpty;
+using CsharpExtras._Enumerable.OneBased;
 using CsharpExtras.IO;
 using CsharpExtras.Map;
 using CsharpExtras.Log;
@@ -15,9 +15,10 @@ using CsharpExtras.Map.Dictionary.Collection;
 using CsharpExtras.Map.Dictionary.Variant;
 using CsharpExtras.Map.Dictionary.Curry;
 using CsharpExtras.ValidatedType.Numeric.Integer;
-using CsharpExtras.Enumerable.Provider.Int;
+using CsharpExtras._Enumerable.Provider.Int;
 using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
+using CsharpExtras.Map.Sparse.Builder;
 
 namespace CsharpExtras.Api
 {
@@ -65,5 +66,6 @@ namespace CsharpExtras.Api
             Func<TKeyInner, int, TKeyOuter> keyOutTransform,
             Func<TValOuter, TValInner> valInTransform,
             Func<TValInner, TValOuter> valOutTransform);
+        ISparseArrayBuilder<TVal> NewSparseArrayBuilder<TVal>(PositiveInteger dimension, TVal defaultValue);
     }
 }

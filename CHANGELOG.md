@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [BREAKING] Renamed Validated to ImmutableValidated and added equality/hashcode logic, delegating to the underlying singleton value (#113)
 - [BREAKING] BinaryDigit is now written in terms of bytes instead of ints, for space efficiency (#113)
 - [BREAKING] Re-ordered the in and value parameters of the index-based map function for arrays and lists to keep them  consistent with Linq's enumerable method
+- [BREAKING] Refactored Enumerable namespace to _Enumerable to avoid a collision with the Enumerable type
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)

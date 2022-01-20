@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CsharpExtras.Enumerable.OneBased
+namespace CsharpExtras._Enumerable.OneBased
 {
     /// <summary>
     /// This is a two dimensional (non-jagged) array whose indices are one-based.

@@ -1,5 +1,5 @@
 ﻿using CsharpExtras.Api;
-using CsharpExtras.Enumerable.OneBased;
+using CsharpExtras._Enumerable.OneBased;
 using System.Collections.Generic;
 using System.Text;
 
