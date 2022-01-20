@@ -97,7 +97,7 @@ namespace CsharpExtrasTest.Map.Sparse
             IComparisonResult comparison = upper.CompareUsedValues(lower, isEqualIgnoreCase);
 
             //Assert
-            Assert.IsFalse(comparison.IsEqual, comparison.Message);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
         }
 
         [Test]
@@ -187,15 +187,16 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.GetVal(), (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
             array[uniqueInvalidIndex] = DefaultValue;
+            //At this point, the function is now mutated and the index is invalid. But since we've already accessed it we expect it to be cached as valid.
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
 
             //Assert
-            string value = array[uniqueInvalidIndex];
+            string value = array[uniqueInvalidIndex];            
             Assert.Pass("No exception was thrown retrieving the value from the array - test passed");
         }
 
@@ -216,10 +217,9 @@ namespace CsharpExtrasTest.Map.Sparse
 
             //Act
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
-            array[uniqueInvalidIndex] = WrittenValue;
 
             //Assert
-            Assert.Throws<ArgumentException>(() => { string _ = array[uniqueInvalidIndex]; });
+            Assert.Throws<ArgumentException>(() => array[uniqueInvalidIndex] = WrittenValue);
         }
 
         [Test]
@@ -237,10 +237,9 @@ namespace CsharpExtrasTest.Map.Sparse
 
             //Act
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
-            array[uniqueInvalidIndex] = DefaultValue;
 
             //Assert
-            Assert.Throws<ArgumentException>(() => { string _ = array[uniqueInvalidIndex]; });
+            Assert.Throws<ArgumentException>(() => array[uniqueInvalidIndex] = DefaultValue);
         }
 
         [Test]
@@ -300,6 +299,6 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Verify(f => f.Invoke(1), Times.Once());
         }
 
-        private class IntWrapper { public int Val; };
+        private class IntWrapper { public int Val { get; set; } public int GetVal() => Val; };
     }
 }

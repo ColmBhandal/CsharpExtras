@@ -1,10 +1,13 @@
 ﻿using CsharpExtras.Api;
 using CsharpExtras.Compare;
+using CsharpExtras.Extensions;
 using CsharpExtras.Map.Dictionary.Curry;
+using CsharpExtras.Map.Sparse.Compare;
 using CsharpExtras.ValidatedType;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CsharpExtras.Map.Sparse
@@ -14,22 +17,45 @@ namespace CsharpExtras.Map.Sparse
         public PositiveInteger Dimension { get; }
         public TVal DefaultValue { get; }
 
-        //TODO: Implement
-        public NonnegativeInteger UsedValuesCount => (NonnegativeInteger) 72;
+        public NonnegativeInteger UsedValuesCount => _backingDictionary.Count;
 
-        //TODO: Implement
         public TVal this[params int[] coordinates]
         {
-            get => DefaultValue;
-            set { return; }
+            get => GetValue(coordinates);
+            set => SetValue(coordinates, value);
         }
 
+        private void SetValue(int[] coordinates, TVal value)
+        {
+            ValidIndex[] validatedCoordinates = GetValidateCoordinated(coordinates);
+            if (EqualityComparer<TVal>.Default.Equals(value, DefaultValue))
+            {
+                return;
+            }
+            if (!_backingDictionary.Update(value, validatedCoordinates))
+            {
+                _backingDictionary.Add(value, validatedCoordinates);
+            }
+        }
+
+        private TVal GetValue(int[] coordinates)
+        {
+            ValidIndex[] validatedCoordinates = GetValidateCoordinated(coordinates);
+            if (_backingDictionary.ContainsKeyTuple(validatedCoordinates))
+            {
+                return _backingDictionary[validatedCoordinates];
+            }
+            return DefaultValue;
+        }
+
+        private SparseArrayImpl<TVal>.ValidIndex[] GetValidateCoordinated(int[] coordinates) 
+            => coordinates.Map((index, axisIndex) => _validIndexCache[(index, axisIndex)]);
+
         private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
-        private readonly ICsharpExtrasApi _api;
 
         private readonly Func<NonnegativeInteger, int, bool> _validationFunction;
 
-        private ILazyFunctionMap<(int index, int dimension), SparseArrayImpl<TVal>.ValidIndex> _validIndexCache;
+        private ILazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex> _validIndexCache;
 
         /// <summary>
         /// Constructs a new sparse array
@@ -45,42 +71,61 @@ namespace CsharpExtras.Map.Sparse
         {
             Dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
             DefaultValue = defaultValue;
-            _api = api ?? throw new ArgumentNullException(nameof(api));
             _validationFunction = validationFunction;
             _backingDictionary = api.NewGenericCurryDictionaryWrapper(
                 api.NewCurryDictionary<int, TVal>(Dimension), KeyInTransform, KeyOutTransform, v => v, v => v);
             _validIndexCache = api.NewLazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex>
-                ((p) => new ValidIndex(p.index, (PositiveInteger)p.axisIndex, this));
+                ((p) => new ValidIndex(p.index, (NonnegativeInteger)p.axisIndex, this));
         }
 
         public IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer)
         {
-            //TODO: Implement properly (this is just a stub)
-            return new CurryDictionaryComparisonImpl<int, int>(1, 1, 1, 1, null);
+            if (other.Dimension != Dimension)
+            {
+                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+            }
+            if (other.UsedValuesCount != UsedValuesCount)
+            {
+                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+            }            
+            foreach(IList<SparseArrayImpl<TVal>.ValidIndex> tuple in _backingDictionary.KeyTuples)
+            {
+                IEnumerable<int> transformedKeyTupleEnum = tuple.Select(i => (int)i);
+                int[] transformedKeyTuple = transformedKeyTupleEnum.ToArray();
+                TVal otherValue = other[transformedKeyTuple];
+                TVal thisValue = this[transformedKeyTuple];
+                if (EqualityComparer<TVal>.Default.Equals(otherValue, other.DefaultValue)
+                    || !valueComparer(otherValue, thisValue))
+                {
+                    return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount,
+                        (transformedKeyTupleEnum.ToList(), thisValue));
+                }
+            }
+            return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
         }
 
         private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int axisIndex) => index;
 
         private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int axisIndex) => _validIndexCache[(index, axisIndex)];
 
-        private class ValidIndex : ImmutableValidated<int>
+        private class ValidIndex
         {
-            private readonly PositiveInteger _axisIndexIndex;
-            private readonly SparseArrayImpl<TVal> _array;
+            private readonly int _index;
 
-            public ValidIndex(int index, PositiveInteger axisIndex, SparseArrayImpl<TVal> array) : base(index)
+            public ValidIndex(int index, NonnegativeInteger axisIndex, SparseArrayImpl<TVal> array)
             {
-                _array = array;
-                _axisIndexIndex = axisIndex;
+                if(!IsValid(index, axisIndex, array))
+                {
+                    throw new ArgumentException($"Invalid index {index} for axis {axisIndex}");
+                }
+                _index = index;
             }
 
-            protected override string ValidityConditionTextDescription =>
-                "Ensures an index at a given dimension is valid";
+            public static implicit operator int(ValidIndex validIndex) => validIndex._index;
 
-            protected override bool IsValid(int t)
-            {
-                //TODO: Implement using the _validationFunction of the array & also ensure the dimension is less than that of the array.
-                return false;
+            protected bool IsValid(int index, NonnegativeInteger axisIndex, SparseArrayImpl<TVal> array)
+            {                
+                return array._validationFunction(axisIndex, index);
             }
         }
     }

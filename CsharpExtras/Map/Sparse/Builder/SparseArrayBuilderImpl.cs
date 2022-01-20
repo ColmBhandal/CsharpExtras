@@ -16,7 +16,8 @@ namespace CsharpExtras.Map.Sparse.Builder
 
         private readonly Func<int, bool>[] _validationFunctions;
 
-        private readonly ISet<(TVal value, int[] coordinates)> _bufferedWrites;
+        private readonly ISet<(TVal value, int[] coordinates)> _bufferedWrites
+            = new HashSet<(TVal value, int[] coordinates)>();
 
         public SparseArrayBuilderImpl(TVal defaultValue, PositiveInteger dimension, ICsharpExtrasApi api)
         {
@@ -26,7 +27,6 @@ namespace CsharpExtras.Map.Sparse.Builder
             /*Non-MVP: Replace Enumerable.Repeat with a for-loop backed array population method, which writes a constant value to each index
              * However, this is not really important as the array is typically small - it's the number of dimensions*/
             _validationFunctions = Enumerable.Repeat<Func<int, bool>>(x => true, dimension).ToArray();
-            _bufferedWrites = new HashSet<(TVal value, int[] coordinates)>();
         }
 
         public ISparseArray<TVal> Build()

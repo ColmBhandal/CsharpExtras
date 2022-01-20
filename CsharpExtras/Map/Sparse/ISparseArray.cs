@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
+using System.Collections.Generic;
 
 namespace CsharpExtras.Map.Sparse
 {
