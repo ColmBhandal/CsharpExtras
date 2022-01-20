@@ -15,7 +15,22 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
     public class SparseArrayBuilderTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
-        
+
+        [Test]
+        public void GIVEN_Builder_WHEN_BuildTwice_THEN_DistinctObjectsCreated()
+        {
+            //Arrange
+
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)7, "DEFAULT");
+
+            //Act
+            ISparseArray<string> array1 = builder.Build();
+            ISparseArray<string> array2 = builder.Build();
+
+            //Assert
+            Assert.AreNotSame(array1, array2);
+        }
+
         [Test, TestCase(1, 0, 3), TestCase(2, 0, 3), TestCase(3, 2, -79)]
         public void GIVEN_BuilderWithValidations_WHEN_Build_THEN_GetInvalidIndexThrowsArgumentException
             (int dimension, int axisIndex, int uniqueInvalidIndex)
