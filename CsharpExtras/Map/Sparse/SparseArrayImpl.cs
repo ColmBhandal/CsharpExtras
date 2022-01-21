@@ -19,11 +19,8 @@ namespace CsharpExtras.Map.Sparse
 
         public NonnegativeInteger UsedValuesCount => _backingDictionary.Count;
 
-        public bool IsValid(int index, NonnegativeInteger axisIndex)
-        {
-            //TODO
-            return false;
-        }
+        public bool IsValid(int index, NonnegativeInteger axisIndex) =>
+            _validIndexCache[(index, axisIndex)] != null;
 
         public TVal this[params int[] coordinates]
         {
@@ -55,13 +52,14 @@ namespace CsharpExtras.Map.Sparse
         }
 
         private SparseArrayImpl<TVal>.ValidIndex[] GetValidateCoordinated(int[] coordinates) 
-            => coordinates.Map((index, axisIndex) => _validIndexCache[(index, axisIndex)]);
+            => coordinates.Map((index, axisIndex) => _validIndexCache[(index, axisIndex)] ??
+                throw new ArgumentException($"Invalid index {index} for axis {axisIndex}"));
 
         private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
 
         private readonly Func<NonnegativeInteger, int, bool> _validationFunction;
 
-        private ILazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex> _validIndexCache;
+        private ILazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex?> _validIndexCache;
 
         /// <summary>
         /// Constructs a new sparse array
@@ -80,8 +78,8 @@ namespace CsharpExtras.Map.Sparse
             _validationFunction = validationFunction;
             _backingDictionary = api.NewGenericCurryDictionaryWrapper(
                 api.NewCurryDictionary<int, TVal>(Dimension), KeyInTransform, KeyOutTransform, v => v, v => v);
-            _validIndexCache = api.NewLazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex>
-                ((p) => new ValidIndex(p.index, (NonnegativeInteger)p.axisIndex, this));
+            _validIndexCache = api.NewLazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex?>
+                ((p) => SparseArrayImpl<TVal>.ValidIndex.GetValidIndexOrNull(p.index, (NonnegativeInteger)p.axisIndex, this));
         }
 
         public IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer)
@@ -112,24 +110,31 @@ namespace CsharpExtras.Map.Sparse
 
         private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int axisIndex) => index;
 
-        private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int axisIndex) => _validIndexCache[(index, axisIndex)];
+        private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int axisIndex) => _validIndexCache[(index, axisIndex)]
+            ?? throw new ArgumentException($"Invalid index {index} for axis {axisIndex}");
 
         private class ValidIndex
         {
             private readonly int _index;
 
-            public ValidIndex(int index, NonnegativeInteger axisIndex, SparseArrayImpl<TVal> array)
+            /// <returns>If the index is valid according to the axis and array, returns a valid index instance. Else returns null.</returns>
+            public static ValidIndex? GetValidIndexOrNull(int index, NonnegativeInteger axisIndex, SparseArrayImpl<TVal> array)
             {
-                if(!IsValid(index, axisIndex, array))
+                if (!IsValid(index, axisIndex, array))
                 {
-                    throw new ArgumentException($"Invalid index {index} for axis {axisIndex}");
+                    return null;
                 }
+                return new ValidIndex(index);
+            }
+
+            private ValidIndex(int index)
+            {
                 _index = index;
             }
 
             public static implicit operator int(ValidIndex validIndex) => validIndex._index;
 
-            protected bool IsValid(int index, NonnegativeInteger axisIndex, SparseArrayImpl<TVal> array)
+            private static bool IsValid(int index, NonnegativeInteger axisIndex, SparseArrayImpl<TVal> array)
             {                
                 return array._validationFunction(axisIndex, index);
             }

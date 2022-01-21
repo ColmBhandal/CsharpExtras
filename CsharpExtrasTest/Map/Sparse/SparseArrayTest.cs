@@ -269,7 +269,7 @@ namespace CsharpExtrasTest.Map.Sparse
         }
 
         [Test, TestCaseSource(nameof(TwoIndexOperationsCasesDimensionOne))]
-        public void GIVEN_InvalidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_ArgumentExceptionsAndValidationCalledTwice
+        public void GIVEN_InvalidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_ArgumentExceptionsAndValidationCalledOnce
             ((string testCaseDescription, Action<ISparseArray<string>, int> beforeAction,
             Action<ISparseArray<string>, int> afterAction, bool shouldThrowBefore, bool shouldThrowAfter) testCase)
         {
@@ -303,8 +303,8 @@ namespace CsharpExtrasTest.Map.Sparse
             }
 
             //Assert
-            mockValidationFunc.Verify(f => f.Invoke(UniqueInvalidIndex), Times.Exactly(2));
-            mockValidationFunc.Verify(f => f.Invoke(It.IsAny<int>()), Times.Exactly(2));
+            mockValidationFunc.Verify(f => f.Invoke(UniqueInvalidIndex), Times.Once());
+            mockValidationFunc.Verify(f => f.Invoke(It.IsAny<int>()), Times.Once());
         }
         
         private static IEnumerable<(string, Action<ISparseArray<string>, int> beforeAction, Action<ISparseArray<string>, int> afterAction,
