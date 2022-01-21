@@ -28,19 +28,21 @@ namespace CsharpExtrasTest.Map.Sparse
             ISparseArrayBuilder<string> builderPopulated = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultValue)
                 .WithValue(matchingValue, 0, 0);
             ISparseArrayBuilder<string> builderEmpty = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultValue);
-            ISparseArray<string> populated = builderPopulated.Build();
-            ISparseArray<string> empty = builderEmpty.Build();
+            ISparseArray<string> populatedArray = builderPopulated.Build();
+            ISparseArray<string> emptyArray = builderEmpty.Build();
 
-            string actualPopulatedValue = populated[0, 0];
+            string actualPopulatedValue = populatedArray[0, 0];
             Assert.AreEqual(matchingValue, actualPopulatedValue, "GIVEN: Expected matching value to be inside the array to begin with");
-            Assert.AreEqual((NonnegativeInteger)1, populated.UsedValuesCount,"GIVEN: Expected populated array to have exactly 1 used value");
+            Assert.AreEqual((NonnegativeInteger)1, populatedArray.UsedValuesCount,"GIVEN: Expected populated array to have exactly 1 used value");
 
             static bool isEqualIgnoreCase(string s1, string s2) => string.Equals(s1, s2, StringComparison.OrdinalIgnoreCase);
             Assert.IsTrue(isEqualIgnoreCase(DefaultValue, matchingValue),
                 "GIVEN: The value populating the array should match according to the equality function under test");
 
             //Act
-            IComparisonResult comparison = populated.CompareUsedValues(empty, isEqualIgnoreCase);
+            IComparisonResult comparison = populatedArray.CompareUsedValues(emptyArray, isEqualIgnoreCase);
+
+            //Assert
             Assert.IsFalse(comparison.IsEqual, "Arrays should not be equal. Only used values should be compared.");
         }
 
