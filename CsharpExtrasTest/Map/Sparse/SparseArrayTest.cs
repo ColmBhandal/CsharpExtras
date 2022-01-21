@@ -246,7 +246,7 @@ namespace CsharpExtrasTest.Map.Sparse
         [Test, TestCaseSource(nameof(TwoIndexOperationsCasesDimensionOne))]
         public void GIVEN_ValidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_ValidationCalledExactlyOnceForGivenIndex
             ((string testCaseDescription, Action<ISparseArray<string>, int> beforeAction,
-            Action<ISparseArray<string>, int> afterAction) testCase)
+            Action<ISparseArray<string>, int> afterAction, bool shouldThrowBefore, bool shouldThrowAfter) testCase)
         {
             //Arrange
             const string DefaultValue = "DEFAULT";
@@ -315,11 +315,52 @@ namespace CsharpExtrasTest.Map.Sparse
             {
                 yield return ("Set then Get", (array, i) => array[i] = "Hello", (array, i) => { string s = array[i];}, true, true);
                 yield return ("Get then Set", (array, i) => { string s = array[i]; }, (array, i) => array[i] = "Hello", true, true);
-                yield return ("IsValid then Get", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => { string s = array[i]; }, false, true);
-                yield return ("Get then IsValid", (array, i) => { string s = array[i]; }, (array, i) => array.IsValid(i, (NonnegativeInteger)1), true, false);
-                yield return ("IsValid then Set", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => array[i] = "Hello", false, true);
-                yield return ("Set then IsValid", (array, i) => array[i] = "Hello", (array, i) => array.IsValid(i, (NonnegativeInteger)1), true, false);
+                yield return ("IsValid then Get", (array, i) => array.IsValid(i, (NonnegativeInteger)0), (array, i) => { string s = array[i]; }, false, true);
+                yield return ("Get then IsValid", (array, i) => { string s = array[i]; }, (array, i) => array.IsValid(i, (NonnegativeInteger)0), true, false);
+                yield return ("IsValid then Set", (array, i) => array.IsValid(i, (NonnegativeInteger)0), (array, i) => array[i] = "Hello", false, true);
+                yield return ("Set then IsValid", (array, i) => array[i] = "Hello", (array, i) => array.IsValid(i, (NonnegativeInteger)0), true, false);
             }
+        }
+
+        [Test]
+        public void GIVEN_ValidIndex_WHEN_IsValid_THEN_True()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
+            const int UniqueInvalidIndex = 77;
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+            const int ValidIndex = 1;
+
+            //Act
+            bool isValid = array.IsValid(ValidIndex, (NonnegativeInteger)0);
+
+            //Assert
+            Assert.IsTrue(isValid);
+        }
+
+        [Test]
+        public void GIVEN_InValidIndex_WHEN_IsValid_THEN_False()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
+            const int UniqueInvalidIndex = 77;
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
+                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+            ISparseArray<string> array = builder.Build();
+
+            //Act
+            bool isValid = array.IsValid(UniqueInvalidIndex, (NonnegativeInteger)0);
+
+            //Assert
+            Assert.IsFalse(isValid);
         }
 
         private class IntWrapper { public int Val { get; set; } public int GetVal() => Val; };
