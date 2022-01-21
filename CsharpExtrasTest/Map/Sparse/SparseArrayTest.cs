@@ -271,7 +271,7 @@ namespace CsharpExtrasTest.Map.Sparse
         [Test, TestCaseSource(nameof(TwoIndexOperationsCasesDimensionOne))]
         public void GIVEN_InvalidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_ArgumentExceptionsAndValidationCalledTwice
             ((string testCaseDescription, Action<ISparseArray<string>, int> beforeAction,
-            Action<ISparseArray<string>, int> afterAction) testCase)
+            Action<ISparseArray<string>, int> afterAction, bool shouldThrowBefore, bool shouldThrowAfter) testCase)
         {
             //Arrange
             const string DefaultValue = "DEFAULT";
@@ -284,25 +284,41 @@ namespace CsharpExtrasTest.Map.Sparse
             ISparseArray<string> array = builder.Build();
 
             //Act
-            Assert.Throws<ArgumentException>(() => testCase.beforeAction(array, UniqueInvalidIndex));
-            Assert.Throws<ArgumentException>(() => testCase.afterAction(array, UniqueInvalidIndex));
+            if (testCase.shouldThrowBefore)
+            {
+                Assert.Throws<ArgumentException>(() => testCase.beforeAction(array, UniqueInvalidIndex));
+            }
+            else
+            {
+                testCase.beforeAction(array, UniqueInvalidIndex);
+            }
+            if (testCase.shouldThrowAfter)
+            {
+
+                Assert.Throws<ArgumentException>(() => testCase.afterAction(array, UniqueInvalidIndex));
+            }
+            else
+            {
+                testCase.afterAction(array, UniqueInvalidIndex);
+            }
 
             //Assert
             mockValidationFunc.Verify(f => f.Invoke(UniqueInvalidIndex), Times.Exactly(2));
             mockValidationFunc.Verify(f => f.Invoke(It.IsAny<int>()), Times.Exactly(2));
         }
-
-        private static IEnumerable<(string, Action<ISparseArray<string>, int> beforeAction, Action<ISparseArray<string>, int> afterAction)>
+        
+        private static IEnumerable<(string, Action<ISparseArray<string>, int> beforeAction, Action<ISparseArray<string>, int> afterAction,
+            bool shouldThrowBefore, bool shouldThrowAfter)>
             TwoIndexOperationsCasesDimensionOne
         {
             get
             {
-                yield return ("Set then Get", (array, i) => array[i] = "Hello", (array, i) => { string s = array[i];});
-                yield return ("Get then Set", (array, i) => { string s = array[i]; }, (array, i) => array[i] = "Hello");
-                yield return ("IsValid then Get", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => { string s = array[i]; });
-                yield return ("Get then IsValid", (array, i) => { string s = array[i]; }, (array, i) => array.IsValid(i, (NonnegativeInteger)1));
-                yield return ("IsValid then Set", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => array[i] = "Hello");
-                yield return ("Set then IsValid", (array, i) => array[i] = "Hello", (array, i) => array.IsValid(i, (NonnegativeInteger)1));
+                yield return ("Set then Get", (array, i) => array[i] = "Hello", (array, i) => { string s = array[i];}, true, true);
+                yield return ("Get then Set", (array, i) => { string s = array[i]; }, (array, i) => array[i] = "Hello", true, true);
+                yield return ("IsValid then Get", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => { string s = array[i]; }, false, true);
+                yield return ("Get then IsValid", (array, i) => { string s = array[i]; }, (array, i) => array.IsValid(i, (NonnegativeInteger)1), true, false);
+                yield return ("IsValid then Set", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => array[i] = "Hello", false, true);
+                yield return ("Set then IsValid", (array, i) => array[i] = "Hello", (array, i) => array.IsValid(i, (NonnegativeInteger)1), true, false);
             }
         }
 
