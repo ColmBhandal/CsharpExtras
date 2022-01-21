@@ -12,7 +12,7 @@ using System.Text;
 namespace CsharpExtrasTest.Map.Sparse
 {
     [TestFixture, Category("Unit")]
-    internal class SparseArrayTest
+    public class SparseArrayTest
     {
 
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();

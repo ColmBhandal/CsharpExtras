@@ -20,6 +20,7 @@ using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
 using CsharpExtras.Map.Dictionary.Curry.Wrapper;
 using CsharpExtras.Map.Sparse.Builder;
+using CsharpExtras.Map.Sparse.TwoDimensional.Builder;
 
 namespace CsharpExtras.Api
 {
@@ -154,5 +155,8 @@ namespace CsharpExtras.Api
 
         public ISparseArrayBuilder<TVal> NewSparseArrayBuilder<TVal>(PositiveInteger dimension, TVal defaultValue) =>
             new SparseArrayBuilderImpl<TVal>(defaultValue, dimension, this);
+
+        public ISparseArray2DBuilder<TVal> NewSparseArray2DBuilder<TVal>(TVal defaultValue) =>
+            new SparseArray2DBuilderImpl<TVal>(defaultValue, this);
     }
 }
