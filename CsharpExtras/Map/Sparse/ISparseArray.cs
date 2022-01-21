@@ -43,7 +43,7 @@ namespace CsharpExtras.Map.Sparse
 
         /// <summary>
         /// Compares the used values in this sparse array to those in another one
-        /// Note: only used values are compared, not defaults. So if one array has exp
+        /// Note: only used values are compared, not defaults.
         /// </summary>
         /// <param name="other">The other array against which to compare</param>
         /// <param name="valueComparer">A function which is used to determine if two values are equal. It's up to the caller to use a sensible function here.</param>
