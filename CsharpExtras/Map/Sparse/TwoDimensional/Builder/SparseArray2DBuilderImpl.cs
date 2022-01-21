@@ -26,17 +26,20 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional.Builder
 
         public ISparseArray2DBuilder<TVal> WithColumnValidation(Func<int, bool> validator)
         {
-            throw new NotImplementedException();
+            //TODO
+            return this;
         }
 
         public ISparseArray2DBuilder<TVal> WithRowValidation(Func<int, bool> validator)
         {
-            throw new NotImplementedException();
+            //TODO
+            return this;
         }
 
         public ISparseArray2DBuilder<TVal> WithValue(TVal value, int row, int column)
         {
-            throw new NotImplementedException();
+            //TODO
+            return this;
         }
     }
 }

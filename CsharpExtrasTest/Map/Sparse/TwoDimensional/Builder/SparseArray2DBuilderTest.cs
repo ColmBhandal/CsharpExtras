@@ -21,7 +21,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
         {
             //Arrange
             const string DefaultValue = "DEFAULT";
-            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder<string>(DefaultValue);
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
 
             //Act
             ISparseArray2D<string> array1 = builder.Build();
@@ -39,7 +39,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
             //Arrange
             const string DefaultValue = "DEFAULT";
             const int UniqueInvalidRowIndex = 7;
-            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder<string>(DefaultValue);
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
             ISparseArray2D<string> array = builder.Build();
 
             //Act
@@ -59,7 +59,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
             //Arrange
             const string DefaultValue = "DEFAULT";
             const int UniqueInvalidColumnIndex = 7;
-            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder<string>(DefaultValue);
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
             ISparseArray2D<string> array = builder.Build();
 
             //Act
@@ -79,7 +79,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
             const string DefaultValue = "DEFAULT";
             const int UniqueInvalidRowIndex = -2;
             const int UniqueInvalidColumnIndex = 7;
-            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder<string>(DefaultValue)
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue)
                 .WithRowValidation(i => i != UniqueInvalidRowIndex)
                 .WithColumnValidation(i => i != UniqueInvalidColumnIndex);
 
@@ -98,7 +98,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
             const string DefaultValue = "DEFAULT";
             const int UniqueInvalidRowIndex = -2;
             const int UniqueInvalidColumnIndex = 7;
-            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder<string>(DefaultValue)
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue)
                 .WithRowValidation(i => i != UniqueInvalidRowIndex)
                 .WithColumnValidation(i => i != UniqueInvalidColumnIndex);
 
@@ -116,14 +116,16 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
             //Arrange
 
             const string DefaultValue = "DEFAULT";
-            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder<string>(DefaultValue)
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue)
                 .WithValue("0,0", 0, 0)
-                .WithValue("1,2", 1, 2);
+                .WithValue("1,2", 1, 2)
+                .WithValue("25,29", 25, 29);
 
             ISparseArray2D<string> expected = new SparseArray2DImpl<string>(Api,
                 new SparseArrayImpl<string>((PositiveInteger)2, Api, (x, i) => true, DefaultValue));
             expected[0, 0] = "0,0";
             expected[1, 2] = "1,2";
+            expected[25, 29] = "25,29";
 
             //Act
             ISparseArray2D<string> array = builder.Build();
