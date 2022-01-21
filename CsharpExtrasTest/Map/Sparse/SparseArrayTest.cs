@@ -313,12 +313,15 @@ namespace CsharpExtrasTest.Map.Sparse
         {
             get
             {
-                yield return ("Set then Get", (array, i) => array[i] = "Hello", (array, i) => { string s = array[i];}, true, true);
-                yield return ("Get then Set", (array, i) => { string s = array[i]; }, (array, i) => array[i] = "Hello", true, true);
-                yield return ("IsValid then Get", (array, i) => array.IsValid(i, (NonnegativeInteger)0), (array, i) => { string s = array[i]; }, false, true);
-                yield return ("Get then IsValid", (array, i) => { string s = array[i]; }, (array, i) => array.IsValid(i, (NonnegativeInteger)0), true, false);
-                yield return ("IsValid then Set", (array, i) => array.IsValid(i, (NonnegativeInteger)0), (array, i) => array[i] = "Hello", false, true);
-                yield return ("Set then IsValid", (array, i) => array[i] = "Hello", (array, i) => array.IsValid(i, (NonnegativeInteger)0), true, false);
+                static void Set(ISparseArray<string> array, int i) => array[i] = "Hello";
+                static void Get(ISparseArray<string> array, int i) { string s = array[i]; }
+                static void IsValid(ISparseArray<string> array, int i) => array.IsValid(i, (NonnegativeInteger)0);
+                yield return ("Set then Get", Set, Get, true, true);
+                yield return ("Get then Set", Get, Set, true, true);
+                yield return ("IsValid then Get", IsValid, Get, false, true);
+                yield return ("Get then IsValid", Get, IsValid, true, false);
+                yield return ("IsValid then Set", IsValid, Set, false, true);
+                yield return ("Set then IsValid", Set, IsValid, true, false);
             }
         }
 
