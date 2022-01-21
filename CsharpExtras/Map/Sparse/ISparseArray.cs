@@ -49,5 +49,6 @@ namespace CsharpExtras.Map.Sparse
         /// <param name="valueComparer">A function which is used to determine if two values are equal. It's up to the caller to use a sensible function here.</param>
         /// <returns>A comparison result which will indicate whether the used values in this array are equal to the other array according to the comparer</returns>                
         IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer);
+        bool IsValid(int index, NonnegativeInteger axisIndex);
     }
 }

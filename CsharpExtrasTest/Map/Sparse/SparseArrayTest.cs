@@ -243,61 +243,67 @@ namespace CsharpExtrasTest.Map.Sparse
             Assert.Throws<ArgumentException>(() => array[uniqueInvalidIndex] = DefaultValue);
         }
 
-        [Test]
-        public void GIVEN_Array_WHEN_WriteToSameIndexTwice_THEN_ValidationCalledExactlyOnce()
+        [Test, TestCaseSource(nameof(TwoIndexOperationsCasesDimensionOne))]
+        public void GIVEN_ValidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_ValidationCalledExactlyOnceForGivenIndex
+            ((string testCaseDescription, Action<ISparseArray<string>, int> beforeAction,
+            Action<ISparseArray<string>, int> afterAction) testCase)
         {
             //Arrange
             const string DefaultValue = "DEFAULT";
             Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
-            mockValidationFunc.Setup(f => f.Invoke(It.IsAny<int>())).Returns(true);
+            const int UniqueInvalidIndex = 77;
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
                 .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
+            const int ValidIndex = 1;
 
             //Act
-            array[1] = "Hello";
-            array[1] = "World";
+            testCase.beforeAction(array, ValidIndex);
+            testCase.afterAction(array, ValidIndex);
 
             //Assert
-            mockValidationFunc.Verify(f => f.Invoke(1), Times.Once());
+            mockValidationFunc.Verify(f => f.Invoke(ValidIndex), Times.Once());
+            mockValidationFunc.Verify(f => f.Invoke(It.IsAny<int>()), Times.Once());
         }
 
-        [Test]
-        public void GIVEN_Array_WHEN_ReadFromSameIndexTwice_THEN_ValidationCalledExactlyOnce()
+        [Test, TestCaseSource(nameof(TwoIndexOperationsCasesDimensionOne))]
+        public void GIVEN_InvalidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_ArgumentExceptionsAndValidationCalledTwice
+            ((string testCaseDescription, Action<ISparseArray<string>, int> beforeAction,
+            Action<ISparseArray<string>, int> afterAction) testCase)
         {
             //Arrange
             const string DefaultValue = "DEFAULT";
             Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
-            mockValidationFunc.Setup(f => f.Invoke(It.IsAny<int>())).Returns(true);
+            const int UniqueInvalidIndex = 77;
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
+            mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
                 .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
-            string x = array[1];
-            x = array[1];
+            Assert.Throws<ArgumentException>(() => testCase.beforeAction(array, UniqueInvalidIndex));
+            Assert.Throws<ArgumentException>(() => testCase.afterAction(array, UniqueInvalidIndex));
 
             //Assert
-            mockValidationFunc.Verify(f => f.Invoke(1), Times.Once());
+            mockValidationFunc.Verify(f => f.Invoke(UniqueInvalidIndex), Times.Exactly(2));
+            mockValidationFunc.Verify(f => f.Invoke(It.IsAny<int>()), Times.Exactly(2));
         }
 
-        [Test]
-        public void GIVEN_Array_WHEN_WriteThenReadAtSameIndex_THEN_ValidationCalledExactlyOnce()
+        private static IEnumerable<(string, Action<ISparseArray<string>, int> beforeAction, Action<ISparseArray<string>, int> afterAction)>
+            TwoIndexOperationsCasesDimensionOne
         {
-            //Arrange
-            const string DefaultValue = "DEFAULT";
-            Mock<Func<int, bool>> mockValidationFunc = new Mock<Func<int, bool>>();
-            mockValidationFunc.Setup(f => f.Invoke(It.IsAny<int>())).Returns(true);
-            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
-            ISparseArray<string> array = builder.Build();
-
-            //Act
-            array[1] = "Hello";
-            string x = array[1];
-
-            //Assert
-            mockValidationFunc.Verify(f => f.Invoke(1), Times.Once());
+            get
+            {
+                yield return ("Set then Get", (array, i) => array[i] = "Hello", (array, i) => { string s = array[i];});
+                yield return ("Get then Set", (array, i) => { string s = array[i]; }, (array, i) => array[i] = "Hello");
+                yield return ("IsValid then Get", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => { string s = array[i]; });
+                yield return ("Get then IsValid", (array, i) => { string s = array[i]; }, (array, i) => array.IsValid(i, (NonnegativeInteger)1));
+                yield return ("IsValid then Set", (array, i) => array.IsValid(i, (NonnegativeInteger)1), (array, i) => array[i] = "Hello");
+                yield return ("Set then IsValid", (array, i) => array[i] = "Hello", (array, i) => array.IsValid(i, (NonnegativeInteger)1));
+            }
         }
 
         private class IntWrapper { public int Val { get; set; } public int GetVal() => Val; };

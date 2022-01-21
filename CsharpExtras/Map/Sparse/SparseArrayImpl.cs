@@ -19,6 +19,12 @@ namespace CsharpExtras.Map.Sparse
 
         public NonnegativeInteger UsedValuesCount => _backingDictionary.Count;
 
+        public bool IsValid(int index, NonnegativeInteger axisIndex)
+        {
+            //TODO
+            return false;
+        }
+
         public TVal this[params int[] coordinates]
         {
             get => GetValue(coordinates);
