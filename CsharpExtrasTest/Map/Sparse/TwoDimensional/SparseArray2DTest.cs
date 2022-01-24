@@ -52,6 +52,8 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
         }
 
         [Test]
+        //Note: if backing implementation changes, then we'll need to explicitly test compare cases here
+        //rather than just testing that mocked-out backing implementation is called
         public void GIVEN_Array_WHEN_Compare_THEN_BackingArrayCompareCalledOnce()
         {
             //Arrange
@@ -70,6 +72,52 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
 
             //Assert
             mockBackingArray.Verify(a => a.CompareUsedValues(mockOtherBackingArray.Object, string.Equals), Times.Once());
+        }
+
+        [Test]
+        //Note: if backing implementation changes, then we'll need to explicitly test compare cases here
+        //rather than just testing that mocked-out backing implementation is called
+        public void GIVEN_Array_WHEN_Set_THEN_BackingArraySetCalledOnceWithCorrectValue()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            const string ValueToSet = "Foo";
+            Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
+            string mockSetValue = "Not Set Yet";
+            mockBackingArray.SetupSet(a => a[It.IsAny<int[]>()] = It.IsAny<string>())
+                .Callback((int[] coordinates, string v) => { mockSetValue = v;})
+                .Verifiable();
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
+            Assert.AreNotEqual(ValueToSet, mockSetValue, "GIVEN: Value to set should not be equal to the mock set value");
+
+            //Act
+            mockBackedArray[7, 12] = ValueToSet;
+
+            //Assert
+            Assert.AreNotEqual(ValueToSet, mockSetValue, "Value to set should be set after the outer setter is called");
+            mockBackingArray.VerifySet(a => a[7, 12]=ValueToSet, Times.Once());
+        }
+
+        [Test]
+        //Note: if backing implementation changes, then we'll need to explicitly test compare cases here
+        //rather than just testing that mocked-out backing implementation is called
+        public void GIVEN_Array_WHEN_Get_THEN_BackingArrayGetCalledOnce()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            const string MockReturnValue = "Returned Value";
+            Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
+            mockBackingArray.SetupGet(a => a[It.IsAny<int>(), It.IsAny<int>()])
+                .Returns(MockReturnValue)
+                .Verifiable();
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
+
+            //Act
+            string actualValue = mockBackedArray[7, 12];
+
+            //Assert
+            Assert.AreEqual(MockReturnValue, actualValue);
+            mockBackingArray.VerifyGet(a => a[7, 12], Times.Once());
         }
 
     }
