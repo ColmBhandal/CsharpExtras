@@ -121,7 +121,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
                 .WithValue("1,2", 1, 2)
                 .WithValue("25,29", 25, 29);
 
-            ISparseArray2D<string> expected = new SparseArray2DImpl<string>(Api,
+            ISparseArray2D<string> expected = new SparseArray2DImpl<string>(
                 new SparseArrayImpl<string>((PositiveInteger)2, Api, (x, i) => true, DefaultValue));
             expected[0, 0] = "0,0";
             expected[1, 2] = "1,2";

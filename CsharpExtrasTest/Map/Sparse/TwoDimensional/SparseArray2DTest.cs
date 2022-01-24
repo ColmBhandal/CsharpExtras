@@ -176,7 +176,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
                 = new SparseArrayImpl<string>((PositiveInteger)dimension, Api, (x, i) => true, "");
 
             //Act / Assert
-            Assert.Throws<ArgumentException>(() => new SparseArray2DImpl<string>(Api, invalidBackingArray));
+            Assert.Throws<ArgumentException>(() => new SparseArray2DImpl<string>(invalidBackingArray));
         }
 
         [Test]
@@ -216,8 +216,8 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             Mock<ISparseArray<string>> mockOtherBackingArray = new Mock<ISparseArray<string>>();
             mockOtherBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
 
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
-            ISparseArray2D<string> otherArray = new SparseArray2DImpl<string>(Api, mockOtherBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
+            ISparseArray2D<string> otherArray = new SparseArray2DImpl<string>(mockOtherBackingArray.Object);
 
             //Act
             IComparisonResult result = mockBackedArray.CompareUsedValues(otherArray, string.Equals);
@@ -240,7 +240,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
                 .Callback((int[] coordinates, string v) => { mockSetValue = v;})
                 .Verifiable();
             mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
             Assert.AreNotEqual(ValueToSet, mockSetValue, "GIVEN: Value to set should not be equal to the mock set value");
 
             //Act
@@ -264,7 +264,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
                 .Returns(MockReturnValue)
                 .Verifiable();
             mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
 
             //Act
             string actualValue = mockBackedArray[7, 12];

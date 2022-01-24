@@ -10,13 +10,11 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
 {
     internal class SparseArray2DImpl<TVal> : ISparseArray2D<TVal>
     {
-        private readonly ICsharpExtrasApi _api;
         public ISparseArray<TVal> BackingArray { get; }
 
-        public SparseArray2DImpl(ICsharpExtrasApi api, ISparseArray<TVal> backingArray)
+        public SparseArray2DImpl(ISparseArray<TVal> backingArray)
         {
             ValidateBackingArray(backingArray);
-            _api = api ?? throw new ArgumentNullException(nameof(api));
             BackingArray = backingArray ?? throw new ArgumentNullException(nameof(backingArray));
         }
 
