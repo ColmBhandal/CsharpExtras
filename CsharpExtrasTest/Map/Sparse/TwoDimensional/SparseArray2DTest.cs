@@ -17,6 +17,81 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
+        [Test]
+        public void GIVEN_Array_WHEN_SetValidAreaWithDefaults_THEN_UsedValuesEqualsEmptyArray()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
+            ISparseArray2D<string> array = builder.Build();
+            string[,] areaToSet = new string[,]{ { DefaultValue, DefaultValue, DefaultValue },
+                {DefaultValue, DefaultValue, DefaultValue }, { DefaultValue, DefaultValue, DefaultValue } };
+
+            //Act / Assert
+            array.SetArea(areaToSet, -1, -1);
+
+            //Assert
+            ISparseArray2D<string> expected = Api.NewSparseArray2DBuilder(DefaultValue).Build();
+            IComparisonResult comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test]
+        public void GIVEN_Array_WHEN_SetValidArea_THEN_UsedValuesAsExpected()
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
+            ISparseArray2D<string> array = builder.Build();
+            string[,] areaToSet = new string[,]{ { "TOP LEFT", "TOP MID", "TOP RIGHT" },
+                { "MID LEFT", "CENTRE", "MID RIGHT" }, { "BOTTOM LEFT", "BOTTOM MID", "BOTTOM RIGHT" } };
+
+            //Act / Assert
+            array.SetArea(areaToSet, -1, -1);
+
+            //Assert
+            ISparseArray2D<string> expected = Api.NewSparseArray2DBuilder(DefaultValue)
+                .WithValue("TOP LEFT" , -1, -1)
+                .WithValue("TOP MID" , -1, 0)
+                .WithValue("TOP RIGHT", -1, 1)
+                .WithValue("MID LEFT", 0, -1)
+                .WithValue("CENTRE", 0, 0)
+                .WithValue("MID RIGHT", 0, 1)
+                .WithValue("BOTTOM LEFT", 1, -1)
+                .WithValue("BOTTOM BOTTOM", 1, 0)
+                .WithValue("BOTTOM RIGHT", 1, 1)
+                .Build();
+            IComparisonResult comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test,
+            TestCase(1, 2), TestCase(1, -3), TestCase(2, 1), TestCase(-5, 1), TestCase(1, 1),
+            TestCase(-2, -1), TestCase(-2, -6), TestCase(-1, -2), TestCase(-8, -2),
+            TestCase(0, 0), TestCase(3, 0), TestCase(0, 3)]
+        public void GIVEN_Array_WHEN_SetInvalidArea_THEN_IndexOutOfRangeExceptionAndArrayUnchanged(int startRow, int startCol)
+        {
+            //Arrange
+
+            const string DefaultValue = "DEFAULT";
+            const int InvalidRow = 1;
+            const int InvalidColumn = 1;
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue)
+                .WithColumnValidation(i => i != InvalidColumn)
+                .WithRowValidation(i => i != InvalidRow);
+            ISparseArray2D<string> array = builder.Build();
+            string[,] areaToSet = new string[,]{ { "TOP LEFT", "TOP MID", "TOP RIGHT" },
+                { "MID LEFT", "CENTRE", "MID RIGHT" }, { "BOTTOM LEFT", "BOTTOM MID", "BOTTOM RIGHT" } };
+
+            //Act / Assert
+            Assert.Throws<IndexOutOfRangeException>(() => array.SetArea(areaToSet, startRow, startCol));
+
+            //Assert
+            ISparseArray2D<string> expected = Api.NewSparseArray2DBuilder(DefaultValue).Build();
+            IComparisonResult comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
         public void GIVEN_SparselyFilledArray_WHEN_GetValidArea_THEN_ExpectedArrayReturned()
         {
             //Arrange
