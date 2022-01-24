@@ -72,7 +72,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
         }
 
         [Test, TestCase(0, 7), TestCase(-2, -4), TestCase(-2, 7)]
-        public void GIVEN_BuilderWithValidations_WHEN_Build_THEN_GetInvalidIndexThrowsArgumentException
+        public void GIVEN_BuilderWithValidations_WHEN_Build_THEN_GetInvalidIndexThrowsIndexOutOfRangeException
             (int rowIndex, int colIndex)
         {
             //Arrange
@@ -87,10 +87,10 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional.Builder
             ISparseArray2D<string> array = builder.Build();
 
             //Assert
-            Assert.Throws<ArgumentException>(() => { string _ = array[rowIndex, colIndex]; });
+            Assert.Throws<IndexOutOfRangeException>(() => { string _ = array[rowIndex, colIndex]; });
         }
 
-        [Test, TestCase(0, 7), TestCase(-2, -4), TestCase(-2, 7)]
+        [Test, TestCase(0, 8), TestCase(-3, -4), TestCase(1, 6)]
         public void GIVEN_BuilderWithValidations_WHEN_Build_THEN_GetValidIndexReturnsDefault
             (int rowIndex, int colIndex)
         {

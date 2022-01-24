@@ -58,7 +58,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
                 .WithValue("CENTRE", 0, 0)
                 .WithValue("MID RIGHT", 0, 1)
                 .WithValue("BOTTOM LEFT", 1, -1)
-                .WithValue("BOTTOM BOTTOM", 1, 0)
+                .WithValue("BOTTOM MID", 1, 0)
                 .WithValue("BOTTOM RIGHT", 1, 1)
                 .Build();
             IComparisonResult comparison = expected.CompareUsedValues(array, string.Equals);
@@ -67,7 +67,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
 
         [Test,
             TestCase(1, 2), TestCase(1, -3), TestCase(2, 1), TestCase(-5, 1), TestCase(1, 1),
-            TestCase(-2, -1), TestCase(-2, -6), TestCase(-1, -2), TestCase(-8, -2),
+            TestCase(-2, -1), TestCase(-1, -6), TestCase(-8, -1),
             TestCase(0, 0), TestCase(3, 0), TestCase(0, 3)]
         public void GIVEN_Array_WHEN_SetInvalidArea_THEN_IndexOutOfRangeExceptionAndArrayUnchanged(int startRow, int startCol)
         {
@@ -152,12 +152,15 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             TestCase(0, 0, -1, 2), TestCase(0, 0, -1, 0), TestCase(0, 0, -1, -9),
             //End col < start col cases
             TestCase(1, 3, 1, 2), TestCase(1, 3, 90, 2)]
-        public void GIVEN_Array_WHEN_AreaWithInvalidCoordinates_THEN_ArgumentException(int startRow, int startCol, int endRow, int endCol)
+        public void GIVEN_Array_WHEN_GetAreaWithInvalidCoordinates_THEN_ArgumentException(int startRow, int startCol, int endRow, int endCol)
         {
             //Arrange
-
             const string DefaultValue = "DEFAULT";
-            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
+            const int InvalidRow = 1;
+            const int InvalidColumn = 1;
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue)
+                .WithColumnValidation(i => i != InvalidColumn)
+                .WithRowValidation(i => i != InvalidRow);
             ISparseArray2D<string> array = builder.Build();
 
             //Act / Assert
@@ -209,7 +212,9 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             Mock<IComparisonResult> comparison = new Mock<IComparisonResult>();
             mockBackingArray.Setup(a => a.CompareUsedValues(It.IsAny<ISparseArray<string>>(),
                 It.IsAny<Func<string, string, bool>>())).Returns(comparison.Object).Verifiable();
+            mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
             Mock<ISparseArray<string>> mockOtherBackingArray = new Mock<ISparseArray<string>>();
+            mockOtherBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
 
             ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
             ISparseArray2D<string> otherArray = new SparseArray2DImpl<string>(Api, mockOtherBackingArray.Object);
@@ -234,6 +239,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             mockBackingArray.SetupSet(a => a[It.IsAny<int[]>()] = It.IsAny<string>())
                 .Callback((int[] coordinates, string v) => { mockSetValue = v;})
                 .Verifiable();
+            mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
             ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
             Assert.AreNotEqual(ValueToSet, mockSetValue, "GIVEN: Value to set should not be equal to the mock set value");
 
@@ -241,7 +247,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             mockBackedArray[7, 12] = ValueToSet;
 
             //Assert
-            Assert.AreNotEqual(ValueToSet, mockSetValue, "Value to set should be set after the outer setter is called");
+            Assert.AreEqual(ValueToSet, mockSetValue, "Value to set should be set after the outer setter is called");
             mockBackingArray.VerifySet(a => a[7, 12]=ValueToSet, Times.Once());
         }
 
@@ -257,6 +263,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             mockBackingArray.SetupGet(a => a[It.IsAny<int>(), It.IsAny<int>()])
                 .Returns(MockReturnValue)
                 .Verifiable();
+            mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
             ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(Api, mockBackingArray.Object);
 
             //Act

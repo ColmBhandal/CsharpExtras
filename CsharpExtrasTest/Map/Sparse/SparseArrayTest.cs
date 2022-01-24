@@ -204,7 +204,7 @@ namespace CsharpExtrasTest.Map.Sparse
         }
 
         [Test]
-        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionBeforeWriteNonDefault_THEN_ArgumentException()
+        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionBeforeWriteNonDefault_THEN_IndexOutOfRangeException()
         {
             //Arrange
             int uniqueInvalidIndex = 7;
@@ -222,11 +222,11 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
 
             //Assert
-            Assert.Throws<ArgumentException>(() => array[uniqueInvalidIndex] = WrittenValue);
+            Assert.Throws<IndexOutOfRangeException>(() => array[uniqueInvalidIndex] = WrittenValue);
         }
 
         [Test]
-        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionBeforeWriteDefault_THEN_ArgumentException()
+        public void GIVEN_ArrayWithImpureValidation_WHEN_MutateValidationFunctionBeforeWriteDefault_THEN_IndexOutOfRangeException()
         {
             //Arrange
             int uniqueInvalidIndex = 7;
@@ -242,7 +242,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex;
 
             //Assert
-            Assert.Throws<ArgumentException>(() => array[uniqueInvalidIndex] = DefaultValue);
+            Assert.Throws<IndexOutOfRangeException>(() => array[uniqueInvalidIndex] = DefaultValue);
         }
 
         [Test, TestCaseSource(nameof(TwoIndexOperationsCasesDimensionOne))]
@@ -271,7 +271,7 @@ namespace CsharpExtrasTest.Map.Sparse
         }
 
         [Test, TestCaseSource(nameof(TwoIndexOperationsCasesDimensionOne))]
-        public void GIVEN_InvalidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_ArgumentExceptionsAndValidationCalledOnce
+        public void GIVEN_InvalidIndex_WHEN_PerformTwoOperationsAtThatIndex_THEN_IndexOutOfRangeExceptionAndValidationCalledOnce
             ((string testCaseDescription, Action<ISparseArray<string>, int> beforeAction,
             Action<ISparseArray<string>, int> afterAction, bool shouldThrowBefore, bool shouldThrowAfter) testCase)
         {
@@ -288,7 +288,7 @@ namespace CsharpExtrasTest.Map.Sparse
             //Act
             if (testCase.shouldThrowBefore)
             {
-                Assert.Throws<ArgumentException>(() => testCase.beforeAction(array, UniqueInvalidIndex));
+                Assert.Throws<IndexOutOfRangeException>(() => testCase.beforeAction(array, UniqueInvalidIndex));
             }
             else
             {
@@ -297,7 +297,7 @@ namespace CsharpExtrasTest.Map.Sparse
             if (testCase.shouldThrowAfter)
             {
 
-                Assert.Throws<ArgumentException>(() => testCase.afterAction(array, UniqueInvalidIndex));
+                Assert.Throws<IndexOutOfRangeException>(() => testCase.afterAction(array, UniqueInvalidIndex));
             }
             else
             {

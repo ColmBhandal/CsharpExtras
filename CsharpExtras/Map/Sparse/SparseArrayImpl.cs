@@ -53,7 +53,7 @@ namespace CsharpExtras.Map.Sparse
 
         private SparseArrayImpl<TVal>.ValidIndex[] GetValidateCoordinated(int[] coordinates) 
             => coordinates.Map((index, axisIndex) => _validIndexCache[(index, axisIndex)] ??
-                throw new ArgumentException($"Invalid index {index} for axis {axisIndex}"));
+                throw new IndexOutOfRangeException($"Invalid index {index} for axis {axisIndex}"));
 
         private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
 
@@ -111,7 +111,7 @@ namespace CsharpExtras.Map.Sparse
         private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int axisIndex) => index;
 
         private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int axisIndex) => _validIndexCache[(index, axisIndex)]
-            ?? throw new ArgumentException($"Invalid index {index} for axis {axisIndex}");
+            ?? throw new IndexOutOfRangeException($"Invalid index {index} for axis {axisIndex}");
 
         private class ValidIndex
         {
