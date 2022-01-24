@@ -30,9 +30,15 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
             return new SparseArray2DComparisonImpl<TVal>(1, 2, null);
         }
 
-        public void Set(TVal[,] area, int rowIndex, int colIndex)
+        public void SetArea(TVal[,] area, int rowIndex, int colIndex)
         {
 
+        }
+
+        public TVal[,] GetArea(int startRow, int startCol, int endRow, int endCol)
+        {
+            //TODO: Implement
+            return new TVal[1,1];
         }
     }
 }

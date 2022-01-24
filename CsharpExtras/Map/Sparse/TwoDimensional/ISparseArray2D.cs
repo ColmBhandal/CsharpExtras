@@ -8,6 +8,7 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
         TVal this[int row, int column] { get; set; }
 
         IComparisonResult CompareUsedValues(ISparseArray2D<TVal> other, Func<TVal, TVal, bool> comparitor);
-        void Set(TVal[,] area, int rowIndex, int colIndex);
+        TVal[,] GetArea(int startRow, int startCol, int endRow, int endCol);
+        void SetArea(TVal[,] area, int rowIndex, int colIndex);
     }
 }

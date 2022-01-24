@@ -17,6 +17,43 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
+        [Test, 
+            TestCase(1, 2, 4, 6), TestCase(1, -3, 4, 0), TestCase(2, 1, 5, 4), TestCase(-5, 1, -2, 4), TestCase(1, 1, 4, 4),
+            TestCase(-2, -1, 1, 2), TestCase(-2, -6, 1, -3), TestCase(-1, -2, 2, 1), TestCase(-8, -2, -5, 1), TestCase(-1, -2, 1, 1),
+            TestCase(0, 0, 0, 2), TestCase(0, 0, 2, 0), TestCase(0, 0, 3, 2), TestCase(3, 0, 4, 4), TestCase(0, 3, 6, 7)]
+        public void GIVEN_Array_WHEN_GetInvalidArea_THEN_IndexOutOfRangeException(int startRow, int startCol, int endRow, int endCol)
+        {
+            //Arrange
+
+            const string DefaultValue = "DEFAULT";
+            const int InvalidRow = 1;
+            const int InvalidColumn = 1;
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue)
+                .WithColumnValidation(i => i != InvalidColumn)
+                .WithRowValidation(i => i != InvalidRow);
+            ISparseArray2D<string> array = builder.Build();
+
+            //Act / Assert
+            Assert.Throws<IndexOutOfRangeException>(() => array.GetArea(startRow, startCol, endRow, endCol));
+        }
+
+        [Test,            
+            //End row < start row cases
+            TestCase(0, 0, -1, 2), TestCase(0, 0, -1, 0), TestCase(0, 0, -1, -9),
+            //End col < start col cases
+            TestCase(1, 3, 1, 2), TestCase(1, 3, 90, 2)]
+        public void GIVEN_Array_WHEN_AreaWithInvalidCoordinates_THEN_ArgumentException(int startRow, int startCol, int endRow, int endCol)
+        {
+            //Arrange
+
+            const string DefaultValue = "DEFAULT";
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
+            ISparseArray2D<string> array = builder.Build();
+
+            //Act / Assert
+            Assert.Throws<ArgumentException>(() => array.GetArea(startRow, startCol, endRow, endCol));
+        }
+
         [Test, TestCase(1), TestCase(3), TestCase(500)]
         public void GIVEN_BackingArrayWithWrongDimension_WHEN_ConstructSparseArray2D_THEN_ArgumentException
             (int dimension)
