@@ -17,6 +17,41 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
+        public void GIVEN_SparselyFilledArray_WHEN_GetValidArea_THEN_ExpectedArrayReturned()
+        {
+            //Arrange
+
+            const string DefaultValue = "DEFAULT";
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue)
+                .WithValue("TOP LEFT", -1, -1)
+                .WithValue("CENTRE", 0, 0)
+                .WithValue("BOTTOM RIGHT", 1, 1);
+            ISparseArray2D<string> array = builder.Build();
+
+            //Act
+            string[,] area = array.GetArea(-1, -1, 1, 1);
+
+            //Assert
+            Assert.AreEqual(new string[,]{ { "TOP LEFT", DefaultValue, DefaultValue },
+                { DefaultValue, "CENTRE", DefaultValue }, { DefaultValue, DefaultValue, "BOTTOM RIGHT" } }, area);
+        }
+
+        public void GIVEN_EmptyArray_WHEN_GetValidArea_THEN_ArrayOfDefaultsReturned()
+        {
+            //Arrange
+
+            const string DefaultValue = "DEFAULT";
+            ISparseArray2DBuilder<string> builder = Api.NewSparseArray2DBuilder(DefaultValue);
+            ISparseArray2D<string> array = builder.Build();
+
+            //Act
+            string[,] area = array.GetArea(-1, -1, 1, 1);
+
+            //Assert
+            Assert.AreEqual(new string[,]{ { DefaultValue, DefaultValue, DefaultValue },
+                { DefaultValue, DefaultValue, DefaultValue }, { DefaultValue, DefaultValue, DefaultValue } }, area);
+        }
+
         [Test, 
             TestCase(1, 2, 4, 6), TestCase(1, -3, 4, 0), TestCase(2, 1, 5, 4), TestCase(-5, 1, -2, 4), TestCase(1, 1, 4, 4),
             TestCase(-2, -1, 1, 2), TestCase(-2, -6, 1, -3), TestCase(-1, -2, 2, 1), TestCase(-8, -2, -5, 1), TestCase(-1, -2, 1, 1),
