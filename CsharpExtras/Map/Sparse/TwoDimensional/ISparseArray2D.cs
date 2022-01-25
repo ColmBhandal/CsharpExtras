@@ -44,7 +44,25 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
         /// <param name="endCol">Column coordinate of the bottom-righ of the rectangle</param>
         /// <returns>A 2D array of values defind by the rectangle at the given coordinates</returns>
         TVal[,] GetArea(int startRow, int startCol, int endRow, int endCol);
+        
+        /// <summary>
+        /// Inserts columns at the given insertion index, shifting by the given vector
+        /// </summary>
+        /// <param name="insertionIndex">The index at which the new columns will be inserted.
+        /// Note: the shifting operation will include this index.</param>
+        /// <param name="shiftVector">A vector encapsulating both how many columns to insert and what direction to shift.
+        /// Note: if this is zero, then the shift has no effect. If this is non zero, then the amount of columns 
+        /// added is equal to the absolute value, and the shift direction is equal to the sign.</param>
         void InsertColumns(int insertionIndex, int shiftVector);
+
+        /// <summary>
+        /// Inserts rows at the given insertion index, shifting by the given vector
+        /// </summary>
+        /// <param name="insertionIndex">The index at which the new rows will be inserted.
+        /// Note: the shifting operation will include this index.</param>
+        /// <param name="shiftVector">A vector encapsulating both how many rows to insert and what direction to shift.
+        /// Note: if this is zero, then the shift has no effect. If this is non zero, then the amount of rows 
+        /// added is equal to the absolute value, and the shift direction is equal to the sign.</param>
         void InsertRows(int insertionIndex, int shiftVector);
 
         /// <summary>
