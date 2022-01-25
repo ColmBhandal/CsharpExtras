@@ -100,7 +100,7 @@ namespace CsharpExtrasTest.Map.Sparse
                 .WithValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
                 .WithValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
                 .WithValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
-                .WithValue("1,2,3", 1,2,3)
+                .WithValue("1,2,3", 1, 2, 3)
                 .WithValue("1,1,1", 1, 1, 1)
                 .WithValue("3, 4, 6", 3, 4, 6);
             ISparseArray<string> array = builder.Build();
