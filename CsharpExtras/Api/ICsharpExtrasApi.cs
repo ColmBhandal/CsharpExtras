@@ -19,6 +19,7 @@ using CsharpExtras._Enumerable.Provider.Int;
 using CsharpExtras.Event.Notify;
 using CsharpExtras.Event.Wrapper;
 using CsharpExtras.Map.Sparse.Builder;
+using CsharpExtras.Map.Sparse.TwoDimensional.Builder;
 
 namespace CsharpExtras.Api
 {
@@ -86,5 +87,6 @@ namespace CsharpExtras.Api
             Func<TValOuter, TValInner> valInTransform,
             Func<TValInner, TValOuter> valOutTransform);
         ISparseArrayBuilder<TVal> NewSparseArrayBuilder<TVal>(PositiveInteger dimension, TVal defaultValue);
+        ISparseArray2DBuilder<TVal> NewSparseArray2DBuilder<TVal>(TVal defaultValue);
     }
 }

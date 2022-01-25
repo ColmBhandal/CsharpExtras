@@ -53,7 +53,7 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
         }
 
         [Test, TestCase(1, 0, 3), TestCase(2, 0, 3), TestCase(3, 2, -79)]
-        public void GIVEN_BuilderWithValidations_WHEN_Build_THEN_GetInvalidIndexThrowsArgumentException
+        public void GIVEN_BuilderWithValidations_WHEN_Build_THEN_GetInvalidIndexThrowsIndexOutOfRangeException
             (int dimension, int axisIndex, int uniqueInvalidIndex)
         {
             //Arrange
@@ -67,7 +67,7 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
             //Assert
             int[] coordinates = new int[dimension];
             coordinates[axisIndex] = uniqueInvalidIndex;
-            Assert.Throws<ArgumentException>(() => { string _ = array[coordinates]; });
+            Assert.Throws<IndexOutOfRangeException>(() => { string _ = array[coordinates]; });
         }
 
         [Test, TestCase(1, 0, 3), TestCase(2, 0, 3), TestCase(3, 2, -79)]
