@@ -42,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [BREAKING] Refactored Enumerable namespace to _Enumerable to avoid a collision with the Enumerable type
 - Added general-purpose Sparse Array type for any amount of dimensions with builder and some basic functions (#108)
 - Added sparse 2D array type for 2D-specific operations (#120)
+- Added a shift operator for sparse arrays (#122)
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)

@@ -17,6 +17,110 @@ namespace CsharpExtrasTest.Map.Sparse
 
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
+        [Test,
+            //Zero shift
+            TestCase(0, 0), TestCase(1, 0), TestCase(2, 0),
+            //Positive shift
+            TestCase(0, 2), TestCase(1, 3), TestCase(2, 5),
+            //Negative shift
+            TestCase(0, -2), TestCase(1, -3), TestCase(2, -5)]
+        public void GIVEN_FilledArray_WHEN_ShiftToAllValidIndexes_THEN_UsedValuesAreAsExpected
+            (int axisIndex, int shiftVector)
+        {
+            //Arrange
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
+                .WithValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
+                .WithValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
+                .WithValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1)
+                .WithValue("-1,-1,-1", -1, -1, -1)
+                .WithValue("-3,-4,-6", -3, -4, -6);
+            ISparseArray<string> array = builder.Build();
+            int posShiftZero = axisIndex == 0 && shiftVector > 0 ? shiftVector : 0;
+            int posShiftOne = axisIndex == 1 && shiftVector > 0 ? shiftVector : 0;
+            int posShiftTwo = axisIndex == 2 && shiftVector > 0 ? shiftVector : 0;
+            int negShiftZero = axisIndex == 0 && shiftVector < 0 ? shiftVector : 0;
+            int negShiftOne = axisIndex == 1 && shiftVector < 0 ? shiftVector : 0;
+            int negShiftTwo = axisIndex == 2 && shiftVector < 0 ? shiftVector : 0;
+            ISparseArrayBuilder<string> expectedBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
+                .WithValue("3,4,6", 3 + posShiftZero, 4 + posShiftOne, 6 + posShiftTwo)
+                .WithValue("1,1,1", 1 + posShiftZero, 1 + posShiftOne, 1 + posShiftTwo)
+                .WithValue("-1,-1,-1", -1 + negShiftZero, -1 + negShiftOne, -1 + negShiftTwo)
+                .WithValue("-3,-4,-6", -3 + negShiftZero, -4 + negShiftOne, -6 + negShiftTwo);
+            ISparseArray<string> expected = expectedBuilder.Build();
+            IComparisonResult comparison = expected.CompareUsedValues(array, string.Equals);
+            if(shiftVector != 0)
+            {
+                Assert.IsFalse(comparison.IsEqual, "GIVEN: Array should not equal expected array before act phase for non-zero shift");
+            }
+
+            //Act
+
+            array.Shift((NonnegativeInteger)axisIndex, 0, shiftVector);
+
+            //Assert
+            comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test, TestCase(0, 1, 1), TestCase(1, -1, 2), TestCase(2, 3, -1)]
+        public void GIVEN_EmptyArrayWithAllIndicesInvalid_WHEN_Shift_THEN_UsedValuesEqualsEmptyArray
+            (int axisIndex, int firstShiftIndex, int shiftVector)
+        {
+            //Arrange
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
+                .WithValidationFunction(i => false, (NonnegativeInteger)0)
+                .WithValidationFunction(i => false, (NonnegativeInteger)1)
+                .WithValidationFunction(i => false, (NonnegativeInteger)2);
+            ISparseArray<string> array = builder.Build();
+            ISparseArrayBuilder<string> expectedBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT");
+            ISparseArray<string> expected = expectedBuilder.Build();
+            IComparisonResult comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, "GIVEN: Array should equal expected array before act phase");
+
+            //Act
+
+            array.Shift((NonnegativeInteger)axisIndex, firstShiftIndex, shiftVector);
+
+            //Assert
+            comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
+        [Test, TestCase(0, 1, 1), TestCase(1, 1, 2), TestCase(2, 1, 4),
+            TestCase(0, 1, -1), TestCase(1, 1, -1), TestCase(2, 1, -1),
+            TestCase(0, -1, 1), TestCase(1, -1, 2), TestCase(2, -1, 4),
+            TestCase(0, 3, -1), TestCase(1, 3, -1), TestCase(2, 3, -1)]
+        public void GIVEN_FilledArray_WHEN_ShiftToSomeInvalidIndexes_THEN_IndexOutOfRangeExceptionAndArrayUnchanged
+            (int axisIndex, int firstShiftIndex, int shiftVector)
+        {
+            //Arrange
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
+                .WithValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
+                .WithValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
+                .WithValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
+                .WithValue("1,2,3", 1, 2, 3)
+                .WithValue("1,1,1", 1, 1, 1)
+                .WithValue("3, 4, 6", 3, 4, 6);
+            ISparseArray<string> array = builder.Build();
+            ISparseArrayBuilder<string> expectedBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
+                .WithValue("1,2,3", 1, 2, 3)
+                .WithValue("1,1,1", 1, 1, 1)
+                .WithValue("3, 4, 6", 3, 4, 6);
+            ISparseArray<string> expected = expectedBuilder.Build();
+            IComparisonResult comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, "GIVEN: Array should equal expected array before act phase");
+
+            //Act
+
+            Assert.Throws<IndexOutOfRangeException>(() => array.Shift((NonnegativeInteger)axisIndex, firstShiftIndex, shiftVector));
+
+            //Assert
+            comparison = expected.CompareUsedValues(array, string.Equals);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
         [Test]
         public void GIVEN_ArrayWithValueLooselyMatchingDefault_WHEN_CompareToEmpty_THEN_NotEqual()
         {

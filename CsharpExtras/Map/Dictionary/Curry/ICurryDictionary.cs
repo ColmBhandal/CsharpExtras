@@ -140,15 +140,20 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         /// <summary>
         /// Performs the given action on all curried dictionaries at the given arity
+        /// Warning: atomicity is not guaranteed by this method. If the action fails before it completes
+        /// for all dictionaries, but it has succeeded for some dictionaries, then the success cases will not be rolled back
         /// </summary>
         /// <param name="action">Action to perform on each curried dictionary</param>
-        /// <param name="arity">The arity of the key tuples uset to generate all the curried dictionaries</param>
+        /// <param name="arity">The arity of the key tuples used to generate all the curried dictionaries.
+        /// Note: if the arity is zero, then the action is performed on this dictionary itself</param>
         void DoForAllCurriedDictionaries(Action<ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity);
 
         /// <summary>
         /// Performs the given action on all pairs of key-prefixes and curried dictionaries at the given arity
         /// </summary>
-        /// <param name="action">The action to perform. It takes a key prefix and a curried dictionary as arguments.</param>
+        /// <param name="action">The action to perform. It takes a key prefix and a curried dictionary as arguments.
+        /// Warning: atomicity is not guaranteed by this method. If the action fails before it completes
+        /// for all dictionaries, but it has succeeded for some dictionaries, then the success cases will not be rolled back</param>
         /// <param name="arity">The arity of the key tuples uset to generate all the pairs</param>
         void DoForAllPairs(Action<IList<TKey>, ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity);
 

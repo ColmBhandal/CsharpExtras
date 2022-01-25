@@ -1,4 +1,5 @@
-﻿using CsharpExtras.Compare;
+﻿using CsharpExtras.Api;
+using CsharpExtras.Compare;
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
@@ -18,7 +19,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public override NonnegativeInteger Arity => (NonnegativeInteger)0;
 
-        public NullaryCurryDictionary(TVal singletonValue)
+        public NullaryCurryDictionary(TVal singletonValue, ICsharpExtrasApi api) : base(api)
         {
             _singletonValue = singletonValue;
         }
@@ -34,7 +35,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             if (arity > Arity)
             {
                 throw new ArgumentException
-                    ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
+                    ($"Cannot get key tuple prefixes. Given arity exceeds Arity of this object: {arity} > {Arity}");
             }
             return KeyTuplePrefixesUnsafe(arity);
         }
@@ -92,9 +93,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
             TVal otherVal = other.GetValueFromTuple();
             if(isEqualValues(_singletonValue, otherVal))
             {
-                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null, otherVal?.ToString());
             }
-            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue));
+            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue), otherVal?.ToString());
         }
 
         public override void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection)

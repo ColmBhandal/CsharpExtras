@@ -86,11 +86,11 @@ namespace CsharpExtras.Map.Sparse
         {
             if (other.Dimension != Dimension)
             {
-                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null, null);
             }
             if (other.UsedValuesCount != UsedValuesCount)
             {
-                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null, null);
             }            
             foreach(IList<SparseArrayImpl<TVal>.ValidIndex> tuple in _backingDictionary.KeyTuples)
             {
@@ -102,10 +102,34 @@ namespace CsharpExtras.Map.Sparse
                     || !valueComparer(otherValue, thisValue))
                 {
                     return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount,
-                        (transformedKeyTupleEnum.ToList(), thisValue));
+                        (transformedKeyTupleEnum.ToList(), thisValue), otherValue?.ToString());
                 }
             }
-            return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+            return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null, null);
+        }
+
+        public void Shift(NonnegativeInteger axisIndex, int firstShiftIndex, int shiftVector) =>
+            _backingDictionary.UpdateKeys
+                (k => KeyOutTransform(ShiftIfInRange(k, firstShiftIndex, shiftVector), axisIndex), axisIndex);
+
+        /// <summary>
+        /// Shifts the given index if it is in the interval defined by the first shift index and shift vector
+        /// </summary>
+        /// <param name="index">The index to shift</param>
+        /// <param name="firstShiftIndex">The first index to shift</param>
+        /// <param name="shiftVector">The amount by which to shift.</param>
+        /// <returns>If the given index is within the semi-infinite interval starting at firstShiftIndex, and
+        /// extending out to plus or minus infinity depending on the shift vector, then translates it by the shift amount.
+        /// Otherwise, returns the same index that was input to the function.
+        /// If the shift vector is zero, then this returns the given index.</returns>
+        private int ShiftIfInRange(int index, int firstShiftIndex, int shiftVector)
+        {
+            if((shiftVector < 0 && index <= firstShiftIndex) 
+                || (shiftVector > 0 && index >= firstShiftIndex))
+            {
+                return index + shiftVector;
+            }
+            return index;
         }
 
         private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int axisIndex) => index;

@@ -1287,6 +1287,36 @@ namespace CsharpExtrasTest.Map.Dictionary.Curry
             Assert.Throws<ArgumentException>(() => dict.UpdateKeys(identityFunction, arityNonneg));
         }
 
+        [Test, TestCase(3), TestCase(4), TestCase(1),]
+        /// <param name="failingKey">The exception will be thrown for this key - the reason for parametrising on this is we
+        /// want to ensure the test tests for atomicity, and doesn't just fail at the first key. So testing for all keys should ensure
+        /// at least one of them fails after some others were processed.</param>
+        public void GIVEN_ErrorInUpdate_WHEN_UpdateKeysAtArity2_THEN_ErrorThrownAndDictionaryUnchanged(int failingKey)
+        {
+            //Arrange
+            ICurryDictionary<int, int> dict = Api.NewCurryDictionary<int, int>(3);
+            dict.Add(7, 1, 1, 3);
+            dict.Add(3, 1, 2, 4);
+            dict.Add(5, 1, 3, 1);
+
+            ICurryDictionary<int, int> expectedDict = Api.NewCurryDictionary<int, int>(3);
+            expectedDict.Add(7, 1, 1, 3);
+            expectedDict.Add(3, 1, 2, 4);
+            expectedDict.Add(5, 1, 3, 1);
+
+            //This function is non-injective but won't fail on the first call - this tests the atomicity the update
+            Func<int, int> errorProneFunction = k => k == failingKey ?
+                throw new ArgumentException($"Exception encountered at key {failingKey}") : k + 3;
+
+            //Act
+
+            Assert.Throws<ArgumentException>(() => dict.UpdateKeys(errorProneFunction, (NonnegativeInteger)2));
+
+            //Assert
+            IComparisonResult comparison = expectedDict.Compare(dict, (i, j) => i == j);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
+
         [Test, TestCase(1), TestCase(2), TestCase(3),]
         /// <param name="failingKey">The exception will be thrown for this key - the reason for parametrising on this is we
         /// want to ensure the test tests for atomicity, and doesn't just fail at the first key. So testing for all keys should ensure

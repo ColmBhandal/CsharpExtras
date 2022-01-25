@@ -1,4 +1,5 @@
-﻿using CsharpExtras.Compare;
+﻿using CsharpExtras.Api;
+using CsharpExtras.Compare;
 using CsharpExtras.Extensions.Helper.Dictionary;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
@@ -10,6 +11,13 @@ namespace CsharpExtras.Map.Dictionary.Curry
 {
     abstract class CurryDictionaryBase<TKey, TVal> : ICurryDictionary<TKey, TVal>
     {
+        private readonly ICsharpExtrasApi _api;
+
+        protected CurryDictionaryBase(ICsharpExtrasApi api)
+        {
+            _api = api ?? throw new ArgumentNullException(nameof(api));
+        }
+
         public abstract NonnegativeInteger Arity { get; }
         public abstract IEnumerable<IList<TKey>> KeyTuples { get; }
 
@@ -88,7 +96,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             int otherCount = other.Count;
             if (Arity != otherArity || Count != otherCount)
             {
-                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null, null);
             }
             return IsSubset(other, isEqualValues);
         }
@@ -122,9 +130,52 @@ namespace CsharpExtras.Map.Dictionary.Curry
                 throw new ArgumentException
                     ($"Cannot get key tuple prefixes. Given arity is exceeds Arity of this object: {arity} > {Arity}");
             }
-            DoForAllCurriedDictionaries(d => d.UpdateFirstKeyInTuples(keyInjection), arity);
+            ILazyFunctionMap<TKey, TKey> keyInjectionCached = _api.NewLazyFunctionMap(keyInjection);
+            ValidateThenDoForAllPairs((_, d) => ValidateKeyInjectionForDictionary(k => keyInjectionCached[k], d),
+                (_, d) => d.UpdateFirstKeyInTuples(k => keyInjectionCached[k]), arity);
+        }
+
+        private void ValidateKeyInjectionForDictionary(Func<TKey, TKey> keyInjection,
+            ICurryDictionary<TKey, TVal> dictionary)
+        {
+            if(dictionary.Arity == 0)
+            {
+                return;
+            }
+            IEnumerable<TKey> firstKeys
+                = dictionary.KeyTuplePrefixes((NonnegativeInteger)1).Select(kt => kt.First());
+            IDictionary<TKey, TKey> mappedToSourceKeys = new Dictionary<TKey, TKey>();
+            foreach(TKey key in firstKeys)
+            {
+                TKey mappedKey = keyInjection(key);
+                if (mappedToSourceKeys.ContainsKey(mappedKey))
+                {
+                    TKey originalSourceKey = mappedToSourceKeys[mappedKey];
+                    throw new InjectiveViolationException(
+                        $"Key-mapping function is not injective. Tried to map key {key} to new key {mappedKey}." +
+                        $"However, this key has already been mapped by {originalSourceKey}");
+                }
+                mappedToSourceKeys.Add(mappedKey, key);
+            }
         }
 
         public abstract void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection);
+
+        /// <summary>
+        /// Similar to <see cref="DoForAllPairs"/> but runs a pre-validation function across all pairs first.
+        /// Useful if a pre-validation function is needed to guarantee atomicity, for example
+        /// </summary>
+        private void ValidateThenDoForAllPairs
+            (Action<IList<TKey>, ICurryDictionary<TKey, TVal>> validation,
+            Action<IList<TKey>, ICurryDictionary<TKey, TVal>> action, NonnegativeInteger arity)
+        {
+            IEnumerable<IList<TKey>> prefixes = KeyTuplePrefixes(arity);
+            foreach (IList<TKey> prefix in prefixes)
+            {
+                ICurryDictionary<TKey, TVal> curriedChild = GetCurriedDictionary(prefix);
+                validation(prefix, curriedChild);
+            }
+            DoForAllPairs(action, arity);
+        }
     }
 }
