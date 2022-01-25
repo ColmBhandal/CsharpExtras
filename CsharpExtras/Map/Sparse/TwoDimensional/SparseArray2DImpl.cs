@@ -34,15 +34,11 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
             return BackingArray.CompareUsedValues(other.BackingArray, comparitor);
         }
 
-        public void InsertRows(int insertionIndex, int shiftVector)
-        {
-            //TODO
-        }
+        public void InsertRows(int insertionIndex, int shiftVector) =>
+            BackingArray.Shift((NonnegativeInteger)0, insertionIndex, shiftVector);
 
-        public void InsertColumns(int insertionIndex, int shiftVector)
-        {
-            //TODO
-        }
+        public void InsertColumns(int insertionIndex, int shiftVector) =>
+            BackingArray.Shift((NonnegativeInteger)1, insertionIndex, shiftVector);
 
         public void SetArea(TVal[,] area, int leftmostRow, int topMostColumn)
         {
