@@ -42,7 +42,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
 
         public CurryDictionaryRecursive(int arity, ICsharpExtrasApi api) : this((PositiveInteger)arity, api) { }
 
-        public CurryDictionaryRecursive(PositiveInteger arity, ICsharpExtrasApi api)
+        public CurryDictionaryRecursive(PositiveInteger arity, ICsharpExtrasApi api) : base(api)
         {
             Arity = (NonnegativeInteger)arity;
             _api = api;
@@ -130,7 +130,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             else
             {
-                ICurryDictionary<TKey, TVal> curryChild = new NullaryCurryDictionary<TKey, TVal>(value);
+                ICurryDictionary<TKey, TVal> curryChild = new NullaryCurryDictionary<TKey, TVal>(value, _api);
                 AddDirectChild(firstKey, curryChild);
                 return true;
             }
