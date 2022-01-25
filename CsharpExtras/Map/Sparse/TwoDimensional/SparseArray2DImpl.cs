@@ -12,6 +12,11 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
     {
         public ISparseArray<TVal> BackingArray { get; }
 
+        private NonnegativeInteger? _rowAxisIndex;
+        public NonnegativeInteger RowAxisIndex => _rowAxisIndex ??= (NonnegativeInteger)0;
+        private NonnegativeInteger? _columnAxisIndex;
+        public NonnegativeInteger ColumnAxisIndex => _columnAxisIndex ??= (NonnegativeInteger)1;
+
         public SparseArray2DImpl(ISparseArray<TVal> backingArray)
         {
             ValidateBackingArray(backingArray);
@@ -57,7 +62,7 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
             for (int i = 0; i < area.GetLength(0); i++)
             {
                 int rowAbs = leftmostRow + i;
-                if (!BackingArray.IsValid(rowAbs, (NonnegativeInteger)0))
+                if (!BackingArray.IsValid(rowAbs, RowAxisIndex))
                 {
                     throw new IndexOutOfRangeException($"Invalid row index: {i}");
                 }
@@ -65,7 +70,7 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
             for (int j = 0; j < area.GetLength(1); j++)
             {
                 int colAbs = topMostColumn + j;
-                if (!BackingArray.IsValid(colAbs, (NonnegativeInteger)1))
+                if (!BackingArray.IsValid(colAbs, ColumnAxisIndex))
                 {
                     throw new IndexOutOfRangeException($"Invalid column index: {j}");
                 }

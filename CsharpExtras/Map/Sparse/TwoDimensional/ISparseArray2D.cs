@@ -1,4 +1,5 @@
 ﻿using CsharpExtras.Compare;
+using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 
 namespace CsharpExtras.Map.Sparse.TwoDimensional
@@ -18,6 +19,16 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
         /// Gets the underlying sparse array - use this for any methods not directly on the 2D array
         /// </summary>
         ISparseArray<TVal> BackingArray { get; }
+        
+        /// <summary>
+        /// The numeric index of the row axis
+        /// </summary>
+        NonnegativeInteger RowAxisIndex { get; }
+
+        /// <summary>
+        /// The numeric index of the column axis
+        /// </summary>
+        NonnegativeInteger ColumnAxisIndex { get; }
 
         /// <summary>
         /// Compares this 2D array to another one using a comparitor - delegates to the BackingArray
