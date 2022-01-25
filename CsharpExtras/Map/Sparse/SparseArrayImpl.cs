@@ -108,6 +108,11 @@ namespace CsharpExtras.Map.Sparse
             return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
         }
 
+        public void Shift(NonnegativeInteger axisIndex, int firstShiftIndex, int shiftVector)
+        {
+            //TODO
+        }
+
         private int KeyInTransform(SparseArrayImpl<TVal>.ValidIndex index, int axisIndex) => index;
 
         private SparseArrayImpl<TVal>.ValidIndex KeyOutTransform(int index, int axisIndex) => _validIndexCache[(index, axisIndex)]

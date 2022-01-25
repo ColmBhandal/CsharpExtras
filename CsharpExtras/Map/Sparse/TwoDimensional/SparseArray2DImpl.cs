@@ -23,15 +23,6 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
             BackingArray = backingArray ?? throw new ArgumentNullException(nameof(backingArray));
         }
 
-        private void ValidateBackingArray(ISparseArray<TVal> backingArray)
-        {
-            PositiveInteger dimension = backingArray.Dimension;
-            if(dimension != 2)
-            {
-                throw new ArgumentException($"Dimension of backing array must be exactly 2. Found: {(int) dimension}");
-            }
-        }
-
         public TVal this[int row, int column]
         {
             get => BackingArray[row, column];
@@ -41,6 +32,16 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
         public IComparisonResult CompareUsedValues(ISparseArray2D<TVal> other, Func<TVal, TVal, bool> comparitor)
         {
             return BackingArray.CompareUsedValues(other.BackingArray, comparitor);
+        }
+
+        public void InsertRows(int insertionIndex, int shiftVector)
+        {
+            //TODO
+        }
+
+        public void InsertColumns(int insertionIndex, int shiftVector)
+        {
+            //TODO
         }
 
         public void SetArea(TVal[,] area, int leftmostRow, int topMostColumn)
@@ -53,26 +54,6 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
                     int rowAbs = leftmostRow + i;
                     int colAbs = topMostColumn + j;
                     BackingArray[rowAbs, colAbs] = area[i, j];
-                }
-            }
-        }
-
-        private void ValidateArea(TVal[,] area, int leftmostRow, int topMostColumn)
-        {
-            for (int i = 0; i < area.GetLength(0); i++)
-            {
-                int rowAbs = leftmostRow + i;
-                if (!BackingArray.IsValid(rowAbs, RowAxisIndex))
-                {
-                    throw new IndexOutOfRangeException($"Invalid row index: {i}");
-                }
-            }
-            for (int j = 0; j < area.GetLength(1); j++)
-            {
-                int colAbs = topMostColumn + j;
-                if (!BackingArray.IsValid(colAbs, ColumnAxisIndex))
-                {
-                    throw new IndexOutOfRangeException($"Invalid column index: {j}");
                 }
             }
         }
@@ -97,6 +78,35 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
                 }
             }
             return area;
+        }
+
+        private void ValidateArea(TVal[,] area, int leftmostRow, int topMostColumn)
+        {
+            for (int i = 0; i < area.GetLength(0); i++)
+            {
+                int rowAbs = leftmostRow + i;
+                if (!BackingArray.IsValid(rowAbs, RowAxisIndex))
+                {
+                    throw new IndexOutOfRangeException($"Invalid row index: {i}");
+                }
+            }
+            for (int j = 0; j < area.GetLength(1); j++)
+            {
+                int colAbs = topMostColumn + j;
+                if (!BackingArray.IsValid(colAbs, ColumnAxisIndex))
+                {
+                    throw new IndexOutOfRangeException($"Invalid column index: {j}");
+                }
+            }
+        }
+
+        private void ValidateBackingArray(ISparseArray<TVal> backingArray)
+        {
+            PositiveInteger dimension = backingArray.Dimension;
+            if (dimension != 2)
+            {
+                throw new ArgumentException($"Dimension of backing array must be exactly 2. Found: {(int)dimension}");
+            }
         }
     }
 }

@@ -44,6 +44,8 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
         /// <param name="endCol">Column coordinate of the bottom-righ of the rectangle</param>
         /// <returns>A 2D array of values defind by the rectangle at the given coordinates</returns>
         TVal[,] GetArea(int startRow, int startCol, int endRow, int endCol);
+        void InsertColumns(int insertionIndex, int shiftVector);
+        void InsertRows(int insertionIndex, int shiftVector);
 
         /// <summary>
         /// Sets an area to the given values at the given coordinates.
