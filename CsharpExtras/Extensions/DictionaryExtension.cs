@@ -203,7 +203,7 @@ namespace CsharpExtras.Extensions
             int otherCount = other.Count;
             if(count != otherCount)
             {
-                return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, null);
+                return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, null, null);
             }
             foreach(KeyValuePair<TKey, TValue> kvp in dictionary)
             {
@@ -214,15 +214,15 @@ namespace CsharpExtras.Extensions
                     TValue otherValue = other[key];
                     if(!isEqualValues(value, otherValue))
                     {
-                        return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, (kvp.Key, kvp.Value));
+                        return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, (kvp.Key, kvp.Value), otherValue?.ToString());
                     }
                 }
                 else
                 {
-                    return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, (kvp.Key, kvp.Value));
+                    return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, (kvp.Key, kvp.Value), null);
                 }
             }
-            return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, null);
+            return new DictionaryComparisonImpl<TKey, TValue>(count, otherCount, null, null);
         }
     }
 }

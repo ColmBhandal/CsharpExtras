@@ -304,7 +304,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
 
             //Act
-            mockBackedArray.InsertRows(-1, 7);
+            mockBackedArray.InsertColumns(-1, 7);
 
             //Assert
             mockBackingArray.Verify(a => a.Shift(It.IsAny<NonnegativeInteger>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());

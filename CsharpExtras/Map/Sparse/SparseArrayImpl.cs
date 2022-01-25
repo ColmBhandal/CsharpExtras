@@ -86,11 +86,11 @@ namespace CsharpExtras.Map.Sparse
         {
             if (other.Dimension != Dimension)
             {
-                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null, null);
             }
             if (other.UsedValuesCount != UsedValuesCount)
             {
-                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+                return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null, null);
             }            
             foreach(IList<SparseArrayImpl<TVal>.ValidIndex> tuple in _backingDictionary.KeyTuples)
             {
@@ -102,10 +102,10 @@ namespace CsharpExtras.Map.Sparse
                     || !valueComparer(otherValue, thisValue))
                 {
                     return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount,
-                        (transformedKeyTupleEnum.ToList(), thisValue));
+                        (transformedKeyTupleEnum.ToList(), thisValue), otherValue?.ToString());
                 }
             }
-            return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null);
+            return new SparseArrayComparisonImpl<TVal>(Dimension, other.Dimension, UsedValuesCount, other.UsedValuesCount, null, null);
         }
 
         public void Shift(NonnegativeInteger axisIndex, int firstShiftIndex, int shiftVector) =>

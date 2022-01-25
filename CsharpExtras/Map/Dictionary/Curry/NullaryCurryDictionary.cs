@@ -92,9 +92,9 @@ namespace CsharpExtras.Map.Dictionary.Curry
             TVal otherVal = other.GetValueFromTuple();
             if(isEqualValues(_singletonValue, otherVal))
             {
-                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null, otherVal?.ToString());
             }
-            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue));
+            return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, (new List<TKey>(), _singletonValue), otherVal?.ToString());
         }
 
         public override void UpdateFirstKeyInTuples(Func<TKey, TKey> keyInjection)

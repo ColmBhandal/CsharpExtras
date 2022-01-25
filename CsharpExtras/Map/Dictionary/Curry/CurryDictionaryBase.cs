@@ -88,7 +88,7 @@ namespace CsharpExtras.Map.Dictionary.Curry
             int otherCount = other.Count;
             if (Arity != otherArity || Count != otherCount)
             {
-                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null);
+                return new CurryDictionaryComparisonImpl<TKey, TVal>(Arity, otherArity, Count, otherCount, null, null);
             }
             return IsSubset(other, isEqualValues);
         }

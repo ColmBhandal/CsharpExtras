@@ -14,14 +14,16 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// <param name="thisCount">Number of elements in this dictionary</param>
         /// <param name="otherCount">Number of elements in other dictionary</param>
         /// <param name="firstMismatch">First mistmach, if one exists, including the keys and the underly dictionary comparison</param>
+        /// <param name="otherValMistmatch">Other value for first mismatch, as a string, or null if other value not found</param>
         public CurryDictionaryComparisonImpl(int thisArity, int otherArity, int thisCount, int otherCount,
-            (IList<TKey> keyTuple, TVal val)? firstMismatch)
+            (IList<TKey> keyTuple, TVal val)? firstMismatch, string? otherValMistmatch)
         {
             ThisCount = thisCount;
             OtherCount = otherCount;
             ThisArity = thisArity;
             OtherArity = otherArity;
             FirstMismatch = firstMismatch;
+            OtherValMistmachOrNull = otherValMistmatch;
         }
 
         private int ThisArity { get; }
@@ -30,6 +32,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
         private int OtherCount { get; }
 
         private (IList<TKey> keyTuple, TVal val)? FirstMismatch { get; }
+
+        private string? OtherValMistmachOrNull { get; }
 
         private (string, bool)? _messageAndIsEqual;
         private (string message, bool isEqual) MessageAndIsEqual => _messageAndIsEqual ??= GetMessageAndIsEqual();
@@ -46,7 +50,8 @@ namespace CsharpExtras.Map.Dictionary.Curry
             }
             if (FirstMismatch is (IList<TKey> keyTuple, TVal val))
             {
-                return ($"Mismatch found at key tuple {string.Join(",", keyTuple)} and value {val}", false);
+                string otherVal = OtherValMistmachOrNull ?? "NOT FOUND";
+                return ($"Mismatch found at key tuple {string.Join(",", keyTuple)}. This value: {val}. Other value: {otherVal}", false);
             }
             return ("Dictionaries are equal", true);
         }
