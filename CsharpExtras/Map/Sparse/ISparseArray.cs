@@ -50,5 +50,6 @@ namespace CsharpExtras.Map.Sparse
         /// <returns>A comparison result which will indicate whether the used values in this array are equal to the other array according to the comparer</returns>                
         IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer);
         bool IsValid(int index, NonnegativeInteger axisIndex);
+        void Shift(NonnegativeInteger axisIndex, int firstShiftIndex, int shiftVector);
     }
 }
