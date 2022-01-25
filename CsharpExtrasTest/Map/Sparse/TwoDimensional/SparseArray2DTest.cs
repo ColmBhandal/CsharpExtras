@@ -207,7 +207,6 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
         public void GIVEN_Array_WHEN_Compare_THEN_BackingArrayCompareCalledOnce()
         {
             //Arrange
-            const string DefaultValue = "DEFAULT";
             Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
             Mock<IComparisonResult> comparison = new Mock<IComparisonResult>();
             mockBackingArray.Setup(a => a.CompareUsedValues(It.IsAny<ISparseArray<string>>(),
@@ -232,7 +231,6 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
         public void GIVEN_Array_WHEN_Set_THEN_BackingArraySetCalledOnceWithCorrectValue()
         {
             //Arrange
-            const string DefaultValue = "DEFAULT";
             const string ValueToSet = "Foo";
             Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
             string mockSetValue = "Not Set Yet";
@@ -257,7 +255,6 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
         public void GIVEN_Array_WHEN_Get_THEN_BackingArrayGetCalledOnce()
         {
             //Arrange
-            const string DefaultValue = "DEFAULT";
             const string MockReturnValue = "Returned Value";
             Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
             mockBackingArray.SetupGet(a => a[It.IsAny<int>(), It.IsAny<int>()])
@@ -272,6 +269,46 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             //Assert
             Assert.AreEqual(MockReturnValue, actualValue);
             mockBackingArray.VerifyGet(a => a[7, 12], Times.Once());
+        }
+
+        [Test]
+        //Note: if backing implementation changes, then we'll need to explicitly add test cases here
+        //rather than just testing that mocked-out backing implementation is called
+        public void GIVEN_Array_WHEN_InsertRows_THEN_BackingArrayShiftGetCalledOnce()
+        {
+            //Arrange
+            Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
+            mockBackingArray.Setup(a => a.Shift(It.IsAny<NonnegativeInteger>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Verifiable();
+            mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
+
+            //Act
+            mockBackedArray.InsertRows(2, -4);
+
+            //Assert
+            mockBackingArray.Verify(a => a.Shift(It.IsAny<NonnegativeInteger>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
+            mockBackingArray.Verify(a => a.Shift((NonnegativeInteger)0, 2, -4), Times.Once());
+        }
+
+        [Test]
+        //Note: if backing implementation changes, then we'll need to explicitly add test cases here
+        //rather than just testing that mocked-out backing implementation is called
+        public void GIVEN_Array_WHEN_InsertColumns_THEN_BackingArrayShiftGetCalledOnce()
+        {
+            //Arrange
+            Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
+            mockBackingArray.Setup(a => a.Shift(It.IsAny<NonnegativeInteger>(), It.IsAny<int>(), It.IsAny<int>()))
+                .Verifiable();
+            mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
+
+            //Act
+            mockBackedArray.InsertRows(-1, 7);
+
+            //Assert
+            mockBackingArray.Verify(a => a.Shift(It.IsAny<NonnegativeInteger>(), It.IsAny<int>(), It.IsAny<int>()), Times.Once());
+            mockBackingArray.Verify(a => a.Shift((NonnegativeInteger)1, -1, 7), Times.Once());
         }
 
     }
