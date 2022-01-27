@@ -73,7 +73,7 @@ namespace CsharpExtras._Enumerable.OneBased
 
         public void Resize(int newSize)
         {
-            Array.Resize<TVal>(ref _backingArray, newSize);
+            Array.Resize(ref _backingArray, newSize);
         }
 
         public IDictionary<TVal, TOther> ZipToDictionary<TOther>(IOneBasedArray<TOther> other)
