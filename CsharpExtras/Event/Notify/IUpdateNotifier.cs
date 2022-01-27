@@ -29,7 +29,7 @@ namespace CsharpExtras.Event.Notify
         event Action<TUpdate>? BeforeUpdate;
 
         /// <summary>
-        /// Calling this function will call the underlying update function & trigger the before/after events
+        /// Calling this function will call the underlying update function and trigger the before/after events
         /// </summary>
         /// <param name="update">Value to pass to the underlying update function</param>
         void Update(TUpdate update);

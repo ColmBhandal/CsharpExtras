@@ -68,7 +68,7 @@ namespace CsharpExtras.Extensions
          /// <typeparam name="TMapped">The type of keys in the resulting dictionary</typeparam>
          /// <param name="injectiveMapper">A function which maps keys in one dictionary to those in another.
          /// This function must be injective on the original keyset.</param>
-         /// <returns>A new dictionary, whose keys are the result of applying the mapper function & whose values are the same as in the original</returns>
+         /// <returns>A new dictionary, whose keys are the result of applying the mapper function and whose values are the same as in the original</returns>
          /// <exception cref="InjectiveViolationException">Thrown if two keys in the original dictionary map to the same key via the mapper function.</exception>
         public static IDictionary<TMapped, TValue> MapKeys<TKey, TValue, TMapped>
             (this IDictionary<TKey, TValue> dictionary, Func<TKey, TMapped> injectiveMapper) =>
@@ -80,7 +80,7 @@ namespace CsharpExtras.Extensions
         /// <typeparam name="TMapped">The type of keys in the resulting dictionary</typeparam>
         /// <param name="injectiveMapper">A function which maps keys and values in one dictionary to keys in another.
         /// This function must be injective on the original set of key-value pairs.</param>
-        /// <returns>A new dictionary, whose keys are the result of applying the mapper function & whose values are the same as in the original</returns>
+        /// <returns>A new dictionary, whose keys are the result of applying the mapper function and whose values are the same as in the original</returns>
         /// <exception cref="InjectiveViolationException">Thrown if two pairs in the original dictionary map to the same key via the mapper function.</exception>
         public static IDictionary<TMapped, TValue> MapKeys<TKey, TValue, TMapped>
             (this IDictionary<TKey, TValue> dictionary, Func<TKey, TValue, TMapped> injectiveMapper)

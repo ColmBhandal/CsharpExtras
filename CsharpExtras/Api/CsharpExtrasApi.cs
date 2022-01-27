@@ -24,6 +24,9 @@ using CsharpExtras.Map.Sparse.TwoDimensional.Builder;
 
 namespace CsharpExtras.Api
 {
+    /// <summary>
+    /// Main entry point for using this library. Create a new API in order to create any of the types in this library.
+    /// </summary>
     public class CsharpExtrasApi : ICsharpExtrasApi
     {
 
