@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace CsharpExtras.Extensions
 {
+    /// <summary>
+    /// Extension functions for lists
+    /// </summary>
     public static class ListExtension
     {
 
-        /// <see cref="Map{TValue, TMapped}(IList{TValue}, Func{TValue, int, TMapped})".
-        /// The difference in this case is that the mapper function ignores indices and only operates on values/>
+        /// <see cref="Map{TValue, TMapped}(IList{TValue}, Func{TValue, int, TMapped})">
+        /// The difference in this case is that the mapper function ignores indices and only operates on values</see>
         public static IList<TMapped> Map<TValue, TMapped>(this IList<TValue> list, Func<TValue, TMapped> mapper)
         {
             Func<TValue, int, TMapped> mapWithIndex = (v, i) => mapper(v);

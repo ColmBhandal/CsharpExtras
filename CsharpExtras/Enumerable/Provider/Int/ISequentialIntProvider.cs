@@ -1,7 +1,7 @@
 ﻿namespace CsharpExtras._Enumerable.Provider.Int
 {
     /// <summary>
-    /// Provides iteration over an arithmetic sequence of ints, starting at the given value & increasing by the given step
+    /// Provides iteration over an arithmetic sequence of ints, starting at the given value and increasing by the given step
     /// </summary>
     public interface ISequentialIntProvider
     {

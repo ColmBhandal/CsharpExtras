@@ -180,7 +180,7 @@ namespace CsharpExtras.Extensions
         /// Creates a new array, populated by mapping the values/indices of the old array using a mapper function.
         /// </summary>
         /// <param name="mapper">A function which maps an element and its row/column indices in the original array to an element in the new array</param>
-        /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array & its row/column indices.</returns>
+        /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array and its row/column indices.</returns>
         public static TResult[,] Map<TVal, TResult>(this TVal[,] array, Func<TVal, int, int, TResult> mapper)
         {
             int length0 = array.GetLength(0);
@@ -289,7 +289,7 @@ namespace CsharpExtras.Extensions
         /// <summary>
         /// Writes one 2D array to another. The arrays do not need to be the same size.
         /// The array to write is first aligned with the top left corner of the target array.
-        /// Then the array to write is shifted by a row & column offset, which could be negative.
+        /// Then the array to write is shifted by a row and column offset, which could be negative.
         /// After the shift, the 2 arrays will be overlapping by some rectangular area, possibly empty.
         /// The values written to the target are exactly those which overlap after the shift.
         /// </summary>
@@ -316,9 +316,9 @@ namespace CsharpExtras.Extensions
         /// Rectangular sub array of this 2D array defined by the given coordinates.
         /// </summary>
         /// <param name="startAtRow">Row index to start at. Negative indices will be truncated to zero.</param>
-        /// <param name="startAtCol">Column index to start at. Negative indices will be truncated to zero.</param>
+        /// <param name="startAtColumn">Column index to start at. Negative indices will be truncated to zero.</param>
         /// <param name="stopBeforeRow">Row index before which to stop. Indices greater than number of rows will be truncated to that number.</param>
-        /// <param name="stopBeforeCol">Column index before which to stop. Indices greater than number of columns will be truncated to that number.</param>
+        /// <param name="stopBeforeColumn">Column index before which to stop. Indices greater than number of columns will be truncated to that number.</param>
         /// <returns></returns>
         public static TVal[,] SubArray<TVal>(this TVal[,] array, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn)
         {

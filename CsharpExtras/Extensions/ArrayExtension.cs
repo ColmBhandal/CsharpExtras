@@ -195,7 +195,7 @@ namespace CsharpExtras.Extensions
             TResult[] currentZip = array.ZipArray(zipper, other);
             foreach(TOther[] extra in extras)
             {
-                currentZip = currentZip.ZipArray<TResult, TOther, TResult>(zipper, extra);
+                currentZip = currentZip.ZipArray(zipper, extra);
             }
             return currentZip;
         }
@@ -215,7 +215,7 @@ namespace CsharpExtras.Extensions
         /// Creates a new array, populated by mapping the values/indices of the old array using a mapper function.
         /// </summary>
         /// <param name="mapper">A function which maps an element and its index in the original array to an element in the new array.</param>
-        /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array & its index.</returns>
+        /// <returns>A new array, whose values are the result of applying the mapper function to the associated element in the source array and its index.</returns>
         public static TResult[] Map<TVal, TResult>(this TVal[] array, Func<TVal, int, TResult> mapper)
         {
             int length = array.Length;

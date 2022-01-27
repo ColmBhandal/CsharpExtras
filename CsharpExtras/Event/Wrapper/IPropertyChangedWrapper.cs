@@ -21,13 +21,13 @@ namespace CsharpExtras.Event.Wrapper
         event Action<TEvent>? OnPropertyChanged;
 
         /// <summary>
-        /// Runs the given action on the object & raises an event capturing how the object's property changed before/after running the action        
+        /// Runs the given action on the object and raises an event capturing how the object's property changed before/after running the action        
         /// </summary>
         /// <param name="act">The action to run</param>
         void Run(Action<TObj> act);
 
         /// <summary>
-        /// Runs the given function on the object & raises an event capturing how the object's property changed before/after running the function
+        /// Runs the given function on the object and raises an event capturing how the object's property changed before/after running the function
         /// </summary>
         /// <typeparam name="TReturn">The return type of the function</typeparam>
         /// <param name="f">The function to run</param>

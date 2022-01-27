@@ -102,7 +102,13 @@ namespace CsharpExtras.Extensions
         }
 
 
+        /// <summary>
+        /// Gets the regex capture of the group at the given index in the regex for the first match of the regex to the given string
+        /// </summary>
+        /// <param name="str">This string</param>
+        /// <param name="regexString">A regex against which to match this string</param>
         /// <param name="groupIndex">The 1 based index of the group within the match</param>
+        /// <returns>The value of the regex capture group at the first match of the regex in the string</returns>
         public static string GetRegexCaptureGroupInFirstMatchOrBlank(this string str, string regexString, int groupIndex)
         {
             Regex regex = new Regex(regexString);
