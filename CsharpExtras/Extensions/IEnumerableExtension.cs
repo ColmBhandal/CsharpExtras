@@ -14,12 +14,16 @@ namespace CsharpExtras.Extensions
         public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int baseIndex)
             => Index(values, baseIndex, 1);
 
+
         /// <summary>
         /// Indexes this enumerable into a dictionary whose keys are the indices of elements in the enumerable.
         /// </summary>
+        /// <typeparam name="U">The type of elements in the enumerable</typeparam>
+        /// <param name="values"></param>
         /// <param name="baseIndex">The index to assign to the first index of the enumerable</param>
         /// <param name="step">The difference between successive indices in the enumerable</param>
-        /// <returns></returns>
+        /// <returns>A dictionary whose keys are the indices of elements in the enumerable,
+        /// starting at the given base index and incresing by the given step</returns>
         public static IDictionary<int, U> Index<U>(this IEnumerable<U> values, int baseIndex, int step)
         {
             IDictionary<int, U> dict = new Dictionary<int, U>();

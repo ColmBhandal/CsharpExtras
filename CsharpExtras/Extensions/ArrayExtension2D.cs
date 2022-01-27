@@ -316,9 +316,9 @@ namespace CsharpExtras.Extensions
         /// Rectangular sub array of this 2D array defined by the given coordinates.
         /// </summary>
         /// <param name="startAtRow">Row index to start at. Negative indices will be truncated to zero.</param>
-        /// <param name="startAtCol">Column index to start at. Negative indices will be truncated to zero.</param>
+        /// <param name="startAtColumn">Column index to start at. Negative indices will be truncated to zero.</param>
         /// <param name="stopBeforeRow">Row index before which to stop. Indices greater than number of rows will be truncated to that number.</param>
-        /// <param name="stopBeforeCol">Column index before which to stop. Indices greater than number of columns will be truncated to that number.</param>
+        /// <param name="stopBeforeColumn">Column index before which to stop. Indices greater than number of columns will be truncated to that number.</param>
         /// <returns></returns>
         public static TVal[,] SubArray<TVal>(this TVal[,] array, int startAtRow, int startAtColumn, int stopBeforeRow, int stopBeforeColumn)
         {
