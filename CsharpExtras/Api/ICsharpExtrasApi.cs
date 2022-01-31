@@ -29,6 +29,7 @@ namespace CsharpExtras.Api
         IComparer<T> NewDescendingComparer<T>();
         IDirectoryDecorator NewDirectoryDecorator();
         IValidator<T> NewEmptyValidator<T>();
+        IPreAccessWrapper<TObj> NewPreAccessWrapper<TObj>(TObj obj, Action<TObj> preAccessAction);
         IFileDecorator NewFileDecorator();
         IIntegerLeaf NewIntegerLeaf(int payload);
         IIntegerTree NewIntegerTree(int payload);
