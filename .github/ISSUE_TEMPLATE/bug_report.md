@@ -8,15 +8,17 @@ assignees: ''
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Add Step
-1. Add Step...
+<!-- Describe what the bug is. -->
+
+**DotNetFiddle Reproduction Steps**
+
+<!-- Add DotNetFiddle reproduction steps here. To see how, see: https://github.com/ColmBhandal/CsharpExtras/wiki/Using-DotNetFiddle-to-Report-a-Bug -->
 
 **Observed behavior**
-A clear and concise description of what you expected to happen.
+
+<!-- Describe what was observed i.e. what actually happened. -->
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+
+<!-- Describe what you expected to happen. -->
