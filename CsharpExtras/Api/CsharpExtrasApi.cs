@@ -161,5 +161,8 @@ namespace CsharpExtras.Api
 
         public ISparseArray2DBuilder<TVal> NewSparseArray2DBuilder<TVal>(TVal defaultValue) =>
             new SparseArray2DBuilderImpl<TVal>(defaultValue, this);
+
+        public IPreAccessWrapper<TObj> NewPreAccessWrapper<TObj>(TObj obj, Action<TObj> preAccessAction) =>
+            new PreAccessWrapperImpl<TObj>(obj, preAccessAction);
     }
 }

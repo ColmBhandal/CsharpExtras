@@ -29,6 +29,15 @@ namespace CsharpExtras.Api
         IComparer<T> NewDescendingComparer<T>();
         IDirectoryDecorator NewDirectoryDecorator();
         IValidator<T> NewEmptyValidator<T>();
+        
+        /// <summary>
+        /// Creates a new pre-access wrapper, containing a wrapped object and a pre-access action to run before every access to that object
+        /// </summary>
+        /// <typeparam name="TObj">The object type</typeparam>
+        /// <param name="obj">An object instance which will be wrapped</param>
+        /// <param name="preAccessAction">An action to run before any access to the given object</param>
+        /// <returns>A new pre-access wrapper object</returns>
+        IPreAccessWrapper<TObj> NewPreAccessWrapper<TObj>(TObj obj, Action<TObj> preAccessAction);
         IFileDecorator NewFileDecorator();
         IIntegerLeaf NewIntegerLeaf(int payload);
         IIntegerTree NewIntegerTree(int payload);
