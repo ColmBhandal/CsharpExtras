@@ -17,12 +17,13 @@ namespace CsharpExtras.Event.Wrapper
 
         public void Run(Action<TObj> act)
         {
-
+            _preAccessAction(_object);
+            act(_object);
         }
 
         public TReturn Get<TReturn>(Func<TObj, TReturn> f)
         {
-            //TODO: Implement properly
+            _preAccessAction(_object);
             return f(_object);
         }
     }
