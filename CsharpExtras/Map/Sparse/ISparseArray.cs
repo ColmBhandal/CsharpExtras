@@ -85,5 +85,10 @@ namespace CsharpExtras.Map.Sparse
         ISparseArray<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
             ISparseArray<TOther> other, TResult defaultVal,
             Func<NonnegativeInteger, int, bool> validationFunction);
+
+        /// <summary>
+        /// Enumerable of all used entries in this array. A used entry is a list of coordinates along with the value at those coordinates.
+        /// </summary>
+        IEnumerable<(IList<int>, TVal)> UsedEntries { get; }
     }
 }

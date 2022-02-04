@@ -2,6 +2,7 @@
 using CsharpExtras.Compare;
 using CsharpExtras.Extensions;
 using CsharpExtras.Map.Dictionary.Curry;
+using CsharpExtras.Map.Sparse.Builder;
 using CsharpExtras.Map.Sparse.Compare;
 using CsharpExtras.ValidatedType;
 using CsharpExtras.ValidatedType.Numeric.Integer;
@@ -18,6 +19,10 @@ namespace CsharpExtras.Map.Sparse
         public TVal DefaultValue { get; }
 
         public NonnegativeInteger UsedValuesCount => _backingDictionary.Count;
+
+        public IEnumerable<(IList<int>, TVal)> UsedEntries => 
+            _backingDictionary.KeyValuePairs.Select(((IList<ValidIndex> l, TVal v) pair)
+                => (pair.l.Map(KeyInTransform), pair.v));
 
         public bool IsValid(int index, NonnegativeInteger axisIndex) =>
             _validIndexCache[(index, axisIndex)] != null;
@@ -88,7 +93,8 @@ namespace CsharpExtras.Map.Sparse
             Func<NonnegativeInteger, int, bool> validationFunction)
         {
             //TODO: Implement properly
-            return _api.NewSparseArrayBuilder(Dimension, defaultVal).Build();
+            ISparseArrayBuilder<TResult> builder = _api.NewSparseArrayBuilder(Dimension, defaultVal);
+            return builder.Build();
         }
 
         public IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer)

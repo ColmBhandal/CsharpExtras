@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CsharpExtrasTest.Map.Sparse
@@ -15,6 +16,43 @@ namespace CsharpExtrasTest.Map.Sparse
     public class SparseArrayTest
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
+
+        [Test]
+        public void GIVEN_EmptyArray_WHEN_GetUsedEntries_THEN_EmptyEnumerable()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr);
+            ISparseArray<string> strArray = strBuilder.Build();
+            IEnumerable<(IList<int>, string)> expectedUsedEntries =
+                new List<(IList<int>, string)>();
+
+            //Act
+            IEnumerable<(IList<int>, string)> usedEntries = strArray.UsedEntries;
+
+            //Assert
+            Assert.AreEqual(expectedUsedEntries, usedEntries);
+        }
+
+        [Test]
+        public void GIVEN_FilledArray_WHEN_GetUsedEntries_THEN_ExpectedValues()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArray<string> strArray = strBuilder.Build();
+            IEnumerable<(IList<int>, string)> expectedUsedEntries =
+                new List<(IList<int>, string)> { (new List<int>() { 3, 4, 6 }, "3,4,6"),
+                    (new List<int>{ 1, 1, 1 }, "1,1,1")};
+
+            //Act
+            IEnumerable<(IList<int>, string)> usedEntries = strArray.UsedEntries;
+
+            //Assert
+            Assert.AreEqual(expectedUsedEntries, usedEntries);
+        }
 
         [Test, TestCase(1), TestCase(-1), TestCase(3)]
         public void GIVEN_InvalidIndexInEitherArray_WHEN_Zip_THEN_IndexOutOfRangeException(int index)
