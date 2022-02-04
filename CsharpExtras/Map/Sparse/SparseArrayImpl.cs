@@ -56,7 +56,7 @@ namespace CsharpExtras.Map.Sparse
                 throw new IndexOutOfRangeException($"Invalid index {index} for axis {axisIndex}"));
 
         private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
-
+        private readonly ICsharpExtrasApi _api;
         private readonly Func<NonnegativeInteger, int, bool> _validationFunction;
 
         private ILazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex?> _validIndexCache;
@@ -74,12 +74,20 @@ namespace CsharpExtras.Map.Sparse
             Func<NonnegativeInteger, int, bool> validationFunction, TVal defaultValue)
         {
             Dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
+            _api = api;
             DefaultValue = defaultValue;
             _validationFunction = validationFunction;
             _backingDictionary = api.NewGenericCurryDictionaryWrapper(
                 api.NewCurryDictionary<int, TVal>(Dimension), KeyInTransform, KeyOutTransform, v => v, v => v);
             _validIndexCache = api.NewLazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex?>
                 ((p) => SparseArrayImpl<TVal>.ValidIndex.GetValidIndexOrNull(p.index, (NonnegativeInteger)p.axisIndex, this));
+        }
+
+        public ISparseArray<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
+            TResult defaultVal, Func<NonnegativeInteger, int, bool> validationFunction)
+        {
+            //TODO: Implement properly
+            return _api.NewSparseArrayBuilder(Dimension, defaultVal).Build();
         }
 
         public IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer)

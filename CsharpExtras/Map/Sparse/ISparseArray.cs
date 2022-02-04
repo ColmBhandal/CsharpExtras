@@ -68,6 +68,19 @@ namespace CsharpExtras.Map.Sparse
         /// The indices of all elements to be shifted are incremented along the shift axis by the shift vector.</param>
         void Shift(NonnegativeInteger axisIndex, int firstShiftIndex, int shiftVector);
 
-
+        /// <summary>
+        /// Zips this array with another one to produce a new array
+        /// </summary>
+        /// <typeparam name="TOther">The type of elements in the other array</typeparam>
+        /// <typeparam name="TResult">The type of elements in the resultant array</typeparam>
+        /// <param name="zipper">A function which, given an element from this array and the other array,
+        /// returns an element of the resultant array.</param>
+        /// <param name="defaultVal">The default value for the new sparse array</param>
+        /// <param name="validationFunction">Validates indices in the resultant array. If any zipped indices are invalid,
+        /// the zip operation will throw an exception.</param>
+        /// <returns>A new sparse array, the used indices of which will be the union of used indices for this array and the other array
+        /// and the values of which will be the result of applying the zipper function at the corresponding indices in this array and the other array</returns>
+        ISparseArray<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
+            TResult defaultVal, Func<NonnegativeInteger, int, bool> validationFunction);
     }
 }
