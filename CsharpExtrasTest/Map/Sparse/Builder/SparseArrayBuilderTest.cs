@@ -33,18 +33,43 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
         }
 
         [Test, TestCase(1, 0, 3), TestCase(2, 0, 3), TestCase(3, 2, -79)]
-        /*The index we're getting is "invalid" only according to a validation function that was later added to the builder
-         * What we're testing here is that said validation function does not come into effect for an object that's already been built*/
-        public void GIVEN_BuilderAndBuiltObject_WHEN_AddValidationsToBuilderAfterBuild_THEN_GetInvalidIndexReturnsDefault
+        public void GIVEN_BuilderAndBuiltObject_WHEN_AddValidationToBuilderAfterBuild_THEN_GetInvalidIndexReturnsDefault
             (int dimension, int axisIndex, int uniqueInvalidIndex)
         {
             //Arrange
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)dimension, DefaultValue);
             ISparseArray<string> array = builder.Build();
+            Func<NonnegativeInteger, int, bool> validationFunction = (k, i) => i != uniqueInvalidIndex && k == axisIndex;
+            Assert.IsFalse(validationFunction((NonnegativeInteger) axisIndex, uniqueInvalidIndex),
+                "GIVEN: Validaiton function should return false on invalid index");
 
             //Act
-            builder.WithAxisValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger)axisIndex);
+            builder.WithValidationFunction(validationFunction);
+
+            //Assert
+            int[] coordinates = new int[dimension];
+            coordinates[axisIndex] = uniqueInvalidIndex;
+            string valueAtCoordinates = array[coordinates];
+            Assert.AreEqual(DefaultValue, valueAtCoordinates);
+        }
+
+        [Test, TestCase(1, 0, 3), TestCase(2, 0, 3), TestCase(3, 2, -79)]
+        /*The index we're getting is "invalid" only according to a validation function that was later added to the builder
+         * What we're testing here is that said validation function does not come into effect for an object that's already been built*/
+        public void GIVEN_BuilderAndBuiltObject_WHEN_AddAxisValidationsToBuilderAfterBuild_THEN_GetInvalidIndexReturnsDefault
+            (int dimension, int axisIndex, int uniqueInvalidIndex)
+        {
+            //Arrange
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)dimension, DefaultValue);
+            ISparseArray<string> array = builder.Build();
+            Func<int, bool> axisValidationFunction = i => i != uniqueInvalidIndex;
+            Assert.IsFalse(axisValidationFunction(uniqueInvalidIndex),
+                "GIVEN: Validaiton function should return false on invalid index");
+
+            //Act
+            builder.WithAxisValidationFunction(axisValidationFunction, (NonnegativeInteger)axisIndex);
 
             //Assert
             int[] coordinates = new int[dimension];
