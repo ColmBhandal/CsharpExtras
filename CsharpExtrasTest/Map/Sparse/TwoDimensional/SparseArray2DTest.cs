@@ -176,7 +176,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
                 = new SparseArrayImpl<string>((PositiveInteger)dimension, Api, (x, i) => true, "");
 
             //Act / Assert
-            Assert.Throws<ArgumentException>(() => new SparseArray2DImpl<string>(invalidBackingArray));
+            Assert.Throws<ArgumentException>(() => new SparseArray2DImpl<string>(invalidBackingArray, Api));
         }
 
         [Test]
@@ -202,6 +202,76 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
         }
 
         [Test]
+        //Note: if backing implementation changes, then we'll need to explicitly test cases here
+        //rather than just testing that mocked-out backing implementation is called
+        public void GIVEN_Array_WHEN_Zip_THEN_ResultIsBackedByZippedBackingArray()
+        {
+            //Arrange
+            Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
+            Mock<ISparseArray<int>> mockOtherBackingArray = new Mock<ISparseArray<int>>();
+            Mock<ISparseArray<(string, int)>> mockZippedBackingArray = new Mock<ISparseArray<(string, int)>>();
+
+
+            mockBackingArray.Setup(a => a.Zip(It.IsAny<Func<string, int, (string s, int i)>>(),
+                It.IsAny<ISparseArray<int>>(), It.IsAny<(string s, int i)>(),
+                It.IsAny<Func<NonnegativeInteger, int, bool>>()))
+                .Returns(mockZippedBackingArray.Object).Verifiable();
+            mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+            mockOtherBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+            mockZippedBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object, Api);
+            ISparseArray<int> otherBackingArray = mockOtherBackingArray.Object;
+            ISparseArray2D<int> otherArray = new SparseArray2DImpl<int>(otherBackingArray, Api);
+            Func<string, int, (string, int)> zipper = (s, i) => (s, i);
+            Func<NonnegativeInteger, int, bool> validationFunction = (k, i) => true;
+            (string, int) defaultVal = ("Blah", 77);
+
+            //Act
+            ISparseArray2D<(string, int)> result = mockBackedArray.Zip(zipper, otherArray, defaultVal, validationFunction);
+
+            //Assert
+            Assert.AreSame(mockZippedBackingArray.Object, result.BackingArray);
+        }
+
+        [Test]
+        //Note: if backing implementation changes, then we'll need to explicitly test cases here
+        //rather than just testing that mocked-out backing implementation is called
+        public void GIVEN_Array_WHEN_Zip_THEN_BackingArrayZipCalledOnce()
+        {
+            //Arrange
+            Mock<ISparseArray<string>> mockBackingArray = new Mock<ISparseArray<string>>();
+            Mock<ISparseArray<int>> mockOtherBackingArray = new Mock<ISparseArray<int>>();
+            Mock<ISparseArray<(string, int)>> mockZippedBackingArray = new Mock<ISparseArray<(string, int)>>();
+            
+            
+            mockBackingArray.Setup(a => a.Zip(It.IsAny<Func<string, int, (string s, int i)>>(),
+                It.IsAny<ISparseArray<int>>(), It.IsAny<(string s, int i)>(),
+                It.IsAny<Func<NonnegativeInteger, int, bool>>()))
+                .Returns(mockZippedBackingArray.Object).Verifiable();
+            mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+            mockOtherBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+            mockZippedBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
+
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object, Api);
+            ISparseArray<int> otherBackingArray = mockOtherBackingArray.Object;
+            ISparseArray2D<int> otherArray = new SparseArray2DImpl<int>(otherBackingArray, Api);
+            Func<string, int, (string, int)> zipper = (s, i) => (s, i);
+            Func<NonnegativeInteger, int, bool> validationFunction = (k, i) => true;
+            (string, int) defaultVal = ("Blah", 77);
+
+            //Act
+            ISparseArray2D<(string, int)> result = mockBackedArray.Zip(zipper, otherArray, defaultVal, validationFunction);
+
+            //Assert
+            mockBackingArray.Verify(a => a.Zip(zipper, otherBackingArray, defaultVal, validationFunction),
+                Times.Once());
+            mockBackingArray.Verify(a => a.Zip(It.IsAny<Func<string, int, (string s, int i)>>(),
+                It.IsAny<ISparseArray<int>>(), It.IsAny<(string s, int i)>(),
+                It.IsAny<Func<NonnegativeInteger, int, bool>>()), Times.Once());
+        }
+
+        [Test]
         //Note: if backing implementation changes, then we'll need to explicitly test compare cases here
         //rather than just testing that mocked-out backing implementation is called
         public void GIVEN_Array_WHEN_Compare_THEN_BackingArrayCompareCalledOnce()
@@ -215,14 +285,16 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             Mock<ISparseArray<string>> mockOtherBackingArray = new Mock<ISparseArray<string>>();
             mockOtherBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
 
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
-            ISparseArray2D<string> otherArray = new SparseArray2DImpl<string>(mockOtherBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object, Api);
+            ISparseArray2D<string> otherArray = new SparseArray2DImpl<string>(mockOtherBackingArray.Object, Api);
 
             //Act
             IComparisonResult result = mockBackedArray.CompareUsedValues(otherArray, string.Equals);
 
             //Assert
             mockBackingArray.Verify(a => a.CompareUsedValues(mockOtherBackingArray.Object, string.Equals), Times.Once());
+            mockBackingArray.Verify(a => a.CompareUsedValues(It.IsAny<ISparseArray<string>>(),
+                It.IsAny<Func<string, string, bool>>()), Times.Once());
         }
 
         [Test]
@@ -238,7 +310,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
                 .Callback((int[] coordinates, string v) => { mockSetValue = v;})
                 .Verifiable();
             mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object, Api);
             Assert.AreNotEqual(ValueToSet, mockSetValue, "GIVEN: Value to set should not be equal to the mock set value");
 
             //Act
@@ -261,7 +333,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
                 .Returns(MockReturnValue)
                 .Verifiable();
             mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object, Api);
 
             //Act
             string actualValue = mockBackedArray[7, 12];
@@ -281,7 +353,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             mockBackingArray.Setup(a => a.Shift(It.IsAny<NonnegativeInteger>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Verifiable();
             mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object, Api);
 
             //Act
             mockBackedArray.InsertRows(2, -4);
@@ -301,7 +373,7 @@ namespace CsharpExtrasTest.Map.Sparse.TwoDimensional
             mockBackingArray.Setup(a => a.Shift(It.IsAny<NonnegativeInteger>(), It.IsAny<int>(), It.IsAny<int>()))
                 .Verifiable();
             mockBackingArray.Setup(a => a.Dimension).Returns((PositiveInteger)2);
-            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object);
+            ISparseArray2D<string> mockBackedArray = new SparseArray2DImpl<string>(mockBackingArray.Object, Api);
 
             //Act
             mockBackedArray.InsertColumns(-1, 7);

@@ -32,10 +32,20 @@ namespace CsharpExtras.Map.Sparse.Builder
         /// In particular, the function should be immutable i.e. the logic should not change over time.
         /// The problem with an impure/mutable function is that sparse arrays cache valid indices under the hood,
         /// the assumption being that once valid, an index is valid forever within the context of a sparse array
+        /// Note: if a validation function is used, then axis validation functions are ignored. <see cref="WithValidationFunction(Func{NonnegativeInteger, int, bool})"/>
         /// </summary>
         /// <param name="indexValidationFunction">A function which validates indices along the axis specified by the axis index</param>
         /// <param name="axisIndex">The index of the axis with which to associate the validation function</param>
-        ISparseArrayBuilder<TVal> WithValidationFunction(Func<int, bool> indexValidationFunction, NonnegativeInteger axisIndex);
+        /// <returns>Instance of this builder</returns>
+        ISparseArrayBuilder<TVal> WithAxisValidationFunction(Func<int, bool> indexValidationFunction, NonnegativeInteger axisIndex);
+
+        /// <summary>
+        /// Adds a new validation function to be used on the underlying sparse array
+        /// </summary>
+        /// <param name="validationFunction">The function to use for validating indices in the sparse array. 
+        /// The first argument of this function is the axis index, the next argument is the index to validate along that axis.</param>
+        /// <returns>Instance of this builder</returns>
+        ISparseArrayBuilder<TVal> WithValidationFunction(Func<NonnegativeInteger, int, bool> validationFunction);
 
         /// <summary>
         /// Caches a value to be set in the corresponding sparse array when it is built

@@ -2,6 +2,7 @@
 using CsharpExtras.Compare;
 using CsharpExtras.Extensions;
 using CsharpExtras.Map.Dictionary.Curry;
+using CsharpExtras.Map.Sparse.Builder;
 using CsharpExtras.Map.Sparse.Compare;
 using CsharpExtras.ValidatedType;
 using CsharpExtras.ValidatedType.Numeric.Integer;
@@ -19,6 +20,10 @@ namespace CsharpExtras.Map.Sparse
 
         public NonnegativeInteger UsedValuesCount => _backingDictionary.Count;
 
+        public IEnumerable<(IList<int>, TVal)> UsedEntries => 
+            _backingDictionary.KeyValuePairs.Select(((IList<ValidIndex> l, TVal v) pair)
+                => (pair.l.Map(KeyInTransform), pair.v));
+
         public bool IsValid(int index, NonnegativeInteger axisIndex) =>
             _validIndexCache[(index, axisIndex)] != null;
 
@@ -27,6 +32,9 @@ namespace CsharpExtras.Map.Sparse
             get => GetValue(coordinates);
             set => SetValue(coordinates, value);
         }
+
+        public TVal GetValueFromCoordinates(IEnumerable<int> coordinates) =>
+            GetValue(coordinates.ToArray());
 
         private void SetValue(int[] coordinates, TVal value)
         {
@@ -56,7 +64,7 @@ namespace CsharpExtras.Map.Sparse
                 throw new IndexOutOfRangeException($"Invalid index {index} for axis {axisIndex}"));
 
         private readonly ICurryDictionary<ValidIndex, TVal> _backingDictionary;
-
+        private readonly ICsharpExtrasApi _api;
         private readonly Func<NonnegativeInteger, int, bool> _validationFunction;
 
         private ILazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex?> _validIndexCache;
@@ -74,12 +82,53 @@ namespace CsharpExtras.Map.Sparse
             Func<NonnegativeInteger, int, bool> validationFunction, TVal defaultValue)
         {
             Dimension = dimension ?? throw new ArgumentNullException(nameof(dimension));
+            _api = api;
             DefaultValue = defaultValue;
             _validationFunction = validationFunction;
             _backingDictionary = api.NewGenericCurryDictionaryWrapper(
                 api.NewCurryDictionary<int, TVal>(Dimension), KeyInTransform, KeyOutTransform, v => v, v => v);
             _validIndexCache = api.NewLazyFunctionMap<(int index, int axisIndex), SparseArrayImpl<TVal>.ValidIndex?>
                 ((p) => SparseArrayImpl<TVal>.ValidIndex.GetValidIndexOrNull(p.index, (NonnegativeInteger)p.axisIndex, this));
+        }
+
+        public bool IsUsed(params int[] coordinates) =>
+            _backingDictionary.ContainsKeyTuple(coordinates.Map(KeyOutTransform));
+
+        public bool IsUsed(IEnumerable<int> coordinates) =>
+            _backingDictionary.ContainsKeyTuple(coordinates.Select(KeyOutTransform));
+
+
+        public ISparseArray<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
+            ISparseArray<TOther> other, TResult defaultVal,
+            Func<NonnegativeInteger, int, bool> validationFunction)
+        {
+            int otherDimension = other.Dimension;
+            if (Dimension != otherDimension)
+            {
+                throw new ArgumentException($"Cannot zip arrays. Dimension mismatch. This array has dimension " +
+                    $"{Dimension} while the other has dimension {otherDimension}");
+            }
+            ISparseArray<TResult> result = _api.NewSparseArrayBuilder(Dimension, defaultVal)
+                .WithValidationFunction(validationFunction)
+                .Build();
+            foreach((IList<int> coordinatesList, TVal val) in UsedEntries)
+            {
+                int[] coordinates = coordinatesList.ToArray();
+                TOther otherVal = other[coordinates];
+                TResult zipped = zipper(val, otherVal);
+                result[coordinates] = zipped;
+            }
+            foreach ((IList<int> coordinatesList, TOther otherVal) in other.UsedEntries)
+            {
+                if (!result.IsUsed(coordinatesList))
+                {
+                    int[] coordinates = coordinatesList.ToArray();
+                    TVal val = this[coordinates];
+                    TResult zipped = zipper(val, otherVal);
+                    result[coordinates] = zipped;
+                }
+            }
+            return result;
         }
 
         public IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer)

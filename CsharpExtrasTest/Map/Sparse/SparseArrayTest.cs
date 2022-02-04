@@ -7,6 +7,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace CsharpExtrasTest.Map.Sparse
@@ -14,8 +15,311 @@ namespace CsharpExtrasTest.Map.Sparse
     [TestFixture, Category("Unit")]
     public class SparseArrayTest
     {
-
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
+
+        [Test, TestCase(false, 0, 0, 0), TestCase(true, 3, 4, 6), TestCase(true, 1, 1, 1)]
+        public void GIVEN_FilledArray_WHEN_IsUsedEnum_THEN_ExpectedResult(bool expected, params int[] coordinates)
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArray<string> strArray = strBuilder.Build();
+
+            //Act
+            bool isUsed = strArray.IsUsed(coordinates.ToList());
+
+            //Assert
+            Assert.AreEqual(expected, isUsed);
+        }
+
+        [Test, TestCase(false, 0, 0, 0), TestCase(true, 3, 4, 6), TestCase(true, 1, 1, 1)]
+        public void GIVEN_FilledArray_WHEN_IsUsedParams_THEN_ExpectedResult(bool expected, params int[] coordinates)
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArray<string> strArray = strBuilder.Build();
+
+            //Act
+            bool isUsed = strArray.IsUsed(coordinates);
+
+            //Assert
+            Assert.AreEqual(expected, isUsed);
+        }
+
+        [Test]
+        public void GIVEN_EmptyArray_WHEN_GetUsedEntries_THEN_EmptyEnumerable()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr);
+            ISparseArray<string> strArray = strBuilder.Build();
+            IEnumerable<(IList<int>, string)> expectedUsedEntries =
+                new List<(IList<int>, string)>();
+
+            //Act
+            IEnumerable<(IList<int>, string)> usedEntries = strArray.UsedEntries;
+
+            //Assert
+            Assert.AreEqual(expectedUsedEntries, usedEntries);
+        }
+
+        [Test]
+        public void GIVEN_FilledArray_WHEN_GetUsedEntries_THEN_ExpectedValues()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArray<string> strArray = strBuilder.Build();
+            IEnumerable<(IList<int>, string)> expectedUsedEntries =
+                new List<(IList<int>, string)> { (new List<int>() { 3, 4, 6 }, "3,4,6"),
+                    (new List<int>{ 1, 1, 1 }, "1,1,1")};
+
+            //Act
+            IEnumerable<(IList<int>, string)> usedEntries = strArray.UsedEntries;
+
+            //Assert
+            Assert.AreEqual(expectedUsedEntries, usedEntries);
+        }
+
+        [Test, TestCase(1), TestCase(-1), TestCase(3)]
+        public void GIVEN_InvalidIndexInEitherArray_WHEN_Zip_THEN_IndexOutOfRangeException(int index)
+        {
+            //Arrange
+            Func<NonnegativeInteger, int, bool> validationFunction = (k, i) => (k == 0) && i == index;
+            
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt)
+                .WithValue(346, 3, 4, 6)
+                .WithValue(-111, -1, -1, -1);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act // Assert
+            Assert.Throws<IndexOutOfRangeException>(() => strArray.Zip(zipper, intArray,
+                defaultResultantVal, validationFunction));
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionZipTest))]
+        public void GIVEN_ZippedArray_WHEN_IndexingActionPerformed_THEN_OtherValidationNotCalled
+            (Action<int, int, ISparseArray<(string s, int i)>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<int, bool>> mockValidator = new Mock<Func<int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt)
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArray<(string s, int i)> zippedArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockValidator.Verify(v => v.Invoke(It.IsAny<int>()), Times.Never());
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionZipTest))]
+        public void GIVEN_ZippedArray_WHEN_IndexingActionPerformed_THEN_OldValidationNotCalled
+            (Action<int, int, ISparseArray<(string s, int i)>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<int, bool>> mockValidator = new Mock<Func<int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr)
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArray<(string s, int i)> zippedArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockValidator.Verify(v => v.Invoke(It.IsAny<int>()), Times.Never());
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionZipTest))]
+        public void GIVEN_ZippedArray_WHEN_IndexingActionPerformed_THEN_NewValidationFunctionCalledOncePerAxisIndex
+            (Action<int, int, ISparseArray<(string s, int i)>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<NonnegativeInteger, int, bool>> mockValidator = new Mock<Func<NonnegativeInteger, int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<NonnegativeInteger>(), It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArray<(string s, int i)> zippedArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, mockValidator.Object);
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockValidator.Verify(v => v.Invoke((NonnegativeInteger)0, 1), Times.Once());
+            mockValidator.Verify(v => v.Invoke((NonnegativeInteger)1, -20), Times.Once());
+            mockValidator.Verify(v => v.Invoke(It.IsAny<NonnegativeInteger>(), It.IsAny<int>()), Times.Exactly(2));
+        }
+
+        private static IEnumerable<Action<int, int, ISparseArray<(string s, int i)>>>
+            ProviderForIndexinActionZipTest()
+        {
+            return new List<Action<int, int, ISparseArray<(string s, int i)>>>()
+            {
+                (i, j, a) => {a[i, j] = ("Hello", 42);},
+                (i, j, a) => { var _ = a[i, j];},
+                (i, j, a) => { a.IsValid(i, (NonnegativeInteger)0); a.IsValid(j, (NonnegativeInteger)1);},
+                (i, j, a) => a.IsUsed(i, j)
+            };
+        }
+
+        [Test, TestCase(1), TestCase(2), TestCase(4), TestCase(60)]
+        public void GIVEN_EmptyArraysOfDifferentDimension_WHEN_Zip_THEN_ArgumentException(int otherDimension)
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)otherDimension, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act
+            Assert.Throws<ArgumentException>(() => strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true));
+        }
+
+        [Test]
+        public void GIVEN_EmptyArrays_WHEN_Zip_THEN_DefaultIsExpected()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act
+            ISparseArray<(string s, int i)> resultArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Assert
+            (string s, int i) unPopulatedValue = resultArray[9, -1, 0];
+            Assert.AreEqual(defaultResultantVal, unPopulatedValue);
+        }
+
+        [Test]
+        public void GIVEN_FilledArrays_WHEN_Zip_THEN_DefaultIsExpectedForNonUsedValue()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1)
+                .WithValue("-1,-1,-1", -1, -1, -1)
+                .WithValue("-3,-4,-6", -3, -4, -6);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt)
+                .WithValue(346, 3, 4, 6)
+                .WithValue(-111, -1, -1, -1)
+                .WithValue(123, 1, 2, 3);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act
+            ISparseArray<(string s, int i)> resultArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Assert
+            (string s, int i) unPopulatedValue = resultArray[9, -1, 0];
+            Assert.AreEqual(defaultResultantVal, unPopulatedValue);
+        }
+
+        [Test]
+        public void GIVEN_FilledArrays_WHEN_Zip_THEN_UsedValuesAreAsExpected()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1)
+                .WithValue("-1,-1,-1", -1, -1, -1)
+                .WithValue("-3,-4,-6", -3, -4, -6);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt)
+                .WithValue(346, 3, 4, 6)
+                .WithValue(-111, -1, -1, -1)
+                .WithValue(123, 1, 2, 3);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArrayBuilder<(string s, int i)> expectedBuilder
+                = Api.NewSparseArrayBuilder((PositiveInteger)3, defaultResultantVal)
+                //Insersection
+                .WithValue(("3,4,6", 346), 3, 4, 6)
+                .WithValue(("-1,-1,-1", -111), -1, -1, -1)
+                //Left Only
+                .WithValue(("1,1,1", DefaultInt), 1, 1, 1)
+                .WithValue(("-3,-4,-6", DefaultInt), -3, -4, -6)
+                //Right Only
+                .WithValue((DefaultStr, 123), 1, 2, 3);
+            ISparseArray<(string s, int i)> expectedArray = expectedBuilder.Build();
+
+            //Act
+            ISparseArray<(string s, int i)> resultArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Assert
+            IComparisonResult comparison = expectedArray.CompareUsedValues(resultArray, (p1, p2) => p1 == p2);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
 
         [Test,
             //Zero shift
@@ -29,9 +333,9 @@ namespace CsharpExtrasTest.Map.Sparse
         {
             //Arrange
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
-                .WithValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
-                .WithValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
-                .WithValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
+                .WithAxisValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
+                .WithAxisValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
                 .WithValue("3,4,6", 3, 4, 6)
                 .WithValue("1,1,1", 1, 1, 1)
                 .WithValue("-1,-1,-1", -1, -1, -1)
@@ -70,9 +374,9 @@ namespace CsharpExtrasTest.Map.Sparse
         {
             //Arrange
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
-                .WithValidationFunction(i => false, (NonnegativeInteger)0)
-                .WithValidationFunction(i => false, (NonnegativeInteger)1)
-                .WithValidationFunction(i => false, (NonnegativeInteger)2);
+                .WithAxisValidationFunction(i => false, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(i => false, (NonnegativeInteger)1)
+                .WithAxisValidationFunction(i => false, (NonnegativeInteger)2);
             ISparseArray<string> array = builder.Build();
             ISparseArrayBuilder<string> expectedBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT");
             ISparseArray<string> expected = expectedBuilder.Build();
@@ -97,9 +401,9 @@ namespace CsharpExtrasTest.Map.Sparse
         {
             //Arrange
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
-                .WithValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
-                .WithValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
-                .WithValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
+                .WithAxisValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
+                .WithAxisValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
                 .WithValue("1,2,3", 1, 2, 3)
                 .WithValue("1,1,1", 1, 1, 1)
                 .WithValue("3, 4, 6", 3, 4, 6);
@@ -208,7 +512,24 @@ namespace CsharpExtrasTest.Map.Sparse
         }
 
         [Test]
-        public void GIVEN_EmptyArray_WHEN_SetThenGet_THEN_RetrievedValueIsEqualToValuePutIn()
+        public void GIVEN_EmptyArray_WHEN_SetThenGetMethod_THEN_RetrievedValueIsEqualToValuePutIn()
+        {
+            //Arrange                
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)2, "DEFAULT");
+            ISparseArray<string> array = builder.Build();
+
+            string valueToWrite = "Hello Sparse World";
+
+            //Act
+            array[3, 4] = valueToWrite;
+            string valueRead = array.GetValueFromCoordinates(new List<int> { 3, 4});
+
+            //Assert
+            Assert.AreEqual(valueToWrite, valueRead);
+        }
+
+        [Test]
+        public void GIVEN_EmptyArray_WHEN_SetThenGetIndexer_THEN_RetrievedValueIsEqualToValuePutIn()
         {
             //Arrange                
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)2, "DEFAULT");
@@ -270,7 +591,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex+1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             const string WrittenValue = "Something";
@@ -294,7 +615,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.GetVal(), (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.GetVal(), (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
@@ -317,7 +638,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             const string WrittenValue = "Something";
@@ -339,7 +660,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
@@ -361,7 +682,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
             const int ValidIndex = 1;
 
@@ -386,7 +707,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
@@ -441,7 +762,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
             const int ValidIndex = 1;
 
@@ -462,7 +783,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
