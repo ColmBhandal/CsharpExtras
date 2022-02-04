@@ -64,9 +64,19 @@ namespace CsharpExtras.Map.Dictionary.Curry
         /// </summary>
         bool ContainsKeyTuplePrefix(IEnumerable<TKey> prefix);
 
+        /// <summary>
+        /// Gets the value stored at the given key tuple
+        /// </summary>
+        /// <param name="keyTuple">The key tuple that maps to the given value</param>
+        /// <returns>The value at the given key tuple</returns>
         TVal GetValueFromTuple(params TKey[] keyTuple);
+        
+        /// <summary>
+        /// Gets the value stored at the given key tuple
+        /// </summary>
+        /// <param name="keyTuple">The key tuple that maps to the given value</param>
+        /// <returns>The value at the given key tuple</returns>
         TVal GetValueFromTuple(IEnumerable<TKey> keyTuple);
-
 
         /// <summary>
         /// "Curries" this dictionary with a prefix of keys, 
