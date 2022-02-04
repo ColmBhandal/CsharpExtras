@@ -26,6 +26,13 @@ namespace CsharpExtras.Map.Sparse
         TVal this[params int[] coordinates] { get; set; }
 
         /// <summary>
+        /// Gets the value stored at the given coordinates
+        /// </summary>
+        /// <param name="coordinates">The coordinates that map to the given value</param>
+        /// <returns>The value at the given coordinates</returns>
+        TVal GetValueFromCoordinates(IEnumerable<int> coordinates);
+
+        /// <summary>
         /// The default value will be returned for any entry in the array whose value was not explicitly assigned
         /// </summary>
         TVal DefaultValue { get; }

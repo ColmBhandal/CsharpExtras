@@ -33,6 +33,9 @@ namespace CsharpExtras.Map.Sparse
             set => SetValue(coordinates, value);
         }
 
+        public TVal GetValueFromCoordinates(IEnumerable<int> coordinates) =>
+            GetValue(coordinates.ToArray());
+
         private void SetValue(int[] coordinates, TVal value)
         {
             ValidIndex[] validatedCoordinates = GetValidateCoordinated(coordinates);

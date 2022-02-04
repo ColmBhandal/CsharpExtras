@@ -512,7 +512,24 @@ namespace CsharpExtrasTest.Map.Sparse
         }
 
         [Test]
-        public void GIVEN_EmptyArray_WHEN_SetThenGet_THEN_RetrievedValueIsEqualToValuePutIn()
+        public void GIVEN_EmptyArray_WHEN_SetThenGetMethod_THEN_RetrievedValueIsEqualToValuePutIn()
+        {
+            //Arrange                
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)2, "DEFAULT");
+            ISparseArray<string> array = builder.Build();
+
+            string valueToWrite = "Hello Sparse World";
+
+            //Act
+            array[3, 4] = valueToWrite;
+            string valueRead = array.GetValueFromCoordinates(new List<int> { 3, 4});
+
+            //Assert
+            Assert.AreEqual(valueToWrite, valueRead);
+        }
+
+        [Test]
+        public void GIVEN_EmptyArray_WHEN_SetThenGetIndexer_THEN_RetrievedValueIsEqualToValuePutIn()
         {
             //Arrange                
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)2, "DEFAULT");
