@@ -88,6 +88,11 @@ namespace CsharpExtras.Map.Sparse
                 ((p) => SparseArrayImpl<TVal>.ValidIndex.GetValidIndexOrNull(p.index, (NonnegativeInteger)p.axisIndex, this));
         }
 
+        public bool IsUsed(params int[] coordinates)
+        {
+            return _backingDictionary.ContainsKeyTuple(coordinates.Map(KeyOutTransform));
+        }
+
         public ISparseArray<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
             ISparseArray<TOther> other, TResult defaultVal,
             Func<NonnegativeInteger, int, bool> validationFunction)

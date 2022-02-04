@@ -90,5 +90,14 @@ namespace CsharpExtras.Map.Sparse
         /// Enumerable of all used entries in this array. A used entry is a list of coordinates along with the value at those coordinates.
         /// </summary>
         IEnumerable<(IList<int>, TVal)> UsedEntries { get; }
+
+        /// <summary>
+        /// Checks if the given valid coordinates are used.
+        /// If invalid coordinates are supplied then throws an exception.
+        /// </summary>
+        /// <param name="coordinates">The coordinates at which to check if there is a used value.</param>
+        /// <returns>True iff the given coordinates are used.
+        /// Coordinates are considered used if a non-default value resides there.</returns>
+        bool IsUsed(params int[] coordinates);
     }
 }

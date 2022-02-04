@@ -17,6 +17,23 @@ namespace CsharpExtrasTest.Map.Sparse
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
+        [Test, TestCase(false, 0, 0, 0), TestCase(true, 3, 4, 6), TestCase(true, 1, 1, 1)]
+        public void GIVEN_FilledArray_WHEN_IsUsed_THEN_ExpectedResult(bool expected, params int[] coordinates)
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArray<string> strArray = strBuilder.Build();
+
+            //Act
+            bool isUsed = strArray.IsUsed(coordinates);
+
+            //Assert
+            Assert.AreEqual(expected, isUsed);
+        }
+
         [Test]
         public void GIVEN_EmptyArray_WHEN_GetUsedEntries_THEN_EmptyEnumerable()
         {
@@ -172,7 +189,8 @@ namespace CsharpExtrasTest.Map.Sparse
             {
                 (i, j, a) => {a[i, j] = ("Hello", 42);},
                 (i, j, a) => { var _ = a[i, j];},
-                (i, j, a) => { a.IsValid(i, (NonnegativeInteger)0); a.IsValid(j, (NonnegativeInteger)1);}
+                (i, j, a) => { a.IsValid(i, (NonnegativeInteger)0); a.IsValid(j, (NonnegativeInteger)1);},
+                (i, j, a) => a.IsUsed(i, j)
             };
         }
 
