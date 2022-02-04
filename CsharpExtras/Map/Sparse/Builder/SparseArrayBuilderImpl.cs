@@ -14,7 +14,9 @@ namespace CsharpExtras.Map.Sparse.Builder
         public PositiveInteger Dimension { get; }
         private readonly ICsharpExtrasApi _api;
 
-        private readonly Func<int, bool>[] _validationFunctions;
+        private readonly Func<int, bool>[] _axisValidationFunctions;
+
+        private Func<NonnegativeInteger, int, bool>? _validationFunctionOrNull;
 
         private readonly ISet<(TVal value, int[] coordinates)> _bufferedWrites
             = new HashSet<(TVal value, int[] coordinates)>();
@@ -26,16 +28,25 @@ namespace CsharpExtras.Map.Sparse.Builder
             _api = api ?? throw new ArgumentNullException(nameof(api));
             /*Non-MVP: Replace Enumerable.Repeat with a for-loop backed array population method, which writes a constant value to each index
              * However, this is not really important as the array is typically small - it's the number of dimensions*/
-            _validationFunctions = Enumerable.Repeat<Func<int, bool>>(x => true, dimension).ToArray();
+            _axisValidationFunctions = Enumerable.Repeat<Func<int, bool>>(x => true, dimension).ToArray();
         }
 
         public ISparseArray<TVal> Build()
         {
-            Func<int, bool>[] validationFunctionsCopy = _validationFunctions.DeepCopy();
-            Func<NonnegativeInteger, int, bool> validationFunction = (i, j) => Validate(validationFunctionsCopy, i, j);
+            Func<NonnegativeInteger, int, bool> validationFunction = GetValidationFunction();
             ISparseArray<TVal> sparseArray = new SparseArrayImpl<TVal>(Dimension, _api, validationFunction, DefaultValue);
             WriteValues(sparseArray);
             return sparseArray;
+        }
+
+        private Func<NonnegativeInteger, int, bool> GetValidationFunction()
+        {
+            if (_validationFunctionOrNull == null)
+            {
+                Func<int, bool>[] validationFunctionsCopy = _axisValidationFunctions.DeepCopy();
+                return (i, j) => Validate(validationFunctionsCopy, i, j);
+            }
+            return _validationFunctionOrNull;
         }
 
         private void WriteValues(ISparseArray<TVal> sparseArray)
@@ -56,19 +67,25 @@ namespace CsharpExtras.Map.Sparse.Builder
             return axisValidator(index);
         }
 
-        public ISparseArrayBuilder<TVal> WithValidationFunction(Func<int, bool> indexValidationFunction, NonnegativeInteger axisIndex)
+        public ISparseArrayBuilder<TVal> WithAxisValidationFunction(Func<int, bool> indexValidationFunction, NonnegativeInteger axisIndex)
         {
             if(axisIndex >= Dimension)
             {
                 throw new ArgumentException($"Axis index {(int)axisIndex} cannot be larger or equal to dimension {Dimension}");
             }
-            _validationFunctions[axisIndex] = indexValidationFunction;
+            _axisValidationFunctions[axisIndex] = indexValidationFunction;
             return this;
         }
         
         public ISparseArrayBuilder<TVal> WithValue(TVal value, params int[] coordinates)
         {
             _bufferedWrites.Add((value, coordinates));
+            return this;
+        }
+
+        public ISparseArrayBuilder<TVal> WithValidationFunction(Func<NonnegativeInteger, int, bool> validationFunction)
+        {
+            _validationFunctionOrNull = validationFunction;
             return this;
         }
     }

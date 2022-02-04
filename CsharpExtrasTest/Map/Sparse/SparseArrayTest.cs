@@ -125,8 +125,8 @@ namespace CsharpExtrasTest.Map.Sparse
             const int DefaultInt = 0;
             ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr);
             ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt)
-                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
-                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
             Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
             ISparseArray<string> strArray = strBuilder.Build();
             ISparseArray<int> intArray = intBuilder.Build();
@@ -153,8 +153,8 @@ namespace CsharpExtrasTest.Map.Sparse
             const string DefaultStr = "DEFAULT";
             const int DefaultInt = 0;
             ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr)
-                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
-                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
             ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt);
             Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
             ISparseArray<string> strArray = strBuilder.Build();
@@ -333,9 +333,9 @@ namespace CsharpExtrasTest.Map.Sparse
         {
             //Arrange
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
-                .WithValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
-                .WithValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
-                .WithValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
+                .WithAxisValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
+                .WithAxisValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
                 .WithValue("3,4,6", 3, 4, 6)
                 .WithValue("1,1,1", 1, 1, 1)
                 .WithValue("-1,-1,-1", -1, -1, -1)
@@ -374,9 +374,9 @@ namespace CsharpExtrasTest.Map.Sparse
         {
             //Arrange
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
-                .WithValidationFunction(i => false, (NonnegativeInteger)0)
-                .WithValidationFunction(i => false, (NonnegativeInteger)1)
-                .WithValidationFunction(i => false, (NonnegativeInteger)2);
+                .WithAxisValidationFunction(i => false, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(i => false, (NonnegativeInteger)1)
+                .WithAxisValidationFunction(i => false, (NonnegativeInteger)2);
             ISparseArray<string> array = builder.Build();
             ISparseArrayBuilder<string> expectedBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT");
             ISparseArray<string> expected = expectedBuilder.Build();
@@ -401,9 +401,9 @@ namespace CsharpExtrasTest.Map.Sparse
         {
             //Arrange
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)3, "DEFAULT")
-                .WithValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
-                .WithValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
-                .WithValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
+                .WithAxisValidationFunction(i => i % 2 != 0, (NonnegativeInteger)0)
+                .WithAxisValidationFunction(i => i % 3 != 0, (NonnegativeInteger)1)
+                .WithAxisValidationFunction(i => i % 5 != 0, (NonnegativeInteger)2)
                 .WithValue("1,2,3", 1, 2, 3)
                 .WithValue("1,1,1", 1, 1, 1)
                 .WithValue("3, 4, 6", 3, 4, 6);
@@ -591,7 +591,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex+1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             const string WrittenValue = "Something";
@@ -615,7 +615,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.GetVal(), (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.GetVal(), (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
@@ -638,7 +638,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             const string WrittenValue = "Something";
@@ -660,7 +660,7 @@ namespace CsharpExtrasTest.Map.Sparse
             wrappedUniqueInvalidIndex.Val = uniqueInvalidIndex + 1;
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(i => i != wrappedUniqueInvalidIndex.Val, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
@@ -682,7 +682,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
             const int ValidIndex = 1;
 
@@ -707,7 +707,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act
@@ -762,7 +762,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
             const int ValidIndex = 1;
 
@@ -783,7 +783,7 @@ namespace CsharpExtrasTest.Map.Sparse
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i != UniqueInvalidIndex))).Returns(true);
             mockValidationFunc.Setup(f => f.Invoke(It.Is<int>(i => i == UniqueInvalidIndex))).Returns(false);
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)1, DefaultValue)
-                .WithValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
+                .WithAxisValidationFunction(mockValidationFunc.Object, (NonnegativeInteger)0);
             ISparseArray<string> array = builder.Build();
 
             //Act

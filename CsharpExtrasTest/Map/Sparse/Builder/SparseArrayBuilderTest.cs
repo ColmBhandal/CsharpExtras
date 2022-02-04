@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using CsharpExtras.Compare;
+using Moq;
 
 namespace CsharpExtrasTest.Map.Sparse.Builder
 {
@@ -43,7 +44,7 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
             ISparseArray<string> array = builder.Build();
 
             //Act
-            builder.WithValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger)axisIndex);
+            builder.WithAxisValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger)axisIndex);
 
             //Assert
             int[] coordinates = new int[dimension];
@@ -59,7 +60,7 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
             //Arrange
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger) dimension, DefaultValue)
-                .WithValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger) axisIndex);
+                .WithAxisValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger) axisIndex);
 
             //Act
             ISparseArray<string> array = builder.Build();
@@ -77,7 +78,7 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
             //Arrange
             const string DefaultValue = "DEFAULT";
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)dimension, DefaultValue)
-                .WithValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger)axisIndex);
+                .WithAxisValidationFunction(i => i != uniqueInvalidIndex, (NonnegativeInteger)axisIndex);
 
             //Act
             ISparseArray<string> array = builder.Build();
@@ -98,7 +99,73 @@ namespace CsharpExtrasTest.Map.Sparse.Builder
             ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)dimension, DefaultValue);
 
             //Act / Assert
-            Assert.Throws<ArgumentException>(() => builder.WithValidationFunction(i => true, (NonnegativeInteger)axisIndex));
+            Assert.Throws<ArgumentException>(() => builder.WithAxisValidationFunction(i => true, (NonnegativeInteger)axisIndex));
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionValidationTest))]
+        public void GIVEN_AxisValidationAndValidation_WHEN_Access_THEN_AxisValidationNotCalled
+            (Action<int, int, ISparseArray<string>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<NonnegativeInteger, int, bool>> mockValidator = new Mock<Func<NonnegativeInteger, int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<NonnegativeInteger>(), It.IsAny<int>())).Returns(true);
+
+            Mock<Func<int, bool>> mockAxisValidator = new Mock<Func<int, bool>>();
+            mockAxisValidator.Setup(v => v.Invoke(It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultValue)
+                .WithValidationFunction(mockValidator.Object)
+                .WithAxisValidationFunction(mockAxisValidator.Object, (NonnegativeInteger)0)
+            .WithAxisValidationFunction(mockAxisValidator.Object, (NonnegativeInteger)1);
+            ISparseArray<string> zippedArray = builder.Build();
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockAxisValidator.Verify(v => v.Invoke(It.IsAny<int>()), Times.Never());
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionValidationTest))]
+        public void GIVEN_AxisValidationAndValidation_WHEN_Access_THEN_ValidationCalledOncePerAxisIndex
+            (Action<int, int, ISparseArray<string>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<NonnegativeInteger, int, bool>> mockValidator = new Mock<Func<NonnegativeInteger, int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<NonnegativeInteger>(), It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            Mock<Func<int, bool>> mockAxisValidator = new Mock<Func<int, bool>>();
+            mockAxisValidator.Setup(v => v.Invoke(It.IsAny<int>())).Returns(true);
+
+            const string DefaultValue = "DEFAULT";
+            ISparseArrayBuilder<string> builder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultValue)
+                .WithValidationFunction(mockValidator.Object)
+                .WithAxisValidationFunction(mockAxisValidator.Object, (NonnegativeInteger) 0)
+            .WithAxisValidationFunction(mockAxisValidator.Object, (NonnegativeInteger)1);
+            ISparseArray<string> zippedArray = builder.Build();
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockValidator.Verify(v => v.Invoke((NonnegativeInteger)0, 1), Times.Once());
+            mockValidator.Verify(v => v.Invoke((NonnegativeInteger)1, -20), Times.Once());
+            mockValidator.Verify(v => v.Invoke(It.IsAny<NonnegativeInteger>(), It.IsAny<int>()), Times.Exactly(2));
+        }
+
+        private static IEnumerable<Action<int, int, ISparseArray<string>>>
+            ProviderForIndexinActionValidationTest()
+        {
+            return new List<Action<int, int, ISparseArray<string>>>()
+            {
+                (i, j, a) => {a[i, j] = "Hello";},
+                (i, j, a) => { var _ = a[i, j];},
+                (i, j, a) => { a.IsValid(i, (NonnegativeInteger)0); a.IsValid(j, (NonnegativeInteger)1);},
+                (i, j, a) => a.IsUsed(i, j)
+            };
         }
 
         [Test]
