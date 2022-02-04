@@ -110,9 +110,22 @@ namespace CsharpExtras.Map.Sparse
             }
             ISparseArray<TResult> result = _api.NewSparseArrayBuilder(Dimension, defaultVal)
                 .Build();
-            foreach((IList<int> coordinates, TVal val) in UsedEntries)
+            foreach((IList<int> coordinatesList, TVal val) in UsedEntries)
             {
-                //TODO: Get other coordinates
+                int[] coordinates = coordinatesList.ToArray();
+                TOther otherVal = other[coordinates];
+                TResult zipped = zipper(val, otherVal);
+                result[coordinates] = zipped;
+            }
+            foreach ((IList<int> coordinatesList, TOther otherVal) in other.UsedEntries)
+            {
+                if (!result.IsUsed(coordinatesList))
+                {
+                    int[] coordinates = coordinatesList.ToArray();
+                    TVal val = this[coordinates];
+                    TResult zipped = zipper(val, otherVal);
+                    result[coordinates] = zipped;
+                }
             }
             return result;
         }
