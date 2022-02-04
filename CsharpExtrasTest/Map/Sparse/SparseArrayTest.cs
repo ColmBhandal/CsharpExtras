@@ -18,7 +18,24 @@ namespace CsharpExtrasTest.Map.Sparse
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
         [Test, TestCase(false, 0, 0, 0), TestCase(true, 3, 4, 6), TestCase(true, 1, 1, 1)]
-        public void GIVEN_FilledArray_WHEN_IsUsed_THEN_ExpectedResult(bool expected, params int[] coordinates)
+        public void GIVEN_FilledArray_WHEN_IsUsedEnum_THEN_ExpectedResult(bool expected, params int[] coordinates)
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArray<string> strArray = strBuilder.Build();
+
+            //Act
+            bool isUsed = strArray.IsUsed(coordinates.ToList());
+
+            //Assert
+            Assert.AreEqual(expected, isUsed);
+        }
+
+        [Test, TestCase(false, 0, 0, 0), TestCase(true, 3, 4, 6), TestCase(true, 1, 1, 1)]
+        public void GIVEN_FilledArray_WHEN_IsUsedParams_THEN_ExpectedResult(bool expected, params int[] coordinates)
         {
             //Arrange
             const string DefaultStr = "DEFAULT";

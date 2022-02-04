@@ -99,5 +99,14 @@ namespace CsharpExtras.Map.Sparse
         /// <returns>True iff the given coordinates are used.
         /// Coordinates are considered used if a non-default value resides there.</returns>
         bool IsUsed(params int[] coordinates);
+
+        /// <summary>
+        /// Checks if the given valid coordinates are used.
+        /// If invalid coordinates are supplied then throws an exception.
+        /// </summary>
+        /// <param name="coordinates">The coordinates at which to check if there is a used value.</param>
+        /// <returns>True iff the given coordinates are used.
+        /// Coordinates are considered used if a non-default value resides there.</returns>
+        bool IsUsed(IEnumerable<int> coordinates);
     }
 }

@@ -88,10 +88,12 @@ namespace CsharpExtras.Map.Sparse
                 ((p) => SparseArrayImpl<TVal>.ValidIndex.GetValidIndexOrNull(p.index, (NonnegativeInteger)p.axisIndex, this));
         }
 
-        public bool IsUsed(params int[] coordinates)
-        {
-            return _backingDictionary.ContainsKeyTuple(coordinates.Map(KeyOutTransform));
-        }
+        public bool IsUsed(params int[] coordinates) =>
+            _backingDictionary.ContainsKeyTuple(coordinates.Map(KeyOutTransform));
+
+        public bool IsUsed(IEnumerable<int> coordinates) =>
+            _backingDictionary.ContainsKeyTuple(coordinates.Select(KeyOutTransform));
+
 
         public ISparseArray<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
             ISparseArray<TOther> other, TResult defaultVal,
