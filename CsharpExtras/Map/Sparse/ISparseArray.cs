@@ -49,7 +49,25 @@ namespace CsharpExtras.Map.Sparse
         /// <param name="valueComparer">A function which is used to determine if two values are equal. It's up to the caller to use a sensible function here.</param>
         /// <returns>A comparison result which will indicate whether the used values in this array are equal to the other array according to the comparer</returns>                
         IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer);
+        
+        /// <summary>
+        /// Is the given index along the given axis valid
+        /// </summary>
+        /// <param name="index">The index to check</param>
+        /// <param name="axisIndex">The index of the axis along which to check the given index. Note, axes are indexed from 0 up to <see cref="Dimension"/> minus 1</param>
+        /// <returns>True iff the given index is valid</returns>
         bool IsValid(int index, NonnegativeInteger axisIndex);
+
+        /// <summary>
+        /// Shifts all elements in the array along a given axis by a given vector
+        /// </summary>
+        /// <param name="axisIndex">The index of the axis along which to check the given index. Note, axes are indexed from 0 up to <see cref="Dimension"/> minus 1</param>
+        /// <param name="firstShiftIndex">Start shifting elements from this index onwards</param>
+        /// <param name="shiftVector">The vector by which to shift. The sign of this value determines which direction elements are shifted.
+        /// The sign also determines whether it's elements less than or greater than the first shift index that are shifted.
+        /// The indices of all elements to be shifted are incremented along the shift axis by the shift vector.</param>
         void Shift(NonnegativeInteger axisIndex, int firstShiftIndex, int shiftVector);
+
+
     }
 }
