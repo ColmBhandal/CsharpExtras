@@ -109,6 +109,7 @@ namespace CsharpExtras.Map.Sparse
                     $"{Dimension} while the other has dimension {otherDimension}");
             }
             ISparseArray<TResult> result = _api.NewSparseArrayBuilder(Dimension, defaultVal)
+                .WithValidationFunction(validationFunction)
                 .Build();
             foreach((IList<int> coordinatesList, TVal val) in UsedEntries)
             {
