@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.Api;
 using CsharpExtras.Compare;
 using CsharpExtras.Map.Sparse.Compare;
+using CsharpExtras.Map.Sparse.TwoDimensional.Builder;
 using CsharpExtras.ValidatedType.Numeric.Integer;
 using System;
 using System.Collections.Generic;
@@ -15,12 +16,15 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
         private NonnegativeInteger? _rowAxisIndex;
         public NonnegativeInteger RowAxisIndex => _rowAxisIndex ??= (NonnegativeInteger)0;
         private NonnegativeInteger? _columnAxisIndex;
+        private readonly ICsharpExtrasApi _api;
+
         public NonnegativeInteger ColumnAxisIndex => _columnAxisIndex ??= (NonnegativeInteger)1;
 
-        public SparseArray2DImpl(ISparseArray<TVal> backingArray)
+        public SparseArray2DImpl(ISparseArray<TVal> backingArray, ICsharpExtrasApi api)
         {
             ValidateBackingArray(backingArray);
             BackingArray = backingArray ?? throw new ArgumentNullException(nameof(backingArray));
+            _api = api;
         }
 
         public TVal this[int row, int column]
@@ -103,6 +107,13 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
             {
                 throw new ArgumentException($"Dimension of backing array must be exactly 2. Found: {(int)dimension}");
             }
+        }
+
+        public ISparseArray2D<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
+            ISparseArray2D<TOther> other, TResult defaultVal, Func<NonnegativeInteger, int, bool> validationFunction)
+        {
+            ISparseArray<TResult> backingZipped = BackingArray.Zip(zipper, other.BackingArray, defaultVal, validationFunction);           
+            return new SparseArray2DImpl<TResult>(backingZipped, _api);
         }
     }
 }
