@@ -69,7 +69,8 @@ namespace CsharpExtras.Map.Sparse
         void Shift(NonnegativeInteger axisIndex, int firstShiftIndex, int shiftVector);
 
         /// <summary>
-        /// Zips this array with another one to produce a new array
+        /// Zips this array with another one to produce a new array.
+        /// The dimension of the other array must exactly match this one, otherwise an exception is thrown.
         /// </summary>
         /// <typeparam name="TOther">The type of elements in the other array</typeparam>
         /// <typeparam name="TResult">The type of elements in the resultant array</typeparam>
