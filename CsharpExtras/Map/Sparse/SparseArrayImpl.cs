@@ -99,9 +99,19 @@ namespace CsharpExtras.Map.Sparse
             ISparseArray<TOther> other, TResult defaultVal,
             Func<NonnegativeInteger, int, bool> validationFunction)
         {
-            //TODO: Implement properly
-            ISparseArrayBuilder<TResult> builder = _api.NewSparseArrayBuilder(Dimension, defaultVal);
-            return builder.Build();
+            int otherDimension = other.Dimension;
+            if (Dimension != otherDimension)
+            {
+                throw new ArgumentException($"Cannot zip arrays. Dimension mismatch. This array has dimension " +
+                    $"{Dimension} while the other has dimension {otherDimension}");
+            }
+            ISparseArray<TResult> result = _api.NewSparseArrayBuilder(Dimension, defaultVal)
+                .Build();
+            foreach((IList<int> coordinates, TVal val) in UsedEntries)
+            {
+                //TODO: Get other coordinates
+            }
+            return result;
         }
 
         public IComparisonResult CompareUsedValues(ISparseArray<TVal> other, Func<TVal, TVal, bool> valueComparer)

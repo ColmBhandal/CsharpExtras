@@ -211,6 +211,24 @@ namespace CsharpExtrasTest.Map.Sparse
             };
         }
 
+        [Test, TestCase(1), TestCase(2), TestCase(4), TestCase(60)]
+        public void GIVEN_EmptyArraysOfDifferentDimension_WHEN_Zip_THEN_ArgumentException(int otherDimension)
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)otherDimension, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act
+            Assert.Throws<ArgumentException>(() => strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true));
+        }
+
         [Test]
         public void GIVEN_EmptyArrays_WHEN_Zip_THEN_DefaultIsExpected()
         {
