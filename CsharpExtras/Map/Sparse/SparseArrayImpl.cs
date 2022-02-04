@@ -84,7 +84,8 @@ namespace CsharpExtras.Map.Sparse
         }
 
         public ISparseArray<TResult> Zip<TOther, TResult>(Func<TVal, TOther, TResult> zipper,
-            TResult defaultVal, Func<NonnegativeInteger, int, bool> validationFunction)
+            ISparseArray<TOther> other, TResult defaultVal,
+            Func<NonnegativeInteger, int, bool> validationFunction)
         {
             //TODO: Implement properly
             return _api.NewSparseArrayBuilder(Dimension, defaultVal).Build();

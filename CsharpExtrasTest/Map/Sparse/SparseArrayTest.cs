@@ -14,8 +14,221 @@ namespace CsharpExtrasTest.Map.Sparse
     [TestFixture, Category("Unit")]
     public class SparseArrayTest
     {
-
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
+
+        [Test, TestCase(1), TestCase(-1), TestCase(3)]
+        public void GIVEN_InvalidIndexInEitherArray_WHEN_Zip_THEN_IndexOutOfRangeException(int index)
+        {
+            //Arrange
+            Func<NonnegativeInteger, int, bool> validationFunction = (k, i) => (k == 0) && i == index;
+            
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt)
+                .WithValue(346, 3, 4, 6)
+                .WithValue(-111, -1, -1, -1);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act // Assert
+            Assert.Throws<IndexOutOfRangeException>(() => strArray.Zip(zipper, intArray,
+                defaultResultantVal, validationFunction));
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionZipTest))]
+        public void GIVEN_ZippedArray_WHEN_IndexingActionPerformed_THEN_OtherValidationNotCalled
+            (Action<int, int, ISparseArray<(string s, int i)>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<int, bool>> mockValidator = new Mock<Func<int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt)
+                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
+                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArray<(string s, int i)> zippedArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockValidator.Verify(v => v.Invoke(It.IsAny<int>()), Times.Never());
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionZipTest))]
+        public void GIVEN_ZippedArray_WHEN_IndexingActionPerformed_THEN_OldValidationNotCalled
+            (Action<int, int, ISparseArray<(string s, int i)>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<int, bool>> mockValidator = new Mock<Func<int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr)
+                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)0)
+                .WithValidationFunction(mockValidator.Object, (NonnegativeInteger)1);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArray<(string s, int i)> zippedArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockValidator.Verify(v => v.Invoke(It.IsAny<int>()), Times.Never());
+        }
+
+        [Test, TestCaseSource(nameof(ProviderForIndexinActionZipTest))]
+        public void GIVEN_ZippedArray_WHEN_IndexingActionPerformed_THEN_NewValidationFunctionCalledOncePerAxisIndex
+            (Action<int, int, ISparseArray<(string s, int i)>> indexingAction)
+        {
+            //Arrange
+            Mock<Func<NonnegativeInteger, int, bool>> mockValidator = new Mock<Func<NonnegativeInteger, int, bool>>();
+            mockValidator.Setup(v => v.Invoke(It.IsAny<NonnegativeInteger>(), It.IsAny<int>())).Returns(true)
+                .Verifiable();
+
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)2, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArray<(string s, int i)> zippedArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, mockValidator.Object);
+
+            //Act
+            indexingAction(1, -20, zippedArray);
+
+            //Assert
+            mockValidator.Verify(v => v.Invoke((NonnegativeInteger)0, 1), Times.Once());
+            mockValidator.Verify(v => v.Invoke((NonnegativeInteger)1, -20), Times.Once());
+            mockValidator.Verify(v => v.Invoke(It.IsAny<NonnegativeInteger>(), It.IsAny<int>()), Times.Exactly(2));
+        }
+
+        private static IEnumerable<Action<int, int, ISparseArray<(string s, int i)>>>
+            ProviderForIndexinActionZipTest()
+        {
+            return new List<Action<int, int, ISparseArray<(string s, int i)>>>()
+            {
+                (i, j, a) => {a[i, j] = ("Hello", 42);},
+                (i, j, a) => { var _ = a[i, j];},
+                (i, j, a) => { a.IsValid(i, (NonnegativeInteger)0); a.IsValid(j, (NonnegativeInteger)1);}
+            };
+        }
+
+        [Test]
+        public void GIVEN_EmptyArrays_WHEN_Zip_THEN_DefaultIsExpected()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act
+            ISparseArray<(string s, int i)> resultArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Assert
+            (string s, int i) unPopulatedValue = resultArray[9, -1, 0];
+            Assert.AreEqual(defaultResultantVal, unPopulatedValue);
+        }
+
+        [Test]
+        public void GIVEN_FilledArrays_WHEN_Zip_THEN_DefaultIsExpectedForNonUsedValue()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1)
+                .WithValue("-1,-1,-1", -1, -1, -1)
+                .WithValue("-3,-4,-6", -3, -4, -6);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt)
+                .WithValue(346, 3, 4, 6)
+                .WithValue(-111, -1, -1, -1)
+                .WithValue(123, 1, 2, 3);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+
+            //Act
+            ISparseArray<(string s, int i)> resultArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Assert
+            (string s, int i) unPopulatedValue = resultArray[9, -1, 0];
+            Assert.AreEqual(defaultResultantVal, unPopulatedValue);
+        }
+
+        [Test]
+        public void GIVEN_FilledArrays_WHEN_Zip_THEN_UsedValuesAreAsExpected()
+        {
+            //Arrange
+            const string DefaultStr = "DEFAULT";
+            const int DefaultInt = 0;
+            ISparseArrayBuilder<string> strBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultStr)
+                .WithValue("3,4,6", 3, 4, 6)
+                .WithValue("1,1,1", 1, 1, 1)
+                .WithValue("-1,-1,-1", -1, -1, -1)
+                .WithValue("-3,-4,-6", -3, -4, -6);
+            ISparseArrayBuilder<int> intBuilder = Api.NewSparseArrayBuilder((PositiveInteger)3, DefaultInt)
+                .WithValue(346, 3, 4, 6)
+                .WithValue(-111, -1, -1, -1)
+                .WithValue(123, 1, 2, 3);
+            Func<string, int, (string s, int i)> zipper = (s, i) => (s, i);
+            ISparseArray<string> strArray = strBuilder.Build();
+            ISparseArray<int> intArray = intBuilder.Build();
+
+            (string s, int i) defaultResultantVal = ("RESULTANT DEFAULT", 42);
+            ISparseArrayBuilder<(string s, int i)> expectedBuilder
+                = Api.NewSparseArrayBuilder((PositiveInteger)3, defaultResultantVal)
+                //Insersection
+                .WithValue(("3,4,6", 346), 3, 4, 6)
+                .WithValue(("-1,-1,-1", -111), -1, -1, -1)
+                //Left Only
+                .WithValue(("1,1,1", DefaultInt), 1, 1, 1)
+                .WithValue(("-3,-4,-6", DefaultInt), -3, -4, -6)
+                //Right Only
+                .WithValue((DefaultStr, 123), 1, 2, 3);
+            ISparseArray<(string s, int i)> expectedArray = expectedBuilder.Build();
+
+            //Act
+            ISparseArray<(string s, int i)> resultArray = strArray.Zip(zipper, intArray,
+                defaultResultantVal, (k, i) => true);
+
+            //Assert
+            IComparisonResult comparison = expectedArray.CompareUsedValues(resultArray, (p1, p2) => p1 == p2);
+            Assert.IsTrue(comparison.IsEqual, comparison.Message);
+        }
 
         [Test,
             //Zero shift
