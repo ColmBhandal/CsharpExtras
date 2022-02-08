@@ -41,6 +41,7 @@ namespace CsharpExtras.Map.Sparse
             ValidIndex[] validatedCoordinates = GetValidateCoordinated(coordinates);
             if (EqualityComparer<TVal>.Default.Equals(value, DefaultValue))
             {
+                _backingDictionary.Remove(validatedCoordinates);
                 return;
             }
             if (!_backingDictionary.Update(value, validatedCoordinates))
