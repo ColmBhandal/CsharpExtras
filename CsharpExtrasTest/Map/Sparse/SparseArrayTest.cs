@@ -17,6 +17,51 @@ namespace CsharpExtrasTest.Map.Sparse
     {
         private ICsharpExtrasApi Api { get; } = new CsharpExtrasApi();
 
+        [Test]
+        public void GIVEN_SparseArray_WHEN_SetToDefault_THEN_IsUsedIsFalse()
+        {
+            //Arrange
+            ISparseArray<string> array = Api.NewSparseArrayBuilder((PositiveInteger)3, "").Build();
+            array[1, 2, 3] = "Initial Non-default value";
+            Assert.IsTrue(array.IsUsed(1, 2, 3),
+                "GIVEN: Coordinates should be used initially as a non-default value exists there");
+
+            //Act
+            array[1, 2, 3] = "";
+
+            //Assert
+            Assert.IsFalse(array.IsUsed(1, 2, 3));
+        }
+
+        [Test]
+        public void GIVEN_SingletonArray_WHEN_SetUniqueValueToDefault_THEN_CountIsZero()
+        {
+            //Arrange
+            ISparseArray<string> array = Api.NewSparseArrayBuilder((PositiveInteger)3, "").Build();
+            array[1, 2, 3] = "Initial Non-default value";
+            Assert.AreEqual(1, (int) array.UsedValuesCount, "GIVEN: Singleton array count should be 1");
+
+            //Act
+            array[1, 2, 3] = "";
+
+            //Assert
+            Assert.AreEqual(0, (int) array.UsedValuesCount, "After writing default value, used count should be zero");
+        }
+
+        [Test]
+        public void GIVEN_SparseArray_WHEN_SetToDefault_THEN_GetReturnsDefault()
+        {
+            //Arrange
+            ISparseArray<string> array = Api.NewSparseArrayBuilder((PositiveInteger)3, "").Build();
+            array[1, 2, 3] = "Initial Non-default value";
+
+            //Act
+            array[1, 2, 3] = "";
+
+            //Assert
+            Assert.AreEqual("", array[1, 2, 3]);
+        }
+
         [Test, TestCase(false, 0, 0, 0), TestCase(true, 3, 4, 6), TestCase(true, 1, 1, 1)]
         public void GIVEN_FilledArray_WHEN_IsUsedEnum_THEN_ExpectedResult(bool expected, params int[] coordinates)
         {

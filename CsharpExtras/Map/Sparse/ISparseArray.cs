@@ -20,6 +20,7 @@ namespace CsharpExtras.Map.Sparse
     {
         /// <summary>
         /// Gets/sets the underlying value at the given sequence of coordinates
+        /// Note: if a value is set to the default value, then it is no longer considered used
         /// </summary>
         /// <param name="coordinates">A sequence of coordinates which must match the dimension of this array</param>
         /// <returns>The last value that was written to those coordinates, or else the default if no value was written</returns>

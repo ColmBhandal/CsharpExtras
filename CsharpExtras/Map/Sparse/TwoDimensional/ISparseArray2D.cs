@@ -12,6 +12,7 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
     {
         /// <summary>
         /// Get or set the value at the given row, column coordinates
+        /// Note: if a value is set to the default value, then it is no longer considered used
         /// </summary>
         TVal this[int row, int column] { get; set; }
 
@@ -68,6 +69,7 @@ namespace CsharpExtras.Map.Sparse.TwoDimensional
         /// <summary>
         /// Sets an area to the given values at the given coordinates.
         /// If coordinates within the area are invalid, throws an exception.
+        /// Note: If a value is set to the default value, then it is no longer considered used
         /// </summary>
         /// <param name="area">The are to write to this array</param>
         /// <param name="leftmostRow">The row coordinate of the top-left corner of the rectangle to which to write</param>
