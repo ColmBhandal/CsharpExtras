@@ -201,6 +201,26 @@ namespace CsharpExtras.Extensions
         }
 
         /// <summary>
+        /// Zips one or more arrays into a single array using an enumerable-based fold operation.
+        /// </summary>
+        /// <typeparam name="TVal">The type of values in this array</typeparam>
+        /// <typeparam name="TOther">The type of values in the enumerable of other arrays</typeparam>
+        /// <typeparam name="TResult">The type of values in the resultant array</typeparam>
+        /// <param name="array">This array</param>
+        /// <param name="zipper">A function which, given an element from this array and an enumerable of elements from 
+        /// the other arrays, returns a value in the resultant array.</param>
+        /// <param name="others">An enumerable of other arrays.</param>
+        /// <returns>A new array, the shape of which is the intersection of the shapes of this array and all the others, 
+        /// and the values of which are the result of applying the zipper across all values at the corresponding indices 
+        /// in all the arrays.</returns>
+        public static TResult[] ZipFold<TVal, TOther, TResult>(this TVal[] array, Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<TOther[]> others)
+        {
+            //TODO
+            TResult[] result = new TResult[1];
+            return result;
+        }
+
+        /// <summary>
         /// Creates a new array, populated by mapping the values of the old array using a mapper function.
         /// </summary>
         /// <param name="mapper">A function which maps an element in the original array to an element in the new array</param>

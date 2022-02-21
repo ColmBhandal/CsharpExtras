@@ -111,6 +111,13 @@ namespace CsharpExtras._Enumerable.OneBased
             return new OneBasedArrayImpl<TVal>(zippedZeroBased);
         }
 
+        public IOneBasedArray<TResult> ZipFold<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others)
+        {
+            //TODO
+            OneBasedArrayImpl<TResult> result = new OneBasedArrayImpl<TResult>(1);
+            return result;
+        }
+
         public void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor)
         {
             int zipLength = Math.Min(Length, other.Length);

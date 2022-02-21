@@ -82,6 +82,13 @@ namespace CsharpExtras._Enumerable.OneBased
             TResult[,] zipped = ZeroBasedEquivalent.ZipArray(zipper, other.ZeroBasedEquivalent);
             return new OneBasedArray2DImpl<TResult>(zipped);
         }
+        
+        public IOneBasedArray2D<TResult> ZipFold<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray2D<TOther>> others)
+        {
+            //TODO
+            OneBasedArray2DImpl<TResult> result = new OneBasedArray2DImpl<TResult>(1,1);
+            return result;
+        }
 
         public bool Any(Func<TVal, bool> checkerFunction)
         {

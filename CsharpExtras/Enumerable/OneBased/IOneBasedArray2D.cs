@@ -68,5 +68,18 @@ namespace CsharpExtras._Enumerable.OneBased
         int LastUsedRow(Predicate<TVal> isUsed);
         int LastUsedColumn(Predicate<TVal> isUsed);
         (int majorIndex, int minorIndex)? FirstIndexTupleOf(Func<TVal, bool> matcher);
+
+        /// <summary>
+        /// Zips one or more arrays into a single array using an enumerable-based fold operation.
+        /// </summary>
+        /// <typeparam name="TOther">The type of values in the enumerable of other arrays</typeparam>
+        /// <typeparam name="TResult">The type of values in the resultant array</typeparam>
+        /// <param name="zipper">A function which, given an element from this array and an enumerable of elements from 
+        /// the other arrays, returns a value in the resultant array.</param>
+        /// <param name="others">An enumerable of other arrays.</param>
+        /// <returns>A new array, the shape of which is the intersection of the shapes of this array and all the others, 
+        /// and the values of which are the result of applying the zipper across all values at the corresponding indices 
+        /// in all the arrays.</returns>
+        IOneBasedArray2D<TResult> ZipFold<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray2D<TOther>> others);
     }
 }
