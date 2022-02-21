@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using CsharpExtras.Map.Dictionary.Collection;
+using System.Linq;
 
 namespace CsharpExtras._Enumerable.OneBased
 {
@@ -113,9 +114,8 @@ namespace CsharpExtras._Enumerable.OneBased
 
         public IOneBasedArray<TResult> ZipFold<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others)
         {
-            //TODO
-            OneBasedArrayImpl<TResult> result = new OneBasedArrayImpl<TResult>(1);
-            return result;
+            return new OneBasedArrayImpl<TResult>(
+                ZeroBasedEquivalent.ZipFold(zipper, others.Select(o => o.ZeroBasedEquivalent)));
         }
 
         public void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor)

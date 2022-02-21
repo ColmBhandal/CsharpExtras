@@ -215,8 +215,13 @@ namespace CsharpExtras.Extensions
         /// in all the arrays.</returns>
         public static TResult[] ZipFold<TVal, TOther, TResult>(this TVal[] array, Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<TOther[]> others)
         {
-            //TODO
-            TResult[] result = new TResult[1];
+            int minLength = others.Select(o => o.Length).UnionMin(array.Length.AsSingleton());            
+            TResult[] result = new TResult[minLength];
+            for(int i=0; i<minLength; i++)
+            {
+                TResult val = zipper(array[i], others.Select(o => o[i]));
+                result[i] = val;
+            }
             return result;
         }
 

@@ -13,6 +13,34 @@ namespace CsharpExtrasTest.Extensions
         private const string Three = "Three";
 
         [Test, Category("Unit")]
+        public void GIVEN_Enumerables_WHEN_UnionMax_THEN_ExpectedResult()
+        {
+            //Arrange
+            IList<int> enumerable1 = new List<int> { 1, 2, 3 };
+            int[] enumerable2 = new int[] { 0, -1, -4 };
+
+            //Act
+            int max = enumerable1.UnionMax(enumerable2);
+
+            //Assert
+            Assert.AreEqual(3, max);
+        }
+
+        [Test, Category("Unit")]
+        public void GIVEN_Enumerables_WHEN_UnionMin_THEN_ExpectedResult()
+        {
+            //Arrange
+            IList<int> enumerable1 = new List<int> { 1, 2, 3 };
+            int[] enumerable2 = new int[] { 0, -1, -4 };
+
+            //Act
+            int min = enumerable1.UnionMin(enumerable2);
+
+            //Assert
+            Assert.AreEqual(-4, min);
+        }
+
+        [Test, Category("Unit")]
         [TestCaseSource("ValidIndexingData")]
         public void GivenEnumerableWhenIndexedThenResultantDictionaryIsAsExpected(int startIndex, int step, int[] expectedKeysInOrder)
         {

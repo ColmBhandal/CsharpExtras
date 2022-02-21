@@ -184,8 +184,17 @@ namespace CsharpExtras.Extensions
         /// in all the arrays.</returns>
         public static TResult[,] ZipFold<TVal, TOther, TResult>(this TVal[,] array, Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<TOther[,]> others)
         {
-            //TODO
-            TResult[,] result = new TResult[1, 1];
+            int minRows = others.Select(o => o.GetLength(0)).UnionMin(array.GetLength(0).AsSingleton());
+            int minColumns = others.Select(o => o.GetLength(1)).UnionMin(array.GetLength(1).AsSingleton());
+            TResult[,] result = new TResult[minRows, minColumns];
+            for (int i = 0; i < minRows; i++)
+            {
+                for(int j=0; j < minColumns; j++)
+                {
+                    TResult val = zipper(array[i,j], others.Select(o => o[i,j]));
+                    result[i,j] = val;
+                }
+            }
             return result;
         }
 

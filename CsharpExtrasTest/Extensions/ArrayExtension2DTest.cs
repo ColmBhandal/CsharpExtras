@@ -10,12 +10,13 @@ namespace CsharpExtrasTest.Extensions
     public class ArrayExtension2DTest
     {
         [Test]
-        public void GIVEN_ExceptionInZipAndEmptyArrays_WHEN_Zipfold_THEN_ResultIsEmpty()
+        public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_Zipfold_THEN_ResultIsEmpty()
         {
             //Arrange
             string[,] array = new string[,] { };
             IList<int[,]> others = new List<int[,]>
             {
+                new int[,] {{ 1, 2, 3 } }
             };
             static (string, int) func(string s, IEnumerable<int> e) =>
                 throw new InvalidOperationException("Intentionally throwing exception for test");

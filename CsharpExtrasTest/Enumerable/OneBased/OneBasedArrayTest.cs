@@ -20,12 +20,13 @@ namespace CsharpExtrasTest._Enumerable.OneBased
 
         
         [Test]
-        public void GIVEN_ExceptionInZipAndEmptyArrays_WHEN_Zipfold_THEN_ResultIsEmpty()
+        public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_Zipfold_THEN_ResultIsEmpty()
         {
             //Arrange
             IOneBasedArray<string> array = _api.NewOneBasedArray<string>(0);
             IList<IOneBasedArray<int>> others = new List<IOneBasedArray<int>>
             {
+                _api.NewOneBasedArray(new int[] { 1, 2, 3 })
             };
             static (string, int) func(string s, IEnumerable<int> e) =>
                 throw new InvalidOperationException("Intentionally throwing exception for test");
@@ -37,21 +38,21 @@ namespace CsharpExtrasTest._Enumerable.OneBased
             (string, int)[] expected = new (string, int)[0];
             Assert.AreEqual(expected, result.ZeroBasedEquivalent);
         }
+
         [Test]
         public void GIVEN_ExceptionInZipAndEmptyOthers_WHEN_Zipfold_THEN_Exception()
         {
             //Arrange
-            IOneBasedArray<string> array = _api.NewOneBasedArray<string>(0);
-            IList<IOneBasedArray<int>> others = new List<IOneBasedArray<int>>
-            {
-                _api.NewOneBasedArray(new int[] { 1, 2, 3 })
-            };
+            IOneBasedArray<string> array = _api.NewOneBasedArray(
+                new string[] { "Zero", "One", "Two" });
+            IList<IOneBasedArray<int>> others = new List<IOneBasedArray<int>>();
             static (string, int) func(string s, IEnumerable<int> e) =>
                 throw new InvalidOperationException("Intentionally throwing exception for test");
 
             //Act / Assert
             Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
         }
+
         [Test]
         public void GIVEN_ExceptionInZipAndNonEmptyOthers_WHEN_Zipfold_THEN_Exception()
         {

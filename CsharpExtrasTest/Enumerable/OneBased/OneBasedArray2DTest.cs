@@ -20,12 +20,30 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
         [Test]
-        public void GIVEN_ExceptionInZipAndEmptyArrays_WHEN_Zipfold_THEN_ResultIsEmpty()
+        public void GIVEN_ArrayAndEmptyOthers_WHEN_ZipfoldIgnoringOthers_THEN_ResultIsAsExpected()
+        {
+            //Arrange
+            IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(
+                new string[,] { { "Zero", "One", "Two", "Three" } });
+            IList<IOneBasedArray2D<int>> emptyOthers = new List<IOneBasedArray2D<int>>();
+            static string func(string s, IEnumerable<int> e) => s;
+
+            //Act
+            IOneBasedArray2D<string> result = array.ZipFold(func, emptyOthers);
+
+            //Assert
+            string[,] expected = new string[,] { { "Zero", "One", "Two", "Three" } };
+            Assert.AreEqual(expected, result.ZeroBasedEquivalent);
+        }
+
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_Zipfold_THEN_ResultIsEmpty()
         {
             //Arrange
             IOneBasedArray2D<string> array = _api.NewOneBasedArray2D<string>(0, 0);
             IList<IOneBasedArray2D<int>> others = new List<IOneBasedArray2D<int>>
             {
+                _api.NewOneBasedArray2D(new int[,] { { 1, 2, 3 } })
             };
             static (string, int) func(string s, IEnumerable<int> e) =>
                 throw new InvalidOperationException("Intentionally throwing exception for test");
