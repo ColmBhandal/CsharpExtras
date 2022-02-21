@@ -46,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a pre-access wrapper, which wraps an object and ensures an action is run before any access to that object (#131)
 - Added zip methods for sparse array and sparse array 2D (#132)
 - Fixed bug: default values were not overwriting non-defaults for sparse arrays (#134)
+- Added ZipEnum methods to 1D and 2D arrays via extension methods and also added one-based equivalent functions (#136)
 
 ### Added
 - Support for writing a 1D one-based array to a 2D one-based array (#9)
