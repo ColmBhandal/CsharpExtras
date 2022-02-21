@@ -2,12 +2,107 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CsharpExtrasTest.Extensions
 {
     [TestFixture, Category("Unit")]
     public class ArrayExtension2DTest
     {
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyArrays_WHEN_Zipfold_THEN_ResultIsEmpty()
+        {
+            //Arrange
+            string[,] array = new string[,] { };
+            IList<int[,]> others = new List<int[,]>
+            {
+            };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act
+            (string, int)[,] result = array.ZipFold(func, others);
+
+            //Assert
+            (string, int)[,] expected = new (string, int)[0, 0];
+            Assert.AreEqual(expected, result);
+        }
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        {
+            //Arrange
+            string[,] array = new string[,] { { "Zero", "One", "Two" } };
+            IList<int[,]> others = new List<int[,]>
+            {
+            };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+        }
+        [Test]
+        public void GIVEN_ExceptionInZipAndNonEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        {
+            //Arrange
+            string[,] array = new string[,] { { "Zero", "One", "Two" } };
+            IList<int[,]> others = new List<int[,]>
+            {
+                new int[,] { { 1, 2, 3 } }
+            };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+        }
+
+        [Test]
+        public void GIVEN_Arrays_WHEN_Zipfold_THEN_ResultIsAsExpected()
+        {
+            //Arrange
+            string[,] array = new string[,] {
+                { "00", "01", "02", "03" },
+                { "10", "11", "12", "13" },
+                { "20", "21", "22", "23" },
+                { "30", "31", "32", "33" },
+            };
+            IList<int[,]> others = new List<int[,]>
+            {
+                //Inentionally make some of the others different shapes to this one
+                new int[,] {
+                    { 1, 2, 3, 4, 5 },
+                    { 5, 6, 7, 8, 9 },
+                    { 9, 10, 11, 12, 13 },
+                    { 13, 14, 15, 16, 17 },
+                },
+                new int[,] {
+                    { 1, 2, 3, 4,},
+                    { 5, 6, 7, 8},
+                    { 9, 10, 11, 12},
+                    { 13, 14, 15, 16},
+                    { 17, 18, 19, 20},
+                },
+                new int[,] {
+                    { 1, 2, 3},
+                    { 5, 6, 7},
+                    { 9, 10, 11},
+                },
+            };
+            static (string, int) func(string s, IEnumerable<int> e) => (s, e.Aggregate((i, j) => i + j));
+
+            //Act
+            (string, int)[,] result = array.ZipFold(func, others);
+
+            //Assert
+            (string, int)[,] expected = new (string, int)[,] {
+                { ("00", 3), ("01", 6), ("02", 9) },
+                { ("10", 15), ("11", 18), ("12", 21) },
+                { ("20", 27), ("21", 30), ("22", 33) }
+            };
+            Assert.AreEqual(expected, result);
+        }
+
         [Test]
         public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
         {

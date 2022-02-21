@@ -13,6 +13,74 @@ namespace CsharpExtrasTest.Extensions
     public class ArrayExtensionTest
     {
         [Test]
+        public void GIVEN_ExceptionInZipAndEmptyArrays_WHEN_Zipfold_THEN_ResultIsEmpty()
+        {
+            //Arrange
+            string[] array = new string[] { };
+            IList<int[]> others = new List<int[]>
+            { };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act 
+            (string, int)[] result = array.ZipFold(func, others);
+
+            //Assert
+            (string, int)[] expected = new (string, int)[0];
+            Assert.AreEqual(expected, result);
+        }
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        {
+            //Arrange
+            string[] array = new string[] { "Zero", "One", "Two" };
+            IList<int[]> others = new List<int[]>
+            {};
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+        }
+        [Test]
+        public void GIVEN_ExceptionInZipAndNonEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        {
+            //Arrange
+            string[] array = new string[] { "Zero", "One", "Two" };
+            IList<int[]> others = new List<int[]>
+            {
+                new int[] { 1, 2, 3 }
+            };
+            static (string, int) func(string s, IEnumerable<int> e) => 
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+        }
+
+        [Test]
+        public void GIVEN_Arrays_WHEN_Zipfold_THEN_ResultIsAsExpected()
+        {
+            //Arrange
+            string[] array = new string[] { "Zero", "One", "Two", "Three" };
+            IList<int[]> others = new List<int[]>
+            {
+                //Inentionally make some of the others different shapes to this one
+                new int[] { 1, 2, 3 },
+                new int[] { 4, 5, 6, -1, 5 },
+                new int[] { 7, 8, 9, 10 },
+            };
+            static (string, int) func(string s, IEnumerable<int> e) => (s, e.Aggregate((i, j) => i + j));
+
+            //Act
+            (string, int)[] result = array.ZipFold(func, others);
+
+            //Assert
+            (string, int)[] expected = new (string, int)[] { ("Zero", 12), ("One", 15), ("Two", 18)};
+            Assert.AreEqual(expected, result);
+        }
+
+        [Test]
         public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
         {
             //Assemble

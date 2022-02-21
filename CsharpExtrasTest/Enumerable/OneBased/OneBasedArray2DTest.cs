@@ -5,6 +5,7 @@ using System;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CsharpExtrasTest._Enumerable.OneBased
 {
@@ -17,6 +18,101 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         private const string Four = "Four";
 
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
+
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyArrays_WHEN_Zipfold_THEN_ResultIsEmpty()
+        {
+            //Arrange
+            IOneBasedArray2D<string> array = _api.NewOneBasedArray2D<string>(0, 0);
+            IList<IOneBasedArray2D<int>> others = new List<IOneBasedArray2D<int>>
+            {
+            };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act
+            IOneBasedArray2D<(string, int)> result = array.ZipFold(func, others);
+
+            //Assert
+            (string, int)[,] expected = new (string, int)[0, 0];
+            Assert.AreEqual(expected, result.ZeroBasedEquivalent);
+        }
+
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        {
+            //Arrange
+            IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(new string[,] { { "Zero", "One", "Two" } });
+            IList<IOneBasedArray2D<int>> others = new List<IOneBasedArray2D<int>>
+            {
+            };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+        }
+        [Test]
+        public void GIVEN_ExceptionInZipAndNonEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        {
+            //Arrange
+            IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(new string[,] { { "Zero", "One", "Two" } });
+            IList<IOneBasedArray2D<int>> others = new List<IOneBasedArray2D<int>>
+            {
+                _api.NewOneBasedArray2D(new int[,] { { 1, 2, 3 } })
+            };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+        }
+
+        [Test]
+        public void GIVEN_Arrays_WHEN_Zipfold_THEN_ResultIsAsExpected()
+        {
+            //Arrange
+            IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(new string[,] {
+                { "00", "01", "02", "03" },
+                { "10", "11", "12", "13" },
+                { "20", "21", "22", "23" },
+                { "30", "31", "32", "33" },
+            });
+            IList<IOneBasedArray2D<int>> others = new List<IOneBasedArray2D<int>>
+            {
+                //Inentionally make some of the others different shapes to this one
+                _api.NewOneBasedArray2D(new int[,] {
+                    { 1, 2, 3, 4, 5 },
+                    { 5, 6, 7, 8, 9 },
+                    { 9, 10, 11, 12, 13 },
+                    { 13, 14, 15, 16, 17 },
+                }),
+               _api.NewOneBasedArray2D(new int[,] {
+                    { 1, 2, 3, 4,},
+                    { 5, 6, 7, 8},
+                    { 9, 10, 11, 12},
+                    { 13, 14, 15, 16},
+                    { 17, 18, 19, 20},
+                }),
+                _api.NewOneBasedArray2D(new int[,] {
+                    { 1, 2, 3},
+                    { 5, 6, 7},
+                    { 9, 10, 11},
+                }),
+            };
+            static (string, int) func(string s, IEnumerable<int> e) => (s, e.Aggregate((i, j) => i + j));
+
+            //Act
+            IOneBasedArray2D<(string, int)> result = array.ZipFold(func, others);
+
+            //Assert
+            (string, int)[,] expected = new (string, int)[,] {
+                { ("00", 3), ("01", 6), ("02", 9) },
+                { ("10", 15), ("11", 18), ("12", 21) },
+                { ("20", 27), ("21", 30), ("22", 33) }
+            };
+            Assert.AreEqual(expected, result.ZeroBasedEquivalent);
+        }
 
         [Test]
         public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
