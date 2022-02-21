@@ -215,7 +215,7 @@ namespace CsharpExtras.Extensions
         /// in all the arrays.</returns>
         public static TResult[] ZipEnum<TVal, TOther, TResult>(this TVal[] array, Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<TOther[]> others)
         {
-            int minLength = others.Select(o => o.Length).UnionMin(array.Length.AsSingleton());            
+            int minLength = others.Select(o => o.Length).Union(array.Length.AsSingleton()).Min();            
             TResult[] result = new TResult[minLength];
             for(int i=0; i<minLength; i++)
             {
