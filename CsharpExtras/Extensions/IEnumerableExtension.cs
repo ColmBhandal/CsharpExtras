@@ -130,37 +130,16 @@ namespace CsharpExtras.Extensions
         /// An ArgumentException is thrown if both collections are empty.
         /// </summary>
         public static int UnionMin(this IEnumerable<int> first, IEnumerable<int> second) =>
-            UnionBound(first, second, e => e.Min(), Math.Min);
+            UnionBound(first, second, e => e.Min());
 
         /// <summary>
         /// Find the max value between two IEnumerables of type int.
         /// An ArgumentException is thrown if both collections are empty.
         /// </summary>
         public static int UnionMax(this IEnumerable<int> first, IEnumerable<int> second) =>
-            UnionBound(first, second, e => e.Max(), Math.Max);
+            UnionBound(first, second, e => e.Max());
 
         private static T UnionBound<T>(this IEnumerable<int> first, IEnumerable<int> second,
-            Func<IEnumerable<int>, T> getBound, Func<T, T, T> getTwoWayBound)
-        {
-            bool firstAny = first.Any();
-            bool secondAny = second.Any();
-
-            if (!firstAny && !secondAny)
-            {
-                throw new ArgumentException("Cannot find the max value between two empty collections");
-            }
-            else if (firstAny && secondAny)
-            {
-                return getTwoWayBound(getBound(first), getBound(second));
-            }
-            else if (firstAny)
-            {
-                return getBound(first);
-            }
-            else
-            {
-                return getBound(second);
-            }
-        }
+            Func<IEnumerable<int>, T> getBound) => getBound(first.Union(second));
     }
 }
