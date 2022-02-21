@@ -125,11 +125,11 @@ namespace CsharpExtras.Extensions
             }
         }
 
-        [Obsolete("Use Union() followed by Max() instead")]
         /// <summary>
         /// Find the max value between two IEnumerables of type int.
         /// An ArgumentException is thrown if both collections are empty.
         /// </summary>        
+        [Obsolete("Use Union() followed by Max() instead")]
         public static int UnionMax(this IEnumerable<int> first, IEnumerable<int> second) =>
             UnionBound(first, second, e => e.Max());
 
