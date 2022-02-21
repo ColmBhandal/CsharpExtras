@@ -213,7 +213,7 @@ namespace CsharpExtras.Extensions
         /// <returns>A new array, the shape of which is the intersection of the shapes of this array and all the others, 
         /// and the values of which are the result of applying the zipper across all values at the corresponding indices 
         /// in all the arrays.</returns>
-        public static TResult[] ZipFold<TVal, TOther, TResult>(this TVal[] array, Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<TOther[]> others)
+        public static TResult[] ZipEnum<TVal, TOther, TResult>(this TVal[] array, Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<TOther[]> others)
         {
             int minLength = others.Select(o => o.Length).UnionMin(array.Length.AsSingleton());            
             TResult[] result = new TResult[minLength];

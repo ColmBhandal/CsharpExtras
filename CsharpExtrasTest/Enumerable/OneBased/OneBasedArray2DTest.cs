@@ -20,7 +20,7 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
         [Test]
-        public void GIVEN_ArrayAndEmptyOthers_WHEN_ZipfoldIgnoringOthers_THEN_ResultIsAsExpected()
+        public void GIVEN_ArrayAndEmptyOthers_WHEN_ZipEnumIgnoringOthers_THEN_ResultIsAsExpected()
         {
             //Arrange
             IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(
@@ -29,7 +29,7 @@ namespace CsharpExtrasTest._Enumerable.OneBased
             static string func(string s, IEnumerable<int> e) => s;
 
             //Act
-            IOneBasedArray2D<string> result = array.ZipFold(func, emptyOthers);
+            IOneBasedArray2D<string> result = array.ZipEnum(func, emptyOthers);
 
             //Assert
             string[,] expected = new string[,] { { "Zero", "One", "Two", "Three" } };
@@ -37,7 +37,7 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         }
 
         [Test]
-        public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_Zipfold_THEN_ResultIsEmpty()
+        public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_ZipEnum_THEN_ResultIsEmpty()
         {
             //Arrange
             IOneBasedArray2D<string> array = _api.NewOneBasedArray2D<string>(0, 0);
@@ -49,7 +49,7 @@ namespace CsharpExtrasTest._Enumerable.OneBased
                 throw new InvalidOperationException("Intentionally throwing exception for test");
 
             //Act
-            IOneBasedArray2D<(string, int)> result = array.ZipFold(func, others);
+            IOneBasedArray2D<(string, int)> result = array.ZipEnum(func, others);
 
             //Assert
             (string, int)[,] expected = new (string, int)[0, 0];
@@ -57,7 +57,7 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         }
 
         [Test]
-        public void GIVEN_ExceptionInZipAndEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        public void GIVEN_ExceptionInZipAndEmptyOthers_WHEN_ZipEnum_THEN_Exception()
         {
             //Arrange
             IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(new string[,] { { "Zero", "One", "Two" } });
@@ -68,10 +68,10 @@ namespace CsharpExtrasTest._Enumerable.OneBased
                 throw new InvalidOperationException("Intentionally throwing exception for test");
 
             //Act / Assert
-            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+            Assert.Throws<InvalidOperationException>(() => array.ZipEnum(func, others));
         }
         [Test]
-        public void GIVEN_ExceptionInZipAndNonEmptyOthers_WHEN_Zipfold_THEN_Exception()
+        public void GIVEN_ExceptionInZipAndNonEmptyOthers_WHEN_ZipEnum_THEN_Exception()
         {
             //Arrange
             IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(new string[,] { { "Zero", "One", "Two" } });
@@ -83,11 +83,11 @@ namespace CsharpExtrasTest._Enumerable.OneBased
                 throw new InvalidOperationException("Intentionally throwing exception for test");
 
             //Act / Assert
-            Assert.Throws<InvalidOperationException>(() => array.ZipFold(func, others));
+            Assert.Throws<InvalidOperationException>(() => array.ZipEnum(func, others));
         }
 
         [Test]
-        public void GIVEN_Arrays_WHEN_Zipfold_THEN_ResultIsAsExpected()
+        public void GIVEN_Arrays_WHEN_ZipEnum_THEN_ResultIsAsExpected()
         {
             //Arrange
             IOneBasedArray2D<string> array = _api.NewOneBasedArray2D(new string[,] {
@@ -121,7 +121,7 @@ namespace CsharpExtrasTest._Enumerable.OneBased
             static (string, int) func(string s, IEnumerable<int> e) => (s, e.Aggregate((i, j) => i + j));
 
             //Act
-            IOneBasedArray2D<(string, int)> result = array.ZipFold(func, others);
+            IOneBasedArray2D<(string, int)> result = array.ZipEnum(func, others);
 
             //Assert
             (string, int)[,] expected = new (string, int)[,] {

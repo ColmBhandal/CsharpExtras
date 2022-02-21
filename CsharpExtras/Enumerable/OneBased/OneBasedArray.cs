@@ -112,10 +112,10 @@ namespace CsharpExtras._Enumerable.OneBased
             return new OneBasedArrayImpl<TVal>(zippedZeroBased);
         }
 
-        public IOneBasedArray<TResult> ZipFold<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others)
+        public IOneBasedArray<TResult> ZipEnum<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others)
         {
             return new OneBasedArrayImpl<TResult>(
-                ZeroBasedEquivalent.ZipFold(zipper, others.Select(o => o.ZeroBasedEquivalent)));
+                ZeroBasedEquivalent.ZipEnum(zipper, others.Select(o => o.ZeroBasedEquivalent)));
         }
 
         public void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor)

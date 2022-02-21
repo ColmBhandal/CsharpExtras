@@ -195,6 +195,6 @@ namespace CsharpExtras._Enumerable.OneBased
         /// <returns>A new array, the shape of which is the intersection of the shapes of this array and all the others, 
         /// and the values of which are the result of applying the zipper across all values at the corresponding indices 
         /// in all the arrays.</returns>
-        IOneBasedArray<TResult> ZipFold<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others);
+        IOneBasedArray<TResult> ZipEnum<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others);
     }
 }
