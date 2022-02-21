@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CsharpExtras._Enumerable.OneBased
 {
@@ -81,6 +82,12 @@ namespace CsharpExtras._Enumerable.OneBased
         {
             TResult[,] zipped = ZeroBasedEquivalent.ZipArray(zipper, other.ZeroBasedEquivalent);
             return new OneBasedArray2DImpl<TResult>(zipped);
+        }
+        
+        public IOneBasedArray2D<TResult> ZipEnum<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray2D<TOther>> others)
+        {
+            return new OneBasedArray2DImpl<TResult>(
+                ZeroBasedEquivalent.ZipEnum(zipper, others.Select(o => o.ZeroBasedEquivalent)));
         }
 
         public bool Any(Func<TVal, bool> checkerFunction)

@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using CsharpExtras.Map.Dictionary.Collection;
+using System.Linq;
 
 namespace CsharpExtras._Enumerable.OneBased
 {
@@ -109,6 +110,12 @@ namespace CsharpExtras._Enumerable.OneBased
             TOther[][] extrasZeroBased = extras.Map(arr => arr.ZeroBasedEquivalent);
             TVal[] zippedZeroBased = ZeroBasedEquivalent.ZipMulti(zipper, other.ZeroBasedEquivalent, extrasZeroBased);
             return new OneBasedArrayImpl<TVal>(zippedZeroBased);
+        }
+
+        public IOneBasedArray<TResult> ZipEnum<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others)
+        {
+            return new OneBasedArrayImpl<TResult>(
+                ZeroBasedEquivalent.ZipEnum(zipper, others.Select(o => o.ZeroBasedEquivalent)));
         }
 
         public void PairAndExecute<TOther>(IOneBasedArray<TOther> other, Action<TVal, TOther> pairProcessor)

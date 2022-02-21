@@ -18,6 +18,81 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         private const string Four = "Four";        
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
+        
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_ZipEnum_THEN_ResultIsEmpty()
+        {
+            //Arrange
+            IOneBasedArray<string> array = _api.NewOneBasedArray<string>(0);
+            IList<IOneBasedArray<int>> others = new List<IOneBasedArray<int>>
+            {
+                _api.NewOneBasedArray(new int[] { 1, 2, 3 })
+            };
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act 
+            IOneBasedArray<(string, int)> result = array.ZipEnum(func, others);
+
+            //Assert
+            (string, int)[] expected = new (string, int)[0];
+            Assert.AreEqual(expected, result.ZeroBasedEquivalent);
+        }
+
+        [Test]
+        public void GIVEN_ExceptionInZipAndEmptyOthers_WHEN_ZipEnum_THEN_Exception()
+        {
+            //Arrange
+            IOneBasedArray<string> array = _api.NewOneBasedArray(
+                new string[] { "Zero", "One", "Two" });
+            IList<IOneBasedArray<int>> others = new List<IOneBasedArray<int>>();
+            static (string, int) func(string s, IEnumerable<int> e) =>
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipEnum(func, others));
+        }
+
+        [Test]
+        public void GIVEN_ExceptionInZipAndNonEmptyOthers_WHEN_ZipEnum_THEN_Exception()
+        {
+            //Arrange
+            IOneBasedArray<string> array = _api.NewOneBasedArray(
+                new string[] { "Zero", "One", "Two" });
+            IList<IOneBasedArray<int>> others = new List<IOneBasedArray<int>>
+            {
+                _api.NewOneBasedArray(new int[] { 1, 2, 3 })
+            };
+            static (string, int) func(string s, IEnumerable<int> e) => 
+                throw new InvalidOperationException("Intentionally throwing exception for test");
+
+            //Act / Assert
+            Assert.Throws<InvalidOperationException>(() => array.ZipEnum(func, others));
+        }
+
+        [Test]
+        public void GIVEN_Arrays_WHEN_ZipEnum_THEN_ResultIsAsExpected()
+        {
+            //Arrange
+            IOneBasedArray<string> array = _api.NewOneBasedArray(
+                new string[] { "Zero", "One", "Two", "Three" });
+            IList<IOneBasedArray<int>> others = new List<IOneBasedArray<int>>
+            {
+                //Inentionally make some of the others different shapes to this one
+                _api.NewOneBasedArray(new int[] { 1, 2, 3 }),
+                _api.NewOneBasedArray(new int[] { 4, 5, 6, -1, 5 }),
+                _api.NewOneBasedArray(new int[] { 7, 8, 9, 10 }),
+            };
+            static (string, int) func(string s, IEnumerable<int> e) => (s, e.Aggregate((i, j) => i + j));
+
+            //Act
+            IOneBasedArray<(string, int)> result = array.ZipEnum(func, others);
+
+            //Assert
+            (string, int)[] expected = new (string, int)[] { ("Zero", 12), ("One", 15), ("Two", 18)};
+            Assert.AreEqual(expected, result.ZeroBasedEquivalent);
+        }
+
         [Test]
         public void GIVEN_ArrayOfStrings_WHEN_MapByConcatenatingIndices_THEN_ResultIsAsExpected()
         {

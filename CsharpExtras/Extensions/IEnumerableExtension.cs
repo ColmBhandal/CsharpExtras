@@ -16,6 +16,17 @@ namespace CsharpExtras.Extensions
 
 
         /// <summary>
+        /// Returns a single value as a singleton enumerable. See: https://stackoverflow.com/q/1577822/5134722
+        /// </summary>
+        /// <typeparam name="T">The type of the value, and the type of values in the resulting enumerable</typeparam>
+        /// <param name="value">The value from which to create the singleton enumerable</param>
+        /// <returns>A new enumerable which has exactly one element that is the given value</returns>
+        public static IEnumerable<T> AsSingleton<T>(this T value)
+        {
+            yield return value;
+        }
+
+        /// <summary>
         /// Indexes this enumerable into a dictionary whose keys are the indices of elements in the enumerable.
         /// </summary>
         /// <typeparam name="U">The type of elements in the enumerable</typeparam>
@@ -116,29 +127,13 @@ namespace CsharpExtras.Extensions
 
         /// <summary>
         /// Find the max value between two IEnumerables of type int.
-        /// A ArgumentException is thrown if both collections are empty.
-        /// </summary>
-        public static int UnionMax(this IEnumerable<int> first, IEnumerable<int> second)
-        {
-            bool firstAny = first.Any();
-            bool secondAny = second.Any();
+        /// An ArgumentException is thrown if both collections are empty.
+        /// </summary>        
+        [Obsolete("Use Union() followed by Max() instead")]
+        public static int UnionMax(this IEnumerable<int> first, IEnumerable<int> second) =>
+            UnionBound(first, second, e => e.Max());
 
-            if (!firstAny && !secondAny)
-            {
-                throw new ArgumentException("Cannot find the max value between two empty collections");
-            }
-            else if (firstAny && secondAny)
-            {
-                return Math.Max(first.Max(), second.Max());
-            }
-            else if (firstAny)
-            {
-                return first.Max();
-            }
-            else
-            {
-                return second.Max();
-            }
-        }
+        private static T UnionBound<T>(this IEnumerable<int> first, IEnumerable<int> second,
+            Func<IEnumerable<int>, T> getBound) => getBound(first.Union(second));
     }
 }
