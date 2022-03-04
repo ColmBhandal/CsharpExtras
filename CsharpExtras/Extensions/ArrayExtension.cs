@@ -1,4 +1,6 @@
-﻿using CsharpExtras.Map.Dictionary;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Compare.Array;
+using CsharpExtras.Map.Dictionary;
 using CsharpExtras.Map.Dictionary.Collection;
 using System;
 using System.Collections.Generic;
@@ -9,9 +11,15 @@ namespace CsharpExtras.Extensions
 {
     public static class ArrayExtension
     {
+        public static IComparisonResult Compare<TVal>(this TVal[] arr, TVal[] other, Func<TVal, TVal, bool> isEqualValues)
+        {
+            //TODO: Implement
+            return new ArrayComparisonResultImpl();
+        }
+
         //Non-mvp: Test this
         /// <returns>A pair indicating the first element found and its index, or (-1, default) if nothing found.</returns>
-        public static (int index, T element)? FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set)
+        public static (int index, TVal element)? FindFirstOccurrenceOfSet<TVal>(this TVal[] arr, ISet<TVal> set)
         {
             return FindFirstOccurrenceOfSet(arr, set, 0, arr.Length);
         }
@@ -20,11 +28,11 @@ namespace CsharpExtras.Extensions
         /// <param name="startIndex">Start searching the array from this index inclusive i.e. don't look at lower indices</param>
         /// <param name="endIndex">Stop searching the array beyond this index, and don't include this index in the search</param>
         /// <returns>A pair indicating the first element found and its index, or null if nothing found.</returns>
-        public static (int index, T element)? FindFirstOccurrenceOfSet<T>(this T[] arr, ISet<T> set, int startIndex, int endIndex)
+        public static (int index, TVal element)? FindFirstOccurrenceOfSet<TVal>(this TVal[] arr, ISet<TVal> set, int startIndex, int endIndex)
         {
             for (int i = startIndex; i < arr.Length && i < endIndex; i++)
             {
-                T element = arr[i];
+                TVal element = arr[i];
                 if (set.Contains(element))
                 {
                     return (i, element);
@@ -40,18 +48,18 @@ namespace CsharpExtras.Extensions
         /// <param name="startAt">Index to start at (inclusive). Negative indices will be truncated to zero.</param>
         /// <param name="stopBefore">Index before which to stop. Indices greater than array length will be truncated to the array length.</param>
         /// <returns></returns>
-        public static T[] SubArray<T>(this T[] data, int startAt, int stopBefore)
+        public static TVal[] SubArray<TVal>(this TVal[] data, int startAt, int stopBefore)
         {
             startAt = Math.Max(startAt, 0);
             stopBefore = Math.Min(stopBefore, data.Length);
 
             int length = stopBefore - startAt;
-            T[] result = new T[length];
+            TVal[] result = new TVal[length];
             Array.Copy(data, startAt, result, 0, length);
             return result;
         }
 
-        public static T[] SubArray<T>(this T[] data, int startAt)
+        public static TVal[] SubArray<TVal>(this TVal[] data, int startAt)
         {
             return data.SubArray(startAt, data.Length);
         }
@@ -67,16 +75,16 @@ namespace CsharpExtras.Extensions
         /// <param name="orientation">If ROW, then the 2D array created will have a single row, 
         /// whose values will match that of the source array. Else the 2D array will have a single column, matching the source array.</param>
         /// <returns>A new 2D array whose values match that of the original 1D array and which is oriented according to the given orientation.</returns>
-        public static T[,] To2DArray<T>(this T[] array, ArrayOrientation orientation)
+        public static TVal[,] To2DArray<TVal>(this TVal[] array, ArrayOrientation orientation)
         {
-            T[,] outputArray;
+            TVal[,] outputArray;
             if (orientation == ArrayOrientation.COLUMN)
             {
-                outputArray = new T[array.Length, 1];
+                outputArray = new TVal[array.Length, 1];
             }
             else
             {
-                outputArray = new T[1, array.Length];
+                outputArray = new TVal[1, array.Length];
             }
 
             for (int i = 0; i < array.Length; i++)
@@ -94,21 +102,21 @@ namespace CsharpExtras.Extensions
         }
 
         //TODO: Test
-        public static T[] DeepCopy<T>(this T[] array)
+        public static TVal[] DeepCopy<TVal>(this TVal[] array)
         {
             int length = array.Length;
-            T[] copy = new T[length];
+            TVal[] copy = new TVal[length];
             array.CopyTo(copy, 0);
             return copy;
         }
 
-        public static IDictionary<T, IList<int>> Inverse<T>(this T[] array)
+        public static IDictionary<TVal, IList<int>> Inverse<TVal>(this TVal[] array)
         {
-            IDictionary<T, IList<int>> inverseMap = new Dictionary<T, IList<int>>();
+            IDictionary<TVal, IList<int>> inverseMap = new Dictionary<TVal, IList<int>>();
 
             for (int index = 0; index < array.Length; index++)
             {
-                T value = array[index];
+                TVal value = array[index];
                 if (inverseMap.ContainsKey(value))
                 {
                     inverseMap[value].Add(index);
@@ -122,7 +130,7 @@ namespace CsharpExtras.Extensions
             return inverseMap;
         }
 
-        public static IDictionary<T, IList<int>> FindDuplicateIndices<T>(this T[] array)
+        public static IDictionary<TVal, IList<int>> FindDuplicateIndices<TVal>(this TVal[] array)
         {
             return array.Inverse().FilterValues(lst => lst.Count > 1);
         }

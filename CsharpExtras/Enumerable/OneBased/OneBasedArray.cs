@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using CsharpExtras.Map.Dictionary.Collection;
 using System.Linq;
+using CsharpExtras.Compare;
+using CsharpExtras.Compare.Array;
 
 namespace CsharpExtras._Enumerable.OneBased
 {
@@ -39,6 +41,12 @@ namespace CsharpExtras._Enumerable.OneBased
         public int Length => _backingArray.Length;
 
         public TVal[] ZeroBasedEquivalent => _backingArray;
+
+        public IComparisonResult Compare(IOneBasedArray<TVal> other)
+        {
+            //TODO: Implement
+            return new ArrayComparisonResultImpl();
+        }
 
         public IEnumerator<TVal> GetEnumerator()
         {

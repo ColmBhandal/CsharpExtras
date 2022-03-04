@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
 using CsharpExtras.Map.Dictionary.Collection;
+using CsharpExtras.Compare;
 
 namespace CsharpExtras._Enumerable.OneBased
 {
@@ -196,5 +197,6 @@ namespace CsharpExtras._Enumerable.OneBased
         /// and the values of which are the result of applying the zipper across all values at the corresponding indices 
         /// in all the arrays.</returns>
         IOneBasedArray<TResult> ZipEnum<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others);
+        IComparisonResult Compare(IOneBasedArray<TVal> other);
     }
 }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Compare.Array;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -8,6 +10,14 @@ namespace CsharpExtras.Extensions
 {
     public static class ArrayExtension2D
     {
+
+
+        public static IComparisonResult Compare<TVAl>(this TVAl[,] arr, TVAl[,] other,
+            Func<TVAl, TVAl, bool> isEqualValues)
+        {
+            //TODO: Implement
+            return new ArrayComparisonResultImpl();
+        }
 
         /// <param name="p">A predicate on an entire column</param>
         /// <returns>The last column where the predicate is true, or -1 if none found</returns>
