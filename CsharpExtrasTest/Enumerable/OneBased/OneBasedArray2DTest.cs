@@ -50,7 +50,7 @@ namespace CsharpExtrasTest._Enumerable.OneBased
                     new double[,]
                     {
                         {1, 2, 3},
-                        {1.1, 0.5, 6.01},
+                        {1.1, 0.501, 6.01},
                     },
                     "Same shape, different value"
                 ),

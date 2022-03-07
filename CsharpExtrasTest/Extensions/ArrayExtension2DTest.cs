@@ -36,7 +36,7 @@ namespace CsharpExtrasTest.Extensions
                     new double[,]
                     {
                         {1, 2, 3},
-                        {1.1, 0.5, 6.01},
+                        {1.1, 0.5003, 6.01},
                     },
                     "Same shape, different value"
                 ),
