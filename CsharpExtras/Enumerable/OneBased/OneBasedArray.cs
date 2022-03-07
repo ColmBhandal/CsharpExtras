@@ -42,7 +42,7 @@ namespace CsharpExtras._Enumerable.OneBased
 
         public TVal[] ZeroBasedEquivalent => _backingArray;
 
-        public IComparisonResult Compare(IOneBasedArray<TVal> other)
+        public IComparisonResult Compare(IOneBasedArray<TVal> other, Func<TVal, TVal, bool> isEqualValues)
         {
             //TODO: Implement
             return new ArrayComparisonResultImpl();

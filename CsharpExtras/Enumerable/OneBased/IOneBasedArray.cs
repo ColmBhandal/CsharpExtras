@@ -197,6 +197,14 @@ namespace CsharpExtras._Enumerable.OneBased
         /// and the values of which are the result of applying the zipper across all values at the corresponding indices 
         /// in all the arrays.</returns>
         IOneBasedArray<TResult> ZipEnum<TOther, TResult>(Func<TVal, IEnumerable<TOther>, TResult> zipper, IEnumerable<IOneBasedArray<TOther>> others);
-        IComparisonResult Compare(IOneBasedArray<TVal> other);
+        
+        /// <summary>
+        /// Compares this array to the other array value-by-value
+        /// </summary>
+        /// <param name="other">The other array against which to compare</param>
+        /// <param name="isEqualValues">A function which checks if values are equal</param>
+        /// <returns>The result of the comparison, which can be used to determine if the arrays are equal according to the value-equality function passed.
+        /// If the arrays are of a different shape, then the comparison will always be unequal</returns>
+        IComparisonResult Compare(IOneBasedArray<TVal> other, Func<TVal, TVal, bool> isEqualValues);
     }
 }
