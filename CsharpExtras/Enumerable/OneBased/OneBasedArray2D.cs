@@ -1,6 +1,7 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.Compare.Array;
 using CsharpExtras.Extensions;
+using CsharpExtras.Extensions.Helper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,11 +38,8 @@ namespace CsharpExtras._Enumerable.OneBased
         }
 
         public IComparisonResult Compare(IOneBasedArray2D<TVal> other,
-            Func<TVal, TVal, bool> isEqualValues)
-        {
-            //TODO: Implement
-            return new ArrayComparisonResultImpl<TVal>();
-        }
+            Func<TVal, TVal, bool> isEqualValues) =>
+                ZeroBasedEquivalent.Compare(other.ZeroBasedEquivalent, isEqualValues, 1);
 
         public int LastUsedRow(Predicate<TVal> isUsed)
         {

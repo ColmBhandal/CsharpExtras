@@ -1,5 +1,6 @@
 ﻿using CsharpExtras.Compare;
 using CsharpExtras.Compare.Array;
+using CsharpExtras.Extensions.Helper;
 using CsharpExtras.Map.Dictionary;
 using CsharpExtras.Map.Dictionary.Collection;
 using System;
@@ -12,10 +13,7 @@ namespace CsharpExtras.Extensions
     public static class ArrayExtension
     {
         public static IComparisonResult Compare<TVal>(this TVal[] arr, TVal[] other, Func<TVal, TVal, bool> isEqualValues)
-        {
-            //TODO: Implement
-            return new ArrayComparisonResultImpl<TVal>();
-        }
+            => arr.Compare(other, isEqualValues, 0);
 
         //Non-mvp: Test this
         /// <returns>A pair indicating the first element found and its index, or (-1, default) if nothing found.</returns>
