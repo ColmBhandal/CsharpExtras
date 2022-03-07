@@ -6,12 +6,86 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Map.Dictionary.Collection;
+using CsharpExtras.Compare;
 
 namespace CsharpExtrasTest.Extensions
 {
     [TestFixture, Category("Unit")]
     public class ArrayExtensionTest
     {
+        [Test, TestCaseSource(nameof(ProviderForUnequalCompare))]
+        public void GIVEN_UnEqualArrays_WHEN_Compare_THEN_IsEqualFalse
+            ((double[] array1, double[] array2, string label) testData)
+        {
+            //Act
+            IComparisonResult result = testData.array1.Compare(testData.array2,
+                (d1, d2) => d1 == d2);
+                
+            //Assert
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        private static IEnumerable<(double[] array1, double[] array2, string label)>
+            ProviderForUnequalCompare()
+        {
+            return new List<(double[] array1, double[] array2, string label)>
+            {
+                (
+                    new double[] {1.1, 0.5, 6.01},
+                    new double[] {1.1, 0.501, 6.01},
+                    "Same length, different value"
+                ),
+                (
+                    new double[] {1.1, 0.5, 6.01},
+                    new double[] {1.1, 0.5},
+                    "Different length, other a prefix"
+                ),
+                (
+                    new double[] {1.1, 0.5, 6.01},
+                    new double[] {0.5, 6.01},
+                    "Different length, other a suffix"
+                ),
+                (
+                    new double[] {1.1, 0.5},
+                    new double[] {1.1, 0.5, 6.01},
+                    "Different length, this a prefix"
+                ),
+                (
+                    new double[] {0.5, 6.01},
+                    new double[] {1.1, 0.5, 6.01},
+                    "Different length, this a suffix"
+                ),
+            };
+        }
+
+        [Test]
+        public void GIVEN_DistinctEqualPopulatedArrays_WHEN_Compare_THEN_IsEqualTrue()
+        {
+            //Arrange
+            string[] array1 = new string[] {"Hello", "World", "42" };
+            string[] array2 = new string[] { "Hello", "World", "42" };
+
+            //Act
+            IComparisonResult result = array1.Compare(array2, string.Equals);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DistinctEmptyArrays_WHEN_CompareWithFalseValueComparer_THEN_IsEqualTrue()
+        {
+            //Arrange
+            string[] array1 = new string[] {};
+            string[] array2 = new string[] { };
+
+            //Act
+            IComparisonResult result = array1.Compare(array2, (s1, s2) => false);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual, "Distinct empty arrays should be equal, even if the comparison funciton always returns false");
+        }
+
         [Test]
         public void GIVEN_ArrayAndEmptyOthers_WHEN_ZipEnumIgnoringOthers_THEN_ResultIsAsExpected()
         {
