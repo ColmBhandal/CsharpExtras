@@ -36,7 +36,8 @@ namespace CsharpExtras._Enumerable.OneBased
             }
         }
 
-        public IComparisonResult Compare(IOneBasedArray<TVal> other)
+        public IComparisonResult Compare(IOneBasedArray2D<TVal> other,
+            Func<TVal, TVal, bool> isEqualValues)
         {
             //TODO: Implement
             return new ArrayComparisonResultImpl();

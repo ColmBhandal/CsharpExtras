@@ -102,6 +102,7 @@ namespace CsharpExtrasTest.Extensions
             //Assert
             Assert.IsTrue(result.IsEqual, "Distinct empty arrays should be equal, even if the comparison funciton always returns false");
         }
+
         [Test]
         public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_ZipEnum_THEN_ResultIsEmpty()
         {
