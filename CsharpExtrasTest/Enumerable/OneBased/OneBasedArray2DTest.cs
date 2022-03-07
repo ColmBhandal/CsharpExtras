@@ -6,6 +6,7 @@ using static CsharpExtras.Extensions.ArrayOrientationClass;
 using static CsharpExtras.Extensions.ArrayExtension;
 using System.Collections.Generic;
 using System.Linq;
+using CsharpExtras.Compare;
 
 namespace CsharpExtrasTest._Enumerable.OneBased
 {
@@ -18,6 +19,103 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         private const string Four = "Four";
 
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
+
+        [Test, TestCaseSource(nameof(ProviderForUnequalCompare))]
+        public void GIVEN_UnEqualArrays_WHEN_Compare_THEN_IsEqualFalse
+            ((double[,] array1, double[,] array2, string label) testData)
+        {
+            //Arrange
+            IOneBasedArray2D<double> array1 = _api.NewOneBasedArray2D(testData.array1);
+            IOneBasedArray2D<double> array2 = _api.NewOneBasedArray2D(testData.array2);
+
+            //Act
+            IComparisonResult result = array1.Compare(array2,
+                (d1, d2) => d1 == d2);
+
+            //Assert
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        private static IEnumerable<(double[,] array1, double[,] array2, string label)>
+            ProviderForUnequalCompare()
+        {
+            return new List<(double[,] array1, double[,] array2, string label)>
+            {
+                (
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.5, 6.01},
+                    },
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.501, 6.01},
+                    },
+                    "Same shape, different value"
+                ),
+
+                (
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.5, 6.01},
+                    },
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                    },
+                    "Different shape, other less rows"
+                ),
+
+                (
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.5, 6.01},
+                    },
+                    new double[,]
+                    {
+                        {1, 2},
+                        {1.1, 0.5},
+                    },
+                    "Different shape, other less columns"
+                )
+            };
+        }
+
+        [Test]
+        public void GIVEN_DistinctEqualPopulatedArrays_WHEN_Compare_THEN_IsEqualTrue()
+        {
+            //Arrange
+            IOneBasedArray2D<string> array1 = _api.NewOneBasedArray2D(new string[,]{
+                { "Hello", "World", "42" },
+                { "Goodbye", "Universe", "43" }
+            });
+            IOneBasedArray2D<string> array2 = _api.NewOneBasedArray2D(new string[,]{
+                { "Hello", "World", "42" },
+                { "Goodbye", "Universe", "43" }
+            });
+            //Act
+            IComparisonResult result = array1.Compare(array2, string.Equals);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DistinctEmptyArrays_WHEN_CompareWithFalseValueComparer_THEN_IsEqualTrue()
+        {
+            //Arrange
+            IOneBasedArray2D<string> array1 = _api.NewOneBasedArray2D<string>(0, 0);
+            IOneBasedArray2D<string> array2 = _api.NewOneBasedArray2D<string>(0, 0);
+
+            //Act
+            IComparisonResult result = array1.Compare(array2, (s1, s2) => false);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual, "Distinct empty arrays should be equal, even if the comparison funciton always returns false");
+        }
 
         [Test]
         public void GIVEN_ArrayAndEmptyOthers_WHEN_ZipEnumIgnoringOthers_THEN_ResultIsAsExpected()

@@ -1,4 +1,7 @@
-﻿using CsharpExtras.Extensions;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Compare.Array;
+using CsharpExtras.Extensions;
+using CsharpExtras.Extensions.Helper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,27 +11,16 @@ namespace CsharpExtras._Enumerable.OneBased
 {
     class OneBasedArray2DImpl<TVal> : IOneBasedArray2D<TVal>
     {
-        public int LastUsedRow(Predicate<TVal> isUsed)
-        {
-            int zeroBasedRow = ZeroBasedEquivalent.LastUsedRow(isUsed);
-            if (zeroBasedRow < 0) return zeroBasedRow;
-            return zeroBasedRow + 1;
-        }
-        public int LastUsedColumn(Predicate<TVal> isUsed)
-        {
-            int zeroBasedColumn = ZeroBasedEquivalent.LastUsedColumn(isUsed);
-            if (zeroBasedColumn < 0) return zeroBasedColumn;
-            return zeroBasedColumn + 1;
-        }
+
         public TVal[,] ZeroBasedEquivalent { get; }
+
+        public OneBasedArray2DImpl(int rows, int columns) : this(new TVal[rows, columns])
+        {
+        }
 
         public OneBasedArray2DImpl(TVal[,] backingArray)
         {
             ZeroBasedEquivalent = backingArray;
-        }
-
-        public OneBasedArray2DImpl(int rows, int columns) : this(new TVal[rows, columns])
-        {
         }
 
         public TVal this[int oneBasedIndex0, int oneBasedIndex1]
@@ -43,6 +35,23 @@ namespace CsharpExtras._Enumerable.OneBased
                 ValidateIndices(oneBasedIndex0, oneBasedIndex1);
                 ZeroBasedEquivalent[oneBasedIndex0 - 1, oneBasedIndex1 - 1] = value;
             }
+        }
+
+        public IComparisonResult Compare(IOneBasedArray2D<TVal> other,
+            Func<TVal, TVal, bool> isEqualValues) =>
+                ZeroBasedEquivalent.Compare(other.ZeroBasedEquivalent, isEqualValues, 1);
+
+        public int LastUsedRow(Predicate<TVal> isUsed)
+        {
+            int zeroBasedRow = ZeroBasedEquivalent.LastUsedRow(isUsed);
+            if (zeroBasedRow < 0) return zeroBasedRow;
+            return zeroBasedRow + 1;
+        }
+        public int LastUsedColumn(Predicate<TVal> isUsed)
+        {
+            int zeroBasedColumn = ZeroBasedEquivalent.LastUsedColumn(isUsed);
+            if (zeroBasedColumn < 0) return zeroBasedColumn;
+            return zeroBasedColumn + 1;
         }
 
         private void ValidateIndices(int oneBasedIndex0, int oneBasedIndex1)

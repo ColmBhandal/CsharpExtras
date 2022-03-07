@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CsharpExtras.Extensions;
+using CsharpExtras.Compare;
 
 namespace CsharpExtrasTest._Enumerable.OneBased
 {
@@ -18,7 +19,86 @@ namespace CsharpExtrasTest._Enumerable.OneBased
         private const string Four = "Four";        
         private readonly ICsharpExtrasApi _api = new CsharpExtrasApi();
 
-        
+
+        [Test, TestCaseSource(nameof(ProviderForUnequalCompare))]
+        public void GIVEN_UnEqualArrays_WHEN_Compare_THEN_IsEqualFalse
+            ((double[] array1Raw, double[] array2Raw, string label) testData)
+        {
+            //Arrange
+            IOneBasedArray<double> array1 = _api.NewOneBasedArray(testData.array1Raw);
+            IOneBasedArray<double> array2 = _api.NewOneBasedArray(testData.array2Raw);
+
+            //Act
+            IComparisonResult result = array1.Compare(array2,
+                (d1, d2) => d1 == d2);
+
+            //Assert
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        private static IEnumerable<(double[] array1, double[] array2, string label)>
+            ProviderForUnequalCompare()
+        {
+            return new List<(double[] array1, double[] array2, string label)>
+            {
+                (
+                    new double[] {1.1, 0.5, 6.01},
+                    new double[] {1.1, 0.501, 6.01},
+                    "Same length, different value"
+                ),
+                (
+                    new double[] {1.1, 0.5, 6.01},
+                    new double[] {1.1, 0.5},
+                    "Different length, other a prefix"
+                ),
+                (
+                    new double[] {1.1, 0.5, 6.01},
+                    new double[] {0.5, 6.01},
+                    "Different length, other a suffix"
+                ),
+                (
+                    new double[] {1.1, 0.5},
+                    new double[] {1.1, 0.5, 6.01},
+                    "Different length, this a prefix"
+                ),
+                (
+                    new double[] {0.5, 6.01},
+                    new double[] {1.1, 0.5, 6.01},
+                    "Different length, this a suffix"
+                ),
+            };
+        }
+
+        [Test]
+        public void GIVEN_DistinctEqualPopulatedArrays_WHEN_Compare_THEN_IsEqualTrue()
+        {
+            //Arrange
+            IOneBasedArray<string> array1 = _api.NewOneBasedArray(
+                new string[] { "Hello", "World", "42" });
+            IOneBasedArray<string> array2 = _api.NewOneBasedArray(
+                new string[] { "Hello", "World", "42" });
+
+            //Act
+            IComparisonResult result = array1.Compare(array2, string.Equals);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DistinctEmptyArrays_WHEN_CompareWithFalseValueComparer_THEN_IsEqualTrue()
+        {
+            //Arrange
+            IOneBasedArray<string> array1 = _api.NewOneBasedArray<string>(0);
+            IOneBasedArray<string> array2 = _api.NewOneBasedArray<string>(0);
+
+            //Act
+            IComparisonResult result = array1.Compare(array2, (s1, s2) => false);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual, "Distinct empty arrays should be equal, even if the comparison funciton always returns false");
+        }
+
         [Test]
         public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_ZipEnum_THEN_ResultIsEmpty()
         {
