@@ -1,4 +1,5 @@
-﻿using CsharpExtras.Extensions;
+﻿using CsharpExtras.Compare;
+using CsharpExtras.Extensions;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,98 @@ namespace CsharpExtrasTest.Extensions
     [TestFixture, Category("Unit")]
     public class ArrayExtension2DTest
     {
+        [Test, TestCaseSource(nameof(ProviderForUnequalCompare))]
+        public void GIVEN_UnEqualArrays_WHEN_Compare_THEN_IsEqualFalse
+            ((double[,] array1, double[,] array2, string label) testData)
+        {
+            //Act
+            IComparisonResult result = testData.array1.Compare(testData.array2,
+                (d1, d2) => d1 == d2);
+
+            //Assert
+            Assert.IsFalse(result.IsEqual);
+        }
+
+        private static IEnumerable<(double[,] array1, double[,] array2, string label)>
+            ProviderForUnequalCompare()
+        {
+            return new List<(double[,] array1, double[,] array2, string label)>
+            {
+                (
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.5, 6.01},
+                    },
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.5, 6.01},
+                    },
+                    "Same shape, different value"
+                ),
+
+                (
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.5, 6.01},
+                    },
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                    },
+                    "Different shape, other less rows"
+                ),
+
+                (
+                    new double[,]
+                    {
+                        {1, 2, 3},
+                        {1.1, 0.5, 6.01},
+                    },
+                    new double[,]
+                    {
+                        {1, 2},
+                        {1.1, 0.5},
+                    },
+                    "Different shape, other less columns"
+                )
+            };
+        }
+
+        [Test]
+        public void GIVEN_DistinctEqualPopulatedArrays_WHEN_Compare_THEN_IsEqualTrue()
+        {
+            //Arrange
+            string[,] array1 = new string[,]{
+                { "Hello", "World", "42" },
+                { "Goodbye", "Universe", "43" }
+            };
+            string[,] array2 = new string[,]{
+                { "Hello", "World", "42" },
+                { "Goodbye", "Universe", "43" }
+            };
+            //Act
+            IComparisonResult result = array1.Compare(array2, string.Equals);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual);
+        }
+
+        [Test]
+        public void GIVEN_DistinctEmptyArrays_WHEN_CompareWithFalseValueComparer_THEN_IsEqualTrue()
+        {
+            //Arrange
+            string[,] array1 = new string[,] { { } };
+            string[,] array2 = new string[,] { { } };
+
+            //Act
+            IComparisonResult result = array1.Compare(array2, (s1, s2) => false);
+
+            //Assert
+            Assert.IsTrue(result.IsEqual, "Distinct empty arrays should be equal, even if the comparison funciton always returns false");
+        }
         [Test]
         public void GIVEN_ExceptionInZipAndEmptyArray_WHEN_ZipEnum_THEN_ResultIsEmpty()
         {
