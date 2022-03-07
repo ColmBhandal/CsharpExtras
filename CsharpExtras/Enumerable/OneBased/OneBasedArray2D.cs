@@ -40,7 +40,7 @@ namespace CsharpExtras._Enumerable.OneBased
             Func<TVal, TVal, bool> isEqualValues)
         {
             //TODO: Implement
-            return new ArrayComparisonResultImpl();
+            return new ArrayComparisonResultImpl<TVal>();
         }
 
         public int LastUsedRow(Predicate<TVal> isUsed)

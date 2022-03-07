@@ -16,7 +16,7 @@ namespace CsharpExtras.Extensions
             Func<TVal, TVal, bool> isEqualValues)
         {
             //TODO: Implement
-            return new ArrayComparisonResultImpl();
+            return new ArrayComparisonResultImpl<TVal>();
         }
 
         /// <param name="p">A predicate on an entire column</param>

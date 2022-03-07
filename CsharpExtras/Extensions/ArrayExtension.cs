@@ -14,7 +14,7 @@ namespace CsharpExtras.Extensions
         public static IComparisonResult Compare<TVal>(this TVal[] arr, TVal[] other, Func<TVal, TVal, bool> isEqualValues)
         {
             //TODO: Implement
-            return new ArrayComparisonResultImpl();
+            return new ArrayComparisonResultImpl<TVal>();
         }
 
         //Non-mvp: Test this
