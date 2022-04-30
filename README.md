@@ -2,7 +2,7 @@
 
 This library contains general-purpose functionality built on top of the .NET Standard libraries. Much of the code was inspired writing Excel VSTO AddIns using the [Excel Interop](https://docs.microsoft.com/en-us/dotnet/api/microsoft.office.interop.excel?view=excel-pia) libraries. However, this code is intentionally abstracted away from such libraries and thus can be used anywhere that's compatible with the .NET Standard framework.
 
-![.NET Core](https://github.com/ColmBhandal/CsharpExtras/workflows/.NET%20Core/badge.svg)
+![.NET Core](https://github.com/ColmBhandal/CsharpExtras/workflows/.NET%20Core/badge.svg) [![Total alerts](https://img.shields.io/lgtm/alerts/g/ColmBhandal/CsharpExtras.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ColmBhandal/CsharpExtras/alerts/) [![Language grade: C#](https://img.shields.io/lgtm/grade/csharp/g/ColmBhandal/CsharpExtras.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ColmBhandal/CsharpExtras/context:csharp)
 
 ## Including C# Extras in Your Project
 
