@@ -1,5 +1,5 @@
 
-![.NET Core](https://github.com/ColmBhandal/CsharpExtras/workflows/.NET%20Core/badge.svg) [![Total alerts](https://img.shields.io/lgtm/alerts/g/ColmBhandal/CsharpExtras.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ColmBhandal/CsharpExtras/alerts/) [![Language grade: C#](https://img.shields.io/lgtm/grade/csharp/g/ColmBhandal/CsharpExtras.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ColmBhandal/CsharpExtras/context:csharp)
+![.NET Core](https://github.com/ColmBhandal/CsharpExtras/workflows/.NET%20Core/badge.svg) [![Total alerts](https://img.shields.io/lgtm/alerts/g/ColmBhandal/CsharpExtras.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ColmBhandal/CsharpExtras/alerts/) [![Language grade: C#](https://img.shields.io/lgtm/grade/csharp/g/ColmBhandal/CsharpExtras.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/ColmBhandal/CsharpExtras/context:csharp) [![project version on nuget](https://badgen.net/nuget/v/CsharpExtras/latest)](https://www.nuget.org/packages/CsharpExtras)
 
 # C# Extras
 
