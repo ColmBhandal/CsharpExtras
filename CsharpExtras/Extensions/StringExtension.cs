@@ -163,6 +163,21 @@ namespace CsharpExtras.Extensions
         {
             return StringValueConvertedToIntGreaterThanOrEqualTo(str, 0);
         }
+
+        public static bool IsInt(this string str)
+        {
+            return int.TryParse(str, out int _);
+        }
+
+        public static int ToInt(this string str)
+        {
+            if (int.TryParse(str, out int strInt))
+            {
+                return strInt;
+            }
+
+            throw new InvalidOperationException("The string should be a integer.");
+        }
     }
 }
 

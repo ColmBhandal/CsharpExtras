@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using System.Collections.Generic;
 using CsharpExtras.Extensions;
 
@@ -244,6 +245,53 @@ namespace CsharpExtrasTest.Extensions
             bool result = value.StringValueConvertedToIntGreaterThanOrEqualToZero();
             //Assert
             Assert.IsTrue(result);
+        }
+        
+        [Test]
+        [Category("Unit")]
+        public void GivenStringWhenIsAIntegerValueThenReturnTrue()
+        {
+            //Arrange
+            string value = "0";
+            //Act
+            bool result = value.IsInt();
+            //Assert
+            Assert.IsTrue(result);
+        }
+        
+        [Test]
+        [Category("Unit")]
+        public void GivenStringWhenIsNotAIntegerValueThenReturnFalse()
+        {
+            //Arrange
+            string value = "teste";
+            //Act
+            bool result = value.IsInt();
+            //Assert
+            Assert.IsFalse(result);
+        }
+        
+        [Test]
+        [Category("Unit")]
+        public void GivenStringWhenIsAIntegerValueThenReturnStringAsAInteger()
+        {
+            //Arrange
+            string value = "0";
+            int expected = 0;
+            //Act
+            int result = value.ToInt();
+            //Assert
+            Assert.AreEqual(expected,result);
+        }
+        
+        [Test]
+        [Category("Unit")]
+        public void GivenStringWhenIsNotAIntegerValueThenThrowsInvalidOperationException()
+        {
+            //Arrange
+            string value = "teste";
+            //Act
+            Assert.Throws<InvalidOperationException>(() => value.ToInt());
         }
     }
 }
