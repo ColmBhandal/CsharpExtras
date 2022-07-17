@@ -261,10 +261,16 @@ namespace CsharpExtrasTest.Extensions
         
         [Test]
         [Category("Unit")]
-        public void GivenStringWhenIsNotAIntegerValueThenReturnFalse()
+        [TestCase("1212s123")]
+        [TestCase("24124a")]
+        [TestCase("1234 12")]
+        [TestCase("1.0")]
+        [TestCase("2.0")]
+        [TestCase("16,2")]
+        [TestCase(null)]
+        [TestCase("1235987345983402759234085702349857342098573245343243298754302958734208954750347850234895750288888888888888888888888888888888888888888888888888888888888888888888888888888888888888888887532954720938570239485732094857023498572304985732094857")]
+        public void GivenStringWhenIsNotAIntegerValueThenReturnFalse(string value)
         {
-            //Arrange
-            string value = "teste";
             //Act
             bool result = value.IsInt();
             //Assert
@@ -273,11 +279,11 @@ namespace CsharpExtrasTest.Extensions
         
         [Test]
         [Category("Unit")]
-        public void GivenStringWhenIsAIntegerValueThenReturnStringAsAInteger()
+        [TestCase(" 12",12)]
+        [TestCase("+352",352)]
+        [TestCase("2001",2001)]
+        public void GivenStringWhenIsAIntegerValueThenReturnStringAsAInteger(string value, int expected)
         {
-            //Arrange
-            string value = "0";
-            int expected = 0;
             //Act
             int result = value.ToInt();
             //Assert
@@ -286,10 +292,16 @@ namespace CsharpExtrasTest.Extensions
         
         [Test]
         [Category("Unit")]
-        public void GivenStringWhenIsNotAIntegerValueThenThrowsInvalidOperationException()
+        [TestCase("1212s123")]
+        [TestCase("24124a")]
+        [TestCase("1234 12")]
+        [TestCase("1.0")]
+        [TestCase("2.0")]
+        [TestCase("16,2")]
+        [TestCase(null)]
+        [TestCase("1235987345983402759234085702349857342098573245343243298754302958734208954750347850234895750288888888888888888888888888888888888888888888888888888888888888888888888888888888888888888887532954720938570239485732094857023498572304985732094857")]
+        public void GivenStringWhenIsNotAIntegerValueThenThrowsInvalidOperationException(string value)
         {
-            //Arrange
-            string value = "teste";
             //Act
             Assert.Throws<InvalidOperationException>(() => value.ToInt());
         }
