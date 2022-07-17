@@ -50,6 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added Compare functions for comparing 1D and 2D arrays, both one and zero-based. (#138)
 
 ### Added
+- Support to to convert strings to integers (#80)
 - Support for writing a 1D one-based array to a 2D one-based array (#9)
 - Support for writing a 2D array to another array (#12)
 - Unit tests for boolean extension (#27)
