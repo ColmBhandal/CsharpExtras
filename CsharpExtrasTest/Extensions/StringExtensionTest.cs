@@ -249,10 +249,12 @@ namespace CsharpExtrasTest.Extensions
         
         [Test]
         [Category("Unit")]
-        [TestCase(" 12",12)]
-        [TestCase("+352",352)]
-        [TestCase("2001",2001)]
-        public void GivenStringWhenIsAIntegerValueThenReturnTrue(string value, int expected)
+        [TestCase(" 12")]
+        [TestCase("+352")]
+        [TestCase("2001")]
+        [TestCase("-123")]
+        [TestCase("-1123435323")]
+        public void GivenStringWhenIsAIntegerValueThenReturnTrue(string value)
         {
             //Act
             bool result = value.IsInt();
@@ -283,6 +285,8 @@ namespace CsharpExtrasTest.Extensions
         [TestCase(" 12",12)]
         [TestCase("+352",352)]
         [TestCase("2001",2001)]
+        [TestCase("-123",-123)]
+        [TestCase("-1123435323",-1123435323)]
         public void GivenStringWhenIsAIntegerValueThenReturnStringAsAInteger(string value, int expected)
         {
             //Act
