@@ -249,10 +249,11 @@ namespace CsharpExtrasTest.Extensions
         
         [Test]
         [Category("Unit")]
-        public void GivenStringWhenIsAIntegerValueThenReturnTrue()
+        [TestCase(" 12",12)]
+        [TestCase("+352",352)]
+        [TestCase("2001",2001)]
+        public void GivenStringWhenIsAIntegerValueThenReturnTrue(string value, int expected)
         {
-            //Arrange
-            string value = "0";
             //Act
             bool result = value.IsInt();
             //Assert
